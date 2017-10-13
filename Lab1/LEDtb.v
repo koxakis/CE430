@@ -14,37 +14,37 @@ LEDsystem sys0(
 initial 
 begin
 
-    in_char = 4'b0000;
+    in_char = 4'h0;
     #20;
-    in_char = 4'b0001;
+    in_char = 4'h1;
     #20;
-    in_char = 4'b0010;
+    in_char = 4'h2;
     #20;
-    in_char = 4'b0011;
+    in_char = 4'h3;
     #20;
-	in_char = 4'b0100;
+	in_char = 4'h4;
 	#20;
-	in_char = 4'b0101;
+	in_char = 4'h5;
 	#20;
-	in_char = 4'b0110;
+	in_char = 4'h6;
 	#20;
-	in_char = 4'b0111;
+	in_char = 4'h7;
 	#20;
-	in_char = 4'b1000;
+	in_char = 4'h8;
 	#20;
-	in_char = 4'b1001;
+	in_char = 4'h9;
 	#20;
-	in_char = 4'b1010;
+	in_char = 4'ha;
 	#20;
-	in_char = 4'b1011;
+	in_char = 4'hb;
 	#20;
-	in_char = 4'b1100;
+	in_char = 4'hc;
 	#20;
-	in_char = 4'b1101;
+	in_char = 4'hd;
 	#20;
-	in_char = 4'b1110;
+	in_char = 4'he;
 	#20;
-	in_char = 4'b1111;
+	in_char = 4'hf;
 
 end
 
