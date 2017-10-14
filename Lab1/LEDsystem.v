@@ -1,17 +1,40 @@
 `timescale 1ns / 1ps
 
 module LEDsystem(
-  char,
-  LED
+	reset,
+	clk,
+	an3,
+	an2,
+	an1,
+	an0,
+	a,
+	b,
+	c,
+	d,
+	e,
+	f	
 );
 
-input [3:0] char;
-output [7:0] LED;
+input reset, clk;
+output an3, an2, an1, an0;
+output a, b, c, d, e, f;
 
 
-LEDdecoder leddecoder_0(
-    .char(char),
-    .LED(LED)
+LEDfourDigitDriver LEDdriver_0(
+	reset,
+	clk,
+	an3,
+	an2,
+	an1,
+	an0,
+	a,
+	b,
+	c,
+	d,
+	e,
+	f	
 );
+
+
 
 endmodule // LEDsystem
