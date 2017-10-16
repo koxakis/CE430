@@ -6,7 +6,7 @@ reg clk;
 reg rst_p;
 
 wire an3, an2, an1, an0;
-wire a, b, c, d, e, f;
+wire a, b, c, d, e, f, g, dp;
 
 LEDsystem sys0
 (
@@ -21,7 +21,9 @@ LEDsystem sys0
 	.c(c),
 	.d(d),
 	.e(e),
-	.f(f)
+	.f(f),
+	.g(g),
+	.dp(dp)
 );
 
 always #10 clk=~clk;
@@ -37,4 +39,4 @@ initial begin
 end
 
 endmodule
-`default_nettype wire
+

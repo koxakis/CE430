@@ -1,3 +1,4 @@
+`timescale 1ns / 1ps
 module LEDfourDigitDriver(
 	reset,
 	clk,
@@ -11,12 +12,13 @@ module LEDfourDigitDriver(
 	d,
 	e,
 	f,
-	g	
+	g,
+	dp	
 );
 
 input reset, clk;
 output reg an3, an2, an1, an0;
-output reg a, b, c, d, e, f, g;
+output wire a, b, c, d, e, f, g, dp;
 
 reg [3:0] char;
 reg [3:0] state;
@@ -80,76 +82,93 @@ wire [7:0] LED;
 	.char(char),
 	.LED(LED)
 	);
+
+	assign a = LED[7];
+	assign b = LED[6];
+	assign c = LED[5];
+	assign d = LED[4];
+	assign e = LED[3];
+	assign f = LED[2];
+	assign g = LED[1];
+	assign dp = LED[0]; 
    
 	// TO-DO to be changed to module instansiation 
    always @(state) begin
 	case (state)
 		4'b1110: 
 			begin
-	  			an0 <= 1;
-				an1 <= 1;
-				an2 <= 1;
-				an3 <= 0;
+	  			an0 = 1;
+				an1 = 1;
+				an2 = 1;
+				an3 = 0;
 
-				a <= 1;
+				char = 4'h1;
+				/*a <= 1;
 				b <= 0;
 				c <= 0; 
 				d <= 1;
 				e <= 1;
 				f <= 1;
 				g <= 1;
+				dp <= 1;*/
 			end
 		4'b1010: 
 			begin
-	  			an0 <= 1;
-				an1 <= 1;
-				an2 <= 0;
-				an3 <= 1;
+	  			an0 = 1;
+				an1 = 1;
+				an2 = 0;
+				an3 = 1;
 
-				a <= 0;
+				char = 4'h7;
+				/*a <= 0;
 				b <= 0;
 				c <= 0; 
 				d <= 1;
 				e <= 1;
 				f <= 1;
 				g <= 1;
+				dp <= 1; */
 			end
 		4'b0110:
 			begin
-	  			an0 <= 1;
-				an1 <= 0;
-				an2 <= 1;
-				an3 <= 1;
+	  			an0 = 1;
+				an1 = 0;
+				an2 = 1;
+				an3 = 1;
 
-				a <= 1;
+				char = 4'h1;
+				/*a <= 1;
 				b <= 0;
 				c <= 0; 
 				d <= 1;
 				e <= 1;
 				f <= 1;
 				g <= 1;
+				dp <= 1;*/
 			end
 		4'b0010:
 			begin
-	  			an0 <= 0;
-				an1 <= 1;
-				an2 <= 1;
-				an3 <= 1;
+	  			an0 = 0;
+				an1 = 1;
+				an2 = 1;
+				an3 = 1;
 
-				a <= 1;
+				char = 4'h1;
+				/*a <= 1;
 				b <= 0;
 				c <= 0; 
 				d <= 1;
 				e <= 1;
 				f <= 1;
 				g <= 1;
+				dp <= 1; */
 			end
 	  	default:
 	  		begin
-	  			an0 <= 1;
-				an1 <= 1;
-				an2 <= 1;
-				an3 <= 1;
+	  			an0 = 1;
+				an1 = 1;
+				an2 = 1;
+				an3 = 1;
 			end
 	endcase
    end

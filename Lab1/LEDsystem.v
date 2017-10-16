@@ -12,12 +12,14 @@ module LEDsystem(
 	c,
 	d,
 	e,
-	f	
+	f,
+	g,
+	dp	
 );
 
 input reset, clk;
 output an3, an2, an1, an0;
-output a, b, c, d, e, f;
+output a, b, c, d, e, f, g, dp;
 
 
 LEDfourDigitDriver LEDdriver_0(
@@ -32,7 +34,9 @@ LEDfourDigitDriver LEDdriver_0(
 	c,
 	d,
 	e,
-	f	
+	f,
+	g,
+	dp	
 );
 
 
