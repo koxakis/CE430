@@ -70,9 +70,9 @@ wire [7:0] LED;
 
 	always @(posedge CLKDV, posedge reset) begin
 		if (reset) begin
-		  state <= 4'b0000;
+		  state <= 4'b1111;
 		end else begin
-		  state <= state + 1'b1;
+		  state <= state - 1'b1;
 		end
 	end
 
@@ -84,7 +84,7 @@ wire [7:0] LED;
 	// TO-DO to be changed to module instansiation 
    always @(state) begin
 	case (state)
-		4'b0010: 
+		4'b1110: 
 			begin
 	  			an0 <= 1;
 				an1 <= 1;
@@ -99,7 +99,7 @@ wire [7:0] LED;
 				f <= 1;
 				g <= 1;
 			end
-		4'b0110: 
+		4'b1010: 
 			begin
 	  			an0 <= 1;
 				an1 <= 1;
@@ -114,7 +114,7 @@ wire [7:0] LED;
 				f <= 1;
 				g <= 1;
 			end
-		4'b1010:
+		4'b0110:
 			begin
 	  			an0 <= 1;
 				an1 <= 0;
@@ -129,12 +129,12 @@ wire [7:0] LED;
 				f <= 1;
 				g <= 1;
 			end
-		4'b1100:
+		4'b0010:
 			begin
-	  			an0 <= 1;
+	  			an0 <= 0;
 				an1 <= 1;
 				an2 <= 1;
-				an3 <= 0;
+				an3 <= 1;
 
 				a <= 1;
 				b <= 0;
