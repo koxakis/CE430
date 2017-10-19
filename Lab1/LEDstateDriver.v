@@ -12,6 +12,7 @@ module LEDstateDriver(
 	output reg [3:0] char_out;
 	output reg an3_out, an2_out, an1_out, an0_out;
 
+	// Change the char assignment state to two cycles before the respected ANn
 	always @(state_in) begin
 		case (state_in)
 

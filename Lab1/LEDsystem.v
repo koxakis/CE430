@@ -21,6 +21,8 @@ input reset, clk;
 output an3, an2, an1, an0;
 output a, b, c, d, e, f, g, dp;
 
+//Implemet debouncer for inputs
+
 
 LEDfourDigitDriver LEDdriver_0(
 	reset,

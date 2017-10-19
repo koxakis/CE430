@@ -95,7 +95,6 @@ wire an3_out, an2_out, an1_out, an0_out;
 	assign g = LED[1];
 	assign dp = LED[0]; 
    
-	// TO-DO to be changed to module instansiation 
 	LEDstateDriver ledStateDriver_0(
 		.state_in(state),
 		.char_out(char),
@@ -104,13 +103,5 @@ wire an3_out, an2_out, an1_out, an0_out;
 		.an2_out(an2),
 		.an3_out(an3)
 	);
-
-	//assign char = char_out;
-	//assign an0 = an0_out;
-	//assign an1 = an1_out;
-	//assign an2 = an2_out;
-	//assign an3 = an3_out;
-	
-
 
 endmodule // LEDfourDigitDriver
