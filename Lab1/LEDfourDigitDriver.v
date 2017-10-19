@@ -17,12 +17,15 @@ module LEDfourDigitDriver(
 );
 
 input reset, clk;
-output reg an3, an2, an1, an0;
+output wire an3, an2, an1, an0;
 output wire a, b, c, d, e, f, g, dp;
 
-reg [3:0] char;
+wire [3:0] char;
 reg [3:0] state;
 wire [7:0] LED;
+
+wire an3_out, an2_out, an1_out, an0_out;
+
 
 // DCM_SP: Digital Clock Manager
    //         Spartan-6
@@ -79,8 +82,8 @@ wire [7:0] LED;
 	end
 
 	LEDdecoder leddecoder_0(
-	.char(char),
-	.LED(LED)
+		.char(char),
+		.LED(LED)
 	);
 
 	assign a = LED[7];
@@ -93,85 +96,21 @@ wire [7:0] LED;
 	assign dp = LED[0]; 
    
 	// TO-DO to be changed to module instansiation 
-   always @(state) begin
-	case (state)
-		4'b1110: 
-			begin
-	  			an0 = 1;
-				an1 = 1;
-				an2 = 1;
-				an3 = 0;
+	LEDstateDriver ledStateDriver_0(
+		.state_in(state),
+		.char_out(char),
+		.an0_out(an0),
+		.an1_out(an1),
+		.an2_out(an2),
+		.an3_out(an3)
+	);
 
-				char = 4'h1;
-				/*a <= 1;
-				b <= 0;
-				c <= 0; 
-				d <= 1;
-				e <= 1;
-				f <= 1;
-				g <= 1;
-				dp <= 1;*/
-			end
-		4'b1010: 
-			begin
-	  			an0 = 1;
-				an1 = 1;
-				an2 = 0;
-				an3 = 1;
-
-				char = 4'h7;
-				/*a <= 0;
-				b <= 0;
-				c <= 0; 
-				d <= 1;
-				e <= 1;
-				f <= 1;
-				g <= 1;
-				dp <= 1; */
-			end
-		4'b0110:
-			begin
-	  			an0 = 1;
-				an1 = 0;
-				an2 = 1;
-				an3 = 1;
-
-				char = 4'h1;
-				/*a <= 1;
-				b <= 0;
-				c <= 0; 
-				d <= 1;
-				e <= 1;
-				f <= 1;
-				g <= 1;
-				dp <= 1;*/
-			end
-		4'b0010:
-			begin
-	  			an0 = 0;
-				an1 = 1;
-				an2 = 1;
-				an3 = 1;
-
-				char = 4'h1;
-				/*a <= 1;
-				b <= 0;
-				c <= 0; 
-				d <= 1;
-				e <= 1;
-				f <= 1;
-				g <= 1;
-				dp <= 1; */
-			end
-	  	default:
-	  		begin
-	  			an0 = 1;
-				an1 = 1;
-				an2 = 1;
-				an3 = 1;
-			end
-	endcase
-   end
+	//assign char = char_out;
+	//assign an0 = an0_out;
+	//assign an1 = an1_out;
+	//assign an2 = an2_out;
+	//assign an3 = an3_out;
+	
 
 
 endmodule // LEDfourDigitDriver

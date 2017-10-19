@@ -11,7 +11,7 @@ output reg [7:0] LED;
 always @(char)
 begin
 	case (char)
-		4'h0: LED = 8'b11111111;
+		4'h0: LED = 8'b00000011;
 
 		4'h1: LED = 8'b10011111;
       
