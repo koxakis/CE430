@@ -33,17 +33,17 @@ begin
 
     	4'ha: LED = 8'b00010001;
 
-    	4'hb: LED = 8'b00000101;
+    	4'hb: LED = 8'b11000001;
 
     	4'hc: LED = 8'b01100011;
 
-    	4'hd: LED = 8'b00000011;
+    	4'hd: LED = 8'b10000101;
 
-    	4'he: LED = 8'b01100001;
+    	4'he: LED = 8'b00100001;
 
     	4'hf: LED = 8'b01110001;
 
-		default: LED = 8'b00000001;
+		default: LED = 8'b11111110;
 	endcase
 end  
 

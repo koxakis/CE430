@@ -33,7 +33,7 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = 4'h0;
+					char_out = 4'h1;
 				end 
 
 			4'b0010:
@@ -71,7 +71,7 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = 4'h0;
+					char_out = 4'h1;
 				end 
 			4'b0110:
 				begin
@@ -109,7 +109,7 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = 4'h0;
+					char_out = 4'h7;
 				end 
 			4'b1010: 
 				begin
@@ -145,7 +145,7 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = 4'h0;
+					char_out = 4'h1;
 				end 
 				
 			4'b1110: 
