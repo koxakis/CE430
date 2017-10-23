@@ -12,7 +12,7 @@ module LEDdebouncer(
    reg b_clean;
    
 	
-	always @(posedge clk) begin
+	always @(posedge clk, posedge reset) begin
 		if ( reset) begin
 			count <= 0;
 		end

@@ -38,15 +38,13 @@ initial begin
 	r_btn = 1'b0;
 	#10
 	r_btn = 1'b1;
-	#10
+
+	#2000
 	r_btn = 1'b0;
 
-
-	#500
-	r_btn = 1'b1;
 	#2000
 
-	r_btn = 1'b0;
+	r_btn = 1'b1;
 
 	#1000
 	$finish;

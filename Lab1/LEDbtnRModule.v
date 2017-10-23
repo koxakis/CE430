@@ -34,18 +34,24 @@ module LEDbtnRModule(
 		message[13] = 4'hd;
 		message[14] = 4'he;
 		message[15] = 4'hf;
+
+		index = 1;
+		char_an3 = message [index - 1];
+		char_an2 = message [index ];
+		char_an1 = message [index + 1];
+		char_an0 = message [index + 2];
 	end
 
 	always @(posedge clk, posedge reset) 
 	begin
 		if (reset) 
 		begin
-			char_an0 <= 4'h0;
-			char_an1 <= 4'h0;
-			char_an2 <= 4'h0;
-			char_an3 <= 4'h0;
+			index <=1;
+			char_an3 <= message [index - 1];
+			char_an2 <= message [index ];
+			char_an1 <= message [index + 1];
+			char_an0 <= message [index + 2];
 
-			index <=0;
 			inc_flag <=0;
 		end else begin
 			if (r_btn) 
