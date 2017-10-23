@@ -22,6 +22,11 @@ input reset, clk,r_btn;
 output an3, an2, an1, an0;
 output a, b, c, d, e, f, g, dp;
 
+wire rb_clean_wire;
+
+//Implement and inst debouncer input clk reset output d_reset
+
+// input d_reset
 // DCM_SP: Digital Clock Manager
    //         Spartan-6
    // Xilinx HDL Language Template, version 14.7
@@ -45,33 +50,41 @@ output a, b, c, d, e, f, g, dp;
 	  .STARTUP_WAIT("FALSE")                // Delay config DONE until DCM_SP LOCKED (TRUE/FALSE)
    )
    DCM_SP_inst (
-	  .CLK0(CLK0),         // 1-bit output: 0 degree clock output
-	 // .CLK180(CLK180),     // 1-bit output: 180 degree clock output
-	 // .CLK270(CLK270),     // 1-bit output: 270 degree clock output
-	 // .CLK2X(CLK2X),       // 1-bit output: 2X clock frequency clock output
-	 // .CLK2X180(CLK2X180), // 1-bit output: 2X clock frequency, 180 degree clock output
-	 // .CLK90(CLK90),       // 1-bit output: 90 degree clock output
-	  .CLKDV(CLKDV),       // 1-bit output: Divided clock output
-	 // .CLKFX(CLKFX),       // 1-bit output: Digital Frequency Synthesizer output (DFS)
-	 // .CLKFX180(CLKFX180), // 1-bit output: 180 degree CLKFX output
-	  .LOCKED(LOCKED),     // 1-bit output: DCM_SP Lock Output
-	 // .PSDONE(PSDONE),     // 1-bit output: Phase shift done output
-	 // .STATUS(STATUS),     // 8-bit output: DCM_SP status output
-	  .CLKFB(CLK0),       // 1-bit input: Clock feedback input
-	  .CLKIN(clk),// 1-bit input: Clock input
-	  //.DSSEN(DSSEN),       // 1-bit input: Unsupported, specify to GND.
-	  //.PSCLK(PSCLK),       // 1-bit input: Phase shift clock input
+		.CLK0(CLK0),         // 1-bit output: 0 degree clock output
+		// .CLK180(CLK180),     // 1-bit output: 180 degree clock output
+		// .CLK270(CLK270),     // 1-bit output: 270 degree clock output
+		// .CLK2X(CLK2X),       // 1-bit output: 2X clock frequency clock output
+		// .CLK2X180(CLK2X180), // 1-bit output: 2X clock frequency, 180 degree clock output
+		// .CLK90(CLK90),       // 1-bit output: 90 degree clock output
+		.CLKDV(CLKDV),       // 1-bit output: Divided clock output
+		// .CLKFX(CLKFX),       // 1-bit output: Digital Frequency Synthesizer output (DFS)
+		// .CLKFX180(CLKFX180), // 1-bit output: 180 degree CLKFX output
+		.LOCKED(LOCKED),     // 1-bit output: DCM_SP Lock Output
+		// .PSDONE(PSDONE),     // 1-bit output: Phase shift done output
+		// .STATUS(STATUS),     // 8-bit output: DCM_SP status output
+		.CLKFB(CLK0),       // 1-bit input: Clock feedback input
+		.CLKIN(clk),// 1-bit input: Clock input
+		//.DSSEN(DSSEN),       // 1-bit input: Unsupported, specify to GND.
+		//.PSCLK(PSCLK),       // 1-bit input: Phase shift clock input
 		//.PSEN(PSEN),         // 1-bit input: Phase shift enable
 		//.PSINCDEC(PSINCDEC), // 1-bit input: Phase shift increment/decrement input
-	  .RST(reset)            // 1-bit input: Active high reset input
+		.RST(reset)            // 1-bit input: Active high reset input
    );
 
    // End of DCM_SP_inst instantiation
 
+// debouncer b
+	LEDdebouncer ledDebounce_1(
+		.clk(CLKDV) ,
+		.reset(reset) ,
+		.b_noise(r_btn) ,
+		.b_clean(rb_clean_wire)
+	);
+
 LEDfourDigitDriver LEDdriver_0(
 	.reset(reset) ,
 	.clk(CLKDV) ,
-	.r_btn(r_btn) ,
+	.r_btn(rb_clean_wire) ,
 	.an3(an3) ,
 	.an2(an2) ,
 	.an1(an1) ,
@@ -85,7 +98,4 @@ LEDfourDigitDriver LEDdriver_0(
 	.g(g) ,
 	.dp(dp)	
 );
-
-
-
 endmodule // LEDsystem

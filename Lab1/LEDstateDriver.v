@@ -32,7 +32,6 @@ module LEDstateDriver(
 	always @ ( state_in or char_an0 or char_an1 or char_an2 or char_an3) 
 	begin
 		case (state_in)
-
 			4'b0000:
 				begin
 					an0_out = 1;
@@ -42,7 +41,6 @@ module LEDstateDriver(
 
 					char_out = 4'h0;
 				end 
-
 			4'b0001:
 				begin
 					an0_out = 1;
@@ -51,8 +49,7 @@ module LEDstateDriver(
 					an3_out = 1;
 
 					char_out = char_an0;
-				end 
-
+				end
 			4'b0010:
 				begin
 					an0_out = 0;
@@ -62,7 +59,6 @@ module LEDstateDriver(
 
 					char_out = char_an0;
 				end 
-
 			4'b0011:
 				begin
 					an0_out = 1;
@@ -108,7 +104,6 @@ module LEDstateDriver(
 					an3_out = 1;
 
 					char_out = 4'h0;
-
 				end
 			4'b1000:
 				begin

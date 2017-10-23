@@ -14,7 +14,7 @@ module LEDbtnRModule(
 	reg [3:0]index;
 	reg inc_flag;
 
-	reg [3:0] message [15:0];
+	reg [3:0] message [N-1:0];
 
 	initial
 	begin
@@ -48,7 +48,8 @@ module LEDbtnRModule(
 			index <=0;
 			inc_flag <=0;
 		end else begin
-			if (r_btn) begin
+			if (r_btn) 
+			begin
 				char_an3 <= message [index ];
 				char_an2 <= message [index + 1];
 				char_an1 <= message [index + 2];
@@ -56,8 +57,8 @@ module LEDbtnRModule(
 				
 				inc_flag <= 1;
 			end
-
-			if (!r_btn & inc_flag) begin
+			if (!r_btn & inc_flag) 
+			begin
 				index <= index + 1;
 				inc_flag <= 0;
 			end
