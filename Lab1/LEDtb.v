@@ -1,5 +1,7 @@
+//Testbench module 
+//Nikolaos Koxenoglou 1711 
 `default_nettype none
-
+`timescale 1ns/ 1ps 
 module tb_LEDsystem;
 reg clk;
 reg rst_p;
@@ -32,22 +34,13 @@ always #10 clk=~clk;
 initial begin
 	rst_p = 1'b1;
 	clk = 1'b1;
-	r_btn = 1'b1;
 	#10
 	rst_p = 1'b0;
-	r_btn = 1'b0;
-	#10
-	r_btn = 1'b1;
-
-	#2000
-	r_btn = 1'b0;
-
-	#2000
-
 	r_btn = 1'b1;
 
 	#1000
 	$finish;
+
 end
 
 endmodule

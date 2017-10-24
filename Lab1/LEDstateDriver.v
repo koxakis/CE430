@@ -1,3 +1,6 @@
+//LED state driver - takes the state and drives the corresponding anode output 
+//Nikolaos Koxenoglou 1711 
+`timescale 1ns / 1ps
 module LEDstateDriver(
 	clk,
 	reset,

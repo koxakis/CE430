@@ -1,3 +1,5 @@
+// Top system module 
+//Nikolaos Koxenoglou 1711 
 `timescale 1ns / 1ps
 
 module LEDsystem(
@@ -24,9 +26,8 @@ output a, b, c, d, e, f, g, dp;
 
 wire rb_clean_wire;
 
-//Implement and inst debouncer input clk reset output d_reset
 
-// input d_reset
+
 // DCM_SP: Digital Clock Manager
    //         Spartan-6
    // Xilinx HDL Language Template, version 14.7
@@ -73,13 +74,13 @@ wire rb_clean_wire;
 
    // End of DCM_SP_inst instantiation
 
-// debouncer b
-	LEDdebouncer ledDebounce_1(
-		.clk(CLKDV) ,
-		.reset(reset) ,
-		.b_noise(r_btn) ,
-		.b_clean(rb_clean_wire)
-	);
+// Button debouncer implemetation  
+LEDdebouncer ledDebounce_1(
+	.clk(CLKDV) ,
+	.reset(reset) ,
+	.b_noise(r_btn) ,
+	.b_clean(rb_clean_wire)
+); 
 
 LEDfourDigitDriver LEDdriver_0(
 	.reset(reset) ,

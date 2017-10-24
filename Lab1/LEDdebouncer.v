@@ -1,3 +1,6 @@
+//Denouncer module - Denounces the input button 
+//Nikolaos Koxenoglou 1711 
+`timescale 1ns / 1ps
 module LEDdebouncer(
 	clk,
 	reset,
@@ -11,8 +14,8 @@ module LEDdebouncer(
    reg [16:0] count;
    reg b_clean;
    
-	
-	always @(posedge clk, posedge reset) begin
+	// The always block xors the noisy signal with the clean signal 
+	always @(posedge clk or posedge reset) begin
 		if ( reset) begin
 			count <= 0;
 		end

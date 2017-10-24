@@ -1,3 +1,5 @@
+//LED decoder - 
+//Nikolaos Koxenoglou 1711
 `timescale 1ns / 1ps
 
 module LEDdecoder(

@@ -1,3 +1,5 @@
+//LED Driver module - Drives the state counter with the divided clock 
+//Nikolaos Koxenoglou 1711 
 `timescale 1ns / 1ps
 module LEDfourDigitDriver(
 	reset,
@@ -27,7 +29,7 @@ wire [7:0] LED;
 
 wire an3_out, an2_out, an1_out, an0_out;
 
-	always @(posedge clk, posedge reset) begin
+	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 		  state <= 4'b1111;
 		end else begin
