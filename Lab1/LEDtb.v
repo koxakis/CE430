@@ -5,7 +5,6 @@
 module tb_LEDsystem;
 reg clk;
 reg rst_p;
-reg r_btn;
 
 wire an3, an2, an1, an0;
 wire a, b, c, d, e, f, g, dp;
@@ -14,7 +13,6 @@ LEDsystem sys0
 (
 	.reset (rst_p),
 	.clk (clk),
-	.r_btn(r_btn),
 	.an3(an3),
 	.an2(an2),
 	.an1(an1),
@@ -36,7 +34,6 @@ initial begin
 	clk = 1'b1;
 	#10
 	rst_p = 1'b0;
-	r_btn = 1'b1;
 
 	#1000
 	$finish;

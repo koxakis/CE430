@@ -5,7 +5,6 @@ module LEDstateDriver(
 	clk,
 	reset,
 	state_in,
-	r_btn,
 	char_out,
 	an0_out,
 	an1_out,
@@ -14,17 +13,16 @@ module LEDstateDriver(
 );
 
 	input [3:0] state_in;
-	input r_btn, clk, reset;
+	input clk, reset;
 	
 	output reg [3:0] char_out;
 	output reg an3_out, an2_out, an1_out, an0_out;
 
 	wire [3:0] char_an0, char_an1, char_an2, char_an3;
 
-	LEDbtnRModule ledbtn_0(
+	LEDsimulatedButton led_sim_btn_0(
 		.clk(clk),
 		.reset(reset),
-		.r_btn(r_btn),
 		.char_an0(char_an0),
 		.char_an1(char_an1),
 		.char_an2(char_an2),

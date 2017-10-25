@@ -5,7 +5,6 @@
 module LEDsystem(
 	reset,
 	clk,
-	r_btn,
 	an3,
 	an2,
 	an1,
@@ -20,12 +19,11 @@ module LEDsystem(
 	dp	
 );
 
-input reset, clk,r_btn;
+input reset, clk;
 output an3, an2, an1, an0;
 output a, b, c, d, e, f, g, dp;
 
 wire rb_clean_wire;
-
 
 
 // DCM_SP: Digital Clock Manager
@@ -75,17 +73,18 @@ wire rb_clean_wire;
    // End of DCM_SP_inst instantiation
 
 // Button debouncer implemetation  
-LEDdebouncer ledDebounce_1(
+/* LEDdebouncer ledDebounce_1(
 	.clk(CLKDV) ,
 	.reset(reset) ,
 	.b_noise(r_btn) ,
 	.b_clean(rb_clean_wire)
-); 
+); */
+
+//Simulated button press 
 
 LEDfourDigitDriver LEDdriver_0(
 	.reset(reset) ,
 	.clk(CLKDV) ,
-	.r_btn(rb_clean_wire) ,
 	.an3(an3) ,
 	.an2(an2) ,
 	.an1(an1) ,

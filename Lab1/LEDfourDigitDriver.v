@@ -4,7 +4,6 @@
 module LEDfourDigitDriver(
 	reset,
 	clk,
-	r_btn,
 	an3,
 	an2,
 	an1,
@@ -19,15 +18,13 @@ module LEDfourDigitDriver(
 	dp	
 );
 
-input reset, clk, r_btn;
+input reset, clk;
 output wire an3, an2, an1, an0;
 output wire a, b, c, d, e, f, g, dp;
 
 wire [3:0] char;
 reg [3:0] state;
 wire [7:0] LED;
-
-wire an3_out, an2_out, an1_out, an0_out;
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
@@ -55,7 +52,6 @@ wire an3_out, an2_out, an1_out, an0_out;
 		.clk(clk),
 		.reset(reset),
 		.state_in(state),
-		.r_btn(r_btn),
 		.char_out(char),
 		.an0_out(an0),
 		.an1_out(an1),
