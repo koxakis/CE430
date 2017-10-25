@@ -42,6 +42,7 @@ module LEDbtnRModule(
 	end
 
 	// This always block resets the output characters to the first of the memory
+	// Convert thsi always to a counter always
 	always @(posedge clk or posedge reset) 
 	begin
 		if (reset) 
