@@ -48,7 +48,8 @@ module LEDsimulatedButton(
 			count <= 0;
 			index <= 0;
 		end else begin
-			if (count == 22'd100) 
+			//3125000 for 1 sec delay 
+			if (count == 22'b1011111010111100001000) 
 			begin
 				count <= 0;
 				index <= index + 1;
