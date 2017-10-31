@@ -1,4 +1,4 @@
-//LED right button module - keeps a message in a register memory and implements the right button behaviour  
+//LED right button module - keeps a message in a register memory and Increments the memory’s index that is controlled by a counter 
 //Nikolaos Koxenoglou 1711 
 `timescale 1ns / 1ps
 module LEDsimulatedButton(
@@ -48,7 +48,7 @@ module LEDsimulatedButton(
 			count <= 0;
 			index <= 0;
 		end else begin
-			//3125000 for 1 sec delay 
+			//1011111010111100001000 for 1 sec delay 
 			if (count == 22'b1011111010111100001000) 
 			begin
 				count <= 0;
