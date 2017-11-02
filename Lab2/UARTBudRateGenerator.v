@@ -1,5 +1,0 @@
-module UARTBudRateGenerator(
-
-);
-
-endmodule // UARTBudRateGenerator

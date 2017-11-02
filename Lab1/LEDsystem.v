@@ -73,12 +73,12 @@ wire rb_clean_wire;
    // End of DCM_SP_inst instantiation
 
 // Button debouncer implemetation  
-/* LEDdebouncer ledDebounce_1(
+ LEDdebouncer ledDebounce_1(
 	.clk(CLKDV) ,
 	.reset(reset) ,
 	.b_noise(r_btn) ,
 	.b_clean(rb_clean_wire)
-); */
+); 
 
 //Simulated button press 
 
