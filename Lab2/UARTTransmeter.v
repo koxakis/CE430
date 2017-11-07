@@ -36,17 +36,18 @@ module UARTTransmeter(
 				baud_count <= 0;
 				trans_en <= 0;
 			end else begin
-				if (baud_count == 16) begin
-					trans_en <= 1;
-					baud_count <= 0;
+				if (baud_enable) begin
+					baud_count <= baud_count + 1;
+					trans_en <= 0;
 				end else begin
-					if (baud_enable) begin
-						baud_count <= baud_count + 1;
+					if (baud_count == 16) begin
+						trans_en <= 1;
+						baud_count <= 0;
+					end else begin
 						trans_en <= 0;
+						//baud_count <= baud_count + 1;
 					end 
-				//baud_count <= baud_count;
-				//trans_en <= 0;
-				end	
+				end 
 			end	
 		end
 	end
