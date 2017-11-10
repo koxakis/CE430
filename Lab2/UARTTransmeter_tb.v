@@ -45,7 +45,7 @@ begin
 
 	#1000;
 
-	
+	Tx_WR = 0;
 
 
 end

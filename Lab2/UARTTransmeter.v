@@ -28,7 +28,7 @@ module UARTTransmeter(
 	reg state;
 	reg next_state;
 	reg [3:0] index;
-	reg flag;
+	reg char_to_send, flag;
 
 	UARTBaudController baud_controller_0(
 		.clk(clk),
@@ -79,7 +79,7 @@ module UARTTransmeter(
 		end
 	end
 
-	always @(state or reset or Tx_WR) begin
+	always @(state or reset or Tx_WR or char_to_send) begin
 
 		if (reset) begin
 			next_state <= IDLE;  
@@ -101,8 +101,9 @@ module UARTTransmeter(
 			  begin
 				if (flag) begin
 					next_state <= IDLE;  
+					Tx_D <= 1;
 				end else begin
-					//Tx_D <= char_to_send;
+					Tx_D <= char_to_send;
 					next_state <= TRANSMIDING;
 				end
 			  end
@@ -127,22 +128,25 @@ module UARTTransmeter(
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
-			//char_to_send <= 1;
+			char_to_send <= 1;
 			index <= 0;
 			flag <= 0;
 		end else begin
 			if (!Tx_WR) begin
-				baud_count <= 0;
-				trans_en <= 0;
+				char_to_send <= 1;
+				index <= 0;
+				flag <= 0;
 			end else begin
 				if (trans_en) begin
-					Tx_D <= data_to_send[index];
+					char_to_send <= data_to_send[index];
 					index <= index + 1;
 					flag <= 0;
 				end else begin
 					if (index == 11) begin
 						flag <= 1;
 						index <= 0;
+					end else begin
+						flag <= 0;
 					end
 				end
 			end
