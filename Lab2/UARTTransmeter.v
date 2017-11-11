@@ -10,7 +10,7 @@ module UARTTransmeter(
 );
 
 	parameter IDLE = 0;
-	parameter TRANSMIDING = 1;
+	parameter TRANSMITTING = 1;
 
 	input clk, reset;
 	input Tx_EN, Tx_WR;
@@ -39,7 +39,7 @@ module UARTTransmeter(
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
-			data_to_send <= 'b0;
+			data_to_send <= 11'b1;
 		end else begin
 			data_to_send[10] <= 1;
 			data_to_send[9] <= ^Tx_DATA ;
@@ -51,7 +51,8 @@ module UARTTransmeter(
 			data_to_send[3] <= Tx_DATA[2];
 			data_to_send[2] <= Tx_DATA[1];
 			data_to_send[1] <= Tx_DATA[0];
-			data_to_send[0] <= 0;
+			data_to_send[0] <= 0; 
+
 		end	  
 	end
 	
@@ -79,42 +80,40 @@ module UARTTransmeter(
 		end
 	end
 
-	always @(state or reset or Tx_WR or char_to_send) begin
+	always @(state or Tx_WR or char_to_send) begin
 
-		if (reset) begin
-			next_state <= IDLE;  
-		end else begin
-			case (state)
-			IDLE:
-		  	  begin
-				if (!Tx_WR) begin
-					Tx_BUSY <= 0;
-					Tx_D <= 1;
-					next_state <= IDLE;
-				end else begin
-					Tx_BUSY <= 1;
-					Tx_D <= 1;
-					next_state <= TRANSMIDING;
-				end
-			  end
-			TRANSMIDING:
-			  begin
-				if (flag) begin
-					next_state <= IDLE;  
-					Tx_D <= 1;
-				end else begin
-					Tx_D <= char_to_send;
-					next_state <= TRANSMIDING;
-				end
-			  end
-			default:
-			  begin
+		case (state)
+		IDLE:
+		  begin
+			if (!Tx_WR) begin
 				Tx_BUSY <= 0;
 				Tx_D <= 1;
 				next_state <= IDLE;
-		 	  end
-			endcase		 
-		end
+			end else begin
+				Tx_BUSY <= 1;
+				Tx_D <= 1;
+				next_state <= TRANSMITTING;
+			end
+		  end
+		TRANSMITTING:
+		  begin
+			if (flag) begin
+				next_state <= IDLE;  
+				Tx_D <= 1;
+				Tx_BUSY <= 1;
+			end else begin
+				Tx_BUSY <= 1;
+				Tx_D <= char_to_send;
+				next_state <= TRANSMITTING;
+			end
+		  end
+		default:
+		  begin
+			Tx_BUSY <= 0;
+			Tx_D <= 1;
+			next_state <= IDLE;
+		  end
+		endcase		 
 		
 	end
 
