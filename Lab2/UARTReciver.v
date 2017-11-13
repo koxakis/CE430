@@ -33,7 +33,7 @@ module UARTReciver(
 	reg start_reciving_flag, error_check_flag;
 	reg data_prossecing_done, data_recived_flag;
 	reg [3:0] index;
-	reg [4:0] trans_counter;
+	reg [3:0] trans_counter;
 
 
 	UARTBaudController baud_controller_0(

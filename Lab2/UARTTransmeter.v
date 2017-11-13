@@ -9,8 +9,8 @@ module UARTTransmeter(
   Tx_BUSY
 );
 
-	parameter IDLE = 0;
-	parameter TRANSMITTING = 1;
+	parameter IDLE = 1'b0;
+	parameter TRANSMITTING = 1'b1;
 
 	input clk, reset;
 	input Tx_EN, Tx_WR;
@@ -41,18 +41,19 @@ module UARTTransmeter(
 		if (reset) begin
 			data_to_send <= 11'b1;
 		end else begin
-			data_to_send[10] <= 1;
-			data_to_send[9] <= ^Tx_DATA ;
-			data_to_send[8] <= Tx_DATA[7];
-			data_to_send[7] <= Tx_DATA[6];
-			data_to_send[6] <= Tx_DATA[5];
-			data_to_send[5] <= Tx_DATA[4];
-			data_to_send[4] <= Tx_DATA[3];
-			data_to_send[3] <= Tx_DATA[2];
-			data_to_send[2] <= Tx_DATA[1];
-			data_to_send[1] <= Tx_DATA[0];
-			data_to_send[0] <= 0; 
-
+			if (Tx_WR) begin	
+				data_to_send[10] <= 1;
+				data_to_send[9] <= ^Tx_DATA ;
+				data_to_send[8] <= Tx_DATA[7];
+				data_to_send[7] <= Tx_DATA[6];
+				data_to_send[6] <= Tx_DATA[5];
+				data_to_send[5] <= Tx_DATA[4];
+				data_to_send[4] <= Tx_DATA[3];
+				data_to_send[3] <= Tx_DATA[2];
+				data_to_send[2] <= Tx_DATA[1];
+				data_to_send[1] <= Tx_DATA[0];
+				data_to_send[0] <= 0; 
+			end
 		end	  
 	end
 	
@@ -131,7 +132,7 @@ module UARTTransmeter(
 			index <= 0;
 			flag <= 0;
 		end else begin
-			if (!Tx_WR) begin
+			if (!Tx_BUSY) begin
 				char_to_send <= 1;
 				index <= 0;
 				flag <= 0;

@@ -47,7 +47,7 @@ always #(CLK_PERIOD/2) clk=~clk;
 initial 
 begin
 	clk = 1;
-	Tx_DATA = 8'b01010101;
+	Tx_DATA = 8'b00111010;
 	Tx_EN = 0;
 	Rx_EN = 0;
 	Tx_WR = 0;
@@ -62,12 +62,14 @@ begin
 	#100;
 
 	Tx_WR = 1;
-
-
-	#100000;
-
+	#10;
 	Tx_WR = 0;
+	#100000;
+	Tx_DATA = 8'b11101011;
 
+	Tx_WR = 1;
+	#10;
+	Tx_WR = 0;
 
 end
 
