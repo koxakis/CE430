@@ -28,26 +28,34 @@ always #(CLK_PERIOD/2) clk=~clk;
 initial 
 begin
 	clk = 1;
-	Tx_DATA = 8'b00111010;
 	Tx_EN = 0;
+	baud_in = 3'b111;
 	Tx_WR = 0;
 	rst_n = 1;
 	#10;
 	rst_n = 0;
-	#10;
-	baud_in = 3'b111;
-	Tx_EN = 1;
+	Tx_DATA = 8'b00001111;
+	Tx_WR = 1;
 	
+	#10;
+	Tx_WR = 0;
+	Tx_EN = 1;
+	#10
+	
+	#100000
+	Tx_WR = 1;
+	Tx_DATA = 8'b11101010;
+	#10;
+	Tx_WR = 0;
 	#100;
 
-	Tx_WR = 1;
 
 
 	#100000;
 
 	Tx_WR = 0;
 
-
+	$finish;
 end
 
 endmodule

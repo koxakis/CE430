@@ -21,7 +21,7 @@ module UARTTransmeter(
 
 	wire baud_enable;
 	reg trans_en;
-	reg [4:0] baud_count;
+	reg [3:0] baud_count;
 
 	reg [10:0] data_to_send;
 
@@ -69,11 +69,15 @@ module UARTTransmeter(
 				if (baud_enable) begin
 					baud_count <= baud_count + 1;
 					trans_en <= 0;
-				end else begin
-					if (baud_count == 16) begin
+					if (baud_count == 15) begin
 						trans_en <= 1;
 						baud_count <= 0;
-					end else begin
+					end
+				end else begin
+					if (baud_count == 0) begin
+					//	trans_en <= 1;
+						//baud_count <= 0;
+					//end else begin
 						trans_en <= 0;
 					end 
 				end 
@@ -81,8 +85,8 @@ module UARTTransmeter(
 		end
 	end
 
-	always @(state or Tx_WR or char_to_send) begin
-
+	//make sequential 
+	always @(state or Tx_WR or char_to_send or flag or Tx_BUSY) begin
 		case (state)
 		IDLE:
 		  begin
@@ -101,7 +105,7 @@ module UARTTransmeter(
 			if (flag) begin
 				next_state <= IDLE;  
 				Tx_D <= 1;
-				Tx_BUSY <= 1;
+				Tx_BUSY <= 0;
 			end else begin
 				Tx_BUSY <= 1;
 				Tx_D <= char_to_send;
@@ -114,8 +118,7 @@ module UARTTransmeter(
 			Tx_D <= 1;
 			next_state <= IDLE;
 		  end
-		endcase		 
-		
+		endcase	
 	end
 
 	always @(posedge clk or posedge reset) begin

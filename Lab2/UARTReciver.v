@@ -19,6 +19,8 @@ module UARTReciver(
 
 	input Rx_EN, Rx_D;
 
+	reg Rx_D_1st, Rx_D_2nd;
+
 	output reg Rx_PERROR, Rx_FERROR, Rx_VALID;
 	output reg [7:0] Rx_DATA;
 
@@ -26,12 +28,12 @@ module UARTReciver(
 
 	reg [1:0] state, next_state;
 	reg [10:0] data_to_check;
-	reg char_to_check;
 
-	reg end_bit, parity_to_check;
+	wire parity_to_check;
 
 	reg start_reciving_flag, error_check_flag;
 	reg data_prossecing_done, data_recived_flag;
+	reg f_error_flag;
 	reg [3:0] index;
 	reg [3:0] trans_counter;
 
@@ -43,8 +45,24 @@ module UARTReciver(
 		.sample_enable(baud_enable)
 	);
 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			Rx_D_1st <= 0;
+		end else begin
+		  	Rx_D_1st <= Rx_D;
+		end
+	end
+
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			Rx_D_2nd <= 0;
+		end else begin
+			Rx_D_2nd <= Rx_D_1st;
+		end
+	end
+
 	//reajast states 
-	always @(posedge clk) begin
+	always @(posedge clk or posedge reset) begin
 
 		if (reset) begin
 			start_reciving_flag <= 0;
@@ -68,9 +86,11 @@ module UARTReciver(
 			  begin
 			  	//if state is correct go to idle if not go to error state
 				if (data_recived_flag) begin
+					start_reciving_flag <= 0;
 					error_check_flag <= 1;
 					next_state <= ERROR_CHECK;
 				end else begin
+					start_reciving_flag <= 1;
 					error_check_flag <= 0;
 				  	next_state <= RECEIVING;
 				end	
@@ -78,8 +98,12 @@ module UARTReciver(
 			ERROR_CHECK:
 			  begin
 				if (data_prossecing_done) begin
+					start_reciving_flag <= 0;
+					error_check_flag <= 0;
 					next_state <= IDLE;
 				end else begin
+					start_reciving_flag <= 0;
+					error_check_flag <= 0;
 					next_state <= ERROR_CHECK;
 				end
 			  end
@@ -113,6 +137,7 @@ module UARTReciver(
 		  	index <= 0;
 			data_recived_flag <= 0;
 			trans_counter <= 0;
+			f_error_flag <= 0;
 		end else begin
 			if (!Rx_EN) begin
 				index <= 0;
@@ -120,6 +145,9 @@ module UARTReciver(
 			end else begin
 				if (!start_reciving_flag) begin
 					index <= 0;
+					if (data_prossecing_done) begin
+					  	f_error_flag <= 0;
+					end
 					data_recived_flag <= 0;
 				end else begin
 					if (baud_enable) begin
@@ -129,15 +157,19 @@ module UARTReciver(
 						end else begin
 							trans_counter <= trans_counter + 1; 
 						end
+						if (index == 0 && Rx_D) begin
+							f_error_flag <= 1;
+						end
+						if ((index == 10) && (~Rx_D)) begin
+							f_error_flag <= 1;
+						end
 						data_to_check[index] <= Rx_D;
-					end else begin
 						if (index == 11) begin
 							data_recived_flag <= 1;
-							index <= 0;
 						end else begin
 							data_recived_flag <= 0;
 						end
-					end
+					end 
 				end
 			end
 		end
@@ -146,10 +178,7 @@ module UARTReciver(
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			Rx_DATA <= 8'b000000000;
-			end_bit <= 0;
 		end else begin
-			end_bit <= data_to_check[10];  
-
 		  	Rx_DATA[7] <= data_to_check[8]; 
 			Rx_DATA[6] <= data_to_check[7];
 			Rx_DATA[5] <= data_to_check[6]; 
@@ -160,6 +189,9 @@ module UARTReciver(
 			Rx_DATA[0] <= data_to_check[1];  
 		end
 	end
+
+
+	assign parity_to_check = ^Rx_DATA; 
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
@@ -175,22 +207,20 @@ module UARTReciver(
 				Rx_VALID <= 0;
 				data_prossecing_done <= 0;
 			end else begin
-				if (!end_bit) begin
+				if (f_error_flag) begin
 					Rx_VALID <= 0;
 					Rx_FERROR <= 1;
 					data_prossecing_done <= 1;
+				end else if (data_to_check[9] != parity_to_check) begin					
+					Rx_VALID <= 0;
+					Rx_PERROR <= 1;
+					data_prossecing_done <= 1;
 				end else begin
-					parity_to_check <= ^Rx_DATA;
-					if (data_to_check[9] != parity_to_check) begin
-						Rx_VALID <= 0;
-						Rx_PERROR <= 1;
-						data_prossecing_done <= 1;
-					end else begin
-						Rx_VALID <= 1;
-						Rx_PERROR <= 0;
-						Rx_FERROR <= 0;
-						data_prossecing_done <= 1;
-					end
+					Rx_VALID <= 1;
+					Rx_FERROR <= 0;
+					Rx_PERROR <= 0;
+					data_prossecing_done <= 1;
+					//end
 				end
 			end
 		end
