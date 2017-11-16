@@ -37,8 +37,9 @@ module UARTReciver(
 	reg [3:0] index;
 	reg [3:0] trans_counter;
 
-
+	// Instansiate UARTBaudController for 20ns UARTBaudController_17clk for 15ns
 	UARTBaudController baud_controller_0(
+	//UARTBaudController_15clk baud_controller_1(
 		.clk(clk),
 		.reset(reset),
 		.baud_select(baud_select),
@@ -47,7 +48,7 @@ module UARTReciver(
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
-			Rx_D_1st <= 0;
+			Rx_D_1st <= 1;
 		end else begin
 		  	Rx_D_1st <= Rx_D;
 		end
@@ -55,7 +56,7 @@ module UARTReciver(
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
-			Rx_D_2nd <= 0;
+			Rx_D_2nd <= 1;
 		end else begin
 			Rx_D_2nd <= Rx_D_1st;
 		end
@@ -72,7 +73,8 @@ module UARTReciver(
 			case (state)
 			IDLE:
 			  begin
-				if (Rx_D) begin
+				//if (Rx_D) begin
+				if (Rx_D_2nd) begin
 					start_reciving_flag <= 0;
 					error_check_flag <= 0;
 					next_state <= IDLE;
@@ -157,13 +159,16 @@ module UARTReciver(
 						end else begin
 							trans_counter <= trans_counter + 1; 
 						end
-						if (index == 0 && Rx_D) begin
+						//if (index == 0 && Rx_D) begin
+						if (index == 0 && Rx_D_2nd) begin
 							f_error_flag <= 1;
 						end
-						if ((index == 10) && (~Rx_D)) begin
+						//if ((index == 10) && (~Rx_D)) begin
+						if ((index == 10) && (~Rx_D_2nd)) begin
 							f_error_flag <= 1;
 						end
-						data_to_check[index] <= Rx_D;
+						//data_to_check[index] <= Rx_D;
+						data_to_check[index] <= Rx_D_2nd;
 						if (index == 11) begin
 							data_recived_flag <= 1;
 						end else begin
@@ -220,7 +225,6 @@ module UARTReciver(
 					Rx_FERROR <= 0;
 					Rx_PERROR <= 0;
 					data_prossecing_done <= 1;
-					//end
 				end
 			end
 		end

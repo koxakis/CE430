@@ -75,9 +75,6 @@ module UARTTransmeter(
 					end
 				end else begin
 					if (baud_count == 0) begin
-					//	trans_en <= 1;
-						//baud_count <= 0;
-					//end else begin
 						trans_en <= 0;
 					end 
 				end 

@@ -2,6 +2,7 @@
 
 module UARTSystem_tb;
 reg clk;
+reg clk_2;
 reg rst_n;
 
 reg [2:0] baud_in;
@@ -29,7 +30,7 @@ UARTTransmeter uart_transmeter_0(
 );
 
 UARTReciver uart_reciver_0(
-	.clk(clk) ,
+	.clk(clk_2) ,
 	.reset(rst_n) ,
 	.baud_select(baud_in) ,
 	.Rx_EN(Rx_EN) ,
@@ -41,36 +42,42 @@ UARTReciver uart_reciver_0(
 );
 
 
-localparam CLK_PERIOD = 10;
+localparam CLK_PERIOD = 20;
 always #(CLK_PERIOD/2) clk=~clk;
+
+localparam CLK_PERIOD_2 = 20;
+always #(CLK_PERIOD_2/2) clk_2=~clk_2;
 
 initial 
 begin
 	clk = 1;
-	Tx_DATA = 8'b10111010;
-	Tx_EN = 0;
-	Rx_EN = 0;
+	clk_2 = 1;
+	Tx_EN = 1;
+	Rx_EN = 1;
+	Tx_DATA = 8'b11111110;
+	//Tx_EN = 0;
+	//Rx_EN = 0;
 	Tx_WR = 0;
 	rst_n = 1;
 	#10;
+	Tx_WR = 1;
 	rst_n = 0;
 	#10;
 	baud_in = 3'b111;
-	Tx_EN = 1;
-	Rx_EN = 1;
 	
 	#100;
 
-	Tx_WR = 1;
 	#10;
 	Tx_WR = 0;
-	#1000;
-	Tx_DATA = 8'b11101010;
+	
+	#1000000;
+	Tx_DATA = 8'b10111010;
+	Tx_WR = 1;
+	//Use the same delay as clk period 
+	#20;
+	Tx_WR = 0;
 
-	#100000;
-	Tx_WR = 1;
-	#10;
-	Tx_WR = 0;
+	$finish;
 
 end
 

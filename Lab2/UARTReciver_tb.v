@@ -34,7 +34,7 @@ initial begin
 	Rx_D = 1;
 
 	rst_n = 1;
-	#10
+	#20
 	rst_n = 0;
 	#100
 	baud_in = 3'b111;
@@ -59,13 +59,9 @@ initial begin
 	#4480
 		Rx_D = 1;   
 	#4480
-		Rx_D = 0; //parity  
+		Rx_D = 1; //parity  
 	#4480
 		Rx_D = 1; //stop  
-	#1000
-		Rx_D = 0;
-	#3480
-		Rx_D = 1;
 	#(4480 *5)
 
 	//1 1 11111011 0
