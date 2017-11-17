@@ -19,6 +19,7 @@ module UARTReciver(
 
 	input Rx_EN, Rx_D;
 
+	//Signals for the 2flip-flop synchronizer 
 	reg Rx_D_1st, Rx_D_2nd;
 
 	output reg Rx_PERROR, Rx_FERROR, Rx_VALID;
@@ -37,7 +38,7 @@ module UARTReciver(
 	reg [3:0] index;
 	reg [3:0] trans_counter;
 
-	// Instansiate UARTBaudController for 20ns UARTBaudController_17clk for 15ns
+	// Instantiate UARTBaudController for 20ns UARTBaudController_15clk for 15ns
 	UARTBaudController baud_controller_0(
 	//UARTBaudController_15clk baud_controller_1(
 		.clk(clk),
@@ -46,6 +47,8 @@ module UARTReciver(
 		.sample_enable(baud_enable)
 	);
 
+	/*Pass the input signal through 2flip-flops in order to synchronize with transmitter 
+        in case transmitter and receiver work with different clocks */
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			Rx_D_1st <= 1;
@@ -62,7 +65,7 @@ module UARTReciver(
 		end
 	end
 
-	//reajast states 
+	//Sequential clock based state machine
 	always @(posedge clk or posedge reset) begin
 
 		if (reset) begin
@@ -71,8 +74,11 @@ module UARTReciver(
 			next_state <= IDLE;
 		end else begin
 			case (state)
+			/*IDLE state is the state where the Receiver waits for the 
+				main channel to become 0 denoting the start bit */
 			IDLE:
 			  begin
+			  	//Use Rx_D in order to bypass the synchronizer 
 				//if (Rx_D) begin
 				if (Rx_D_2nd) begin
 					start_reciving_flag <= 0;
@@ -84,9 +90,9 @@ module UARTReciver(
 					next_state <= RECEIVING;
 				end	
 			  end
+			/*RECEIVING state is the state where the Receiver is receiving data*/
 			RECEIVING:
 			  begin
-			  	//if state is correct go to idle if not go to error state
 				if (data_recived_flag) begin
 					start_reciving_flag <= 0;
 					error_check_flag <= 1;
@@ -97,6 +103,8 @@ module UARTReciver(
 				  	next_state <= RECEIVING;
 				end	
 			  end
+			/*ERROR_CHECK state is the state where the received message is being 
+				error checked*/
 			ERROR_CHECK:
 			  begin
 				if (data_prossecing_done) begin
@@ -109,6 +117,7 @@ module UARTReciver(
 					next_state <= ERROR_CHECK;
 				end
 			  end
+			/*Completed states in order to avoid a latch*/
 			2'b11:
 			  begin
 			  	error_check_flag <= 0;
@@ -125,6 +134,7 @@ module UARTReciver(
 		end
 	end
 
+	//Sequential clock based state driver 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			state <= IDLE;
@@ -133,7 +143,7 @@ module UARTReciver(
 		end
 	end
 
-	//Ajaust logic of the transmeter to the resiver to sample and store
+	//RECEIVING state block
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 		  	index <= 0;
@@ -141,17 +151,20 @@ module UARTReciver(
 			trans_counter <= 0;
 			f_error_flag <= 0;
 		end else begin
+			//If the module enable signal is 0 do nothing 
 			if (!Rx_EN) begin
 				index <= 0;
 				data_recived_flag <= 0;
 			end else begin
+				//Don't start transmitting unless you have the start bit   
 				if (!start_reciving_flag) begin
 					index <= 0;
 					if (data_prossecing_done) begin
 					  	f_error_flag <= 0;
 					end
 					data_recived_flag <= 0;
-				end else begin
+				end else begin 
+					//Baud_enable is used to receive data data with the specified baud rate  
 					if (baud_enable) begin
 						if (trans_counter == 15) begin
 							index <= index + 1;
@@ -159,15 +172,21 @@ module UARTReciver(
 						end else begin
 							trans_counter <= trans_counter + 1; 
 						end
+						//Use Rx_D in order to bypass the synchronizer 
 						//if (index == 0 && Rx_D) begin
+						//If the start bit becomes 1 earlier than 16 cycles there is a framing error 
 						if (index == 0 && Rx_D_2nd) begin
 							f_error_flag <= 1;
 						end
+						//Use Rx_D in order to bypass the synchronizer 
 						//if ((index == 10) && (~Rx_D)) begin
+						//If the stop bit becomes 0 earlier than 16 cycles there is a framing error 
 						if ((index == 10) && (~Rx_D_2nd)) begin
 							f_error_flag <= 1;
 						end
+						//Use Rx_D in order to bypass the synchronizer 
 						//data_to_check[index] <= Rx_D;
+						//Sample 16 times per transmeter cycle 
 						data_to_check[index] <= Rx_D_2nd;
 						if (index == 11) begin
 							data_recived_flag <= 1;
@@ -180,6 +199,7 @@ module UARTReciver(
 		end
 	end
 
+	//Assign 8-bit message to the output regs
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			Rx_DATA <= 8'b000000000;
@@ -196,8 +216,10 @@ module UARTReciver(
 	end
 
 
+	//Parity bit calculation for the receiver end
 	assign parity_to_check = ^Rx_DATA; 
 
+	//ERROR_CHECK state block
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 		  	Rx_FERROR <= 0;
@@ -205,21 +227,24 @@ module UARTReciver(
 			Rx_VALID <= 0;
 			data_prossecing_done <= 0;
 		end else begin
-		  	//perform all checks on the gathered data and output the correct signal
+			//Don't start error checking unless all data has been received 
 			if (!error_check_flag) begin
 				Rx_FERROR <= 0;
 				Rx_PERROR <= 0;
 				Rx_VALID <= 0;
 				data_prossecing_done <= 0;
 			end else begin
+				//If flag is 1 then a framing-error has occurred  
 				if (f_error_flag) begin
 					Rx_VALID <= 0;
 					Rx_FERROR <= 1;
 					data_prossecing_done <= 1;
+				//If flag is 1 then a parity mismatch has occurred 
 				end else if (data_to_check[9] != parity_to_check) begin					
 					Rx_VALID <= 0;
 					Rx_PERROR <= 1;
 					data_prossecing_done <= 1;
+				//If no flag is 1 then the message is correct and the Rx_VALID is 1 
 				end else begin
 					Rx_VALID <= 1;
 					Rx_FERROR <= 0;
