@@ -1,3 +1,4 @@
+//Module used for FPGA implementation 
 module UARTSystem(
 	clk,
 	reset,

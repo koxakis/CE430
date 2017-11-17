@@ -55,8 +55,6 @@ begin
 	Tx_EN = 1;
 	Rx_EN = 1;
 	Tx_DATA = 8'b11111110;
-	//Tx_EN = 0;
-	//Rx_EN = 0;
 	Tx_WR = 0;
 	rst_n = 1;
 	#10;

@@ -30,6 +30,7 @@ module UARTTransmeter(
 	reg [3:0] index;
 	reg char_to_send, data_transmitting_done;
 
+	//Baud controller instantiation  
 	UARTBaudController baud_controller_0(
 		.clk(clk),
 		.reset(reset),
@@ -37,6 +38,10 @@ module UARTTransmeter(
 		.sample_enable(baud_enable)
 	);
 
+	/*Prepair the 11-bit vector to send and assign only on wirte enable signal Tx_WR
+		10        9           8 7 6 5 4 3 2 1  0
+		stop bit| parity bit| message bits |   start bit
+		*/
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			data_to_send <= 11'b1;
@@ -57,6 +62,7 @@ module UARTTransmeter(
 		end	  
 	end
 	
+	//Take the baud rate and reduce it 16 times e.g. 1 transmitter cycle = 16 receiver cycles
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			baud_count <= 0;
@@ -82,9 +88,10 @@ module UARTTransmeter(
 		end
 	end
 
-	//make sequential 
+	//Combinational state machine  
 	always @(state or Tx_WR or char_to_send or data_transmitting_done or Tx_BUSY) begin
 		case (state)
+		/*IDLE is the state where the transmitter is waiting for the write enable signal*/
 		IDLE:
 		  begin
 			if (!Tx_WR) begin
@@ -97,6 +104,8 @@ module UARTTransmeter(
 				next_state <= TRANSMITTING;
 			end
 		  end
+		/*TRANSMITTING is the state where the transmitter is transmitting the 11-bit vector 
+            containing the message and other signals to the receiver */
 		TRANSMITTING:
 		  begin
 			if (data_transmitting_done) begin
@@ -118,6 +127,7 @@ module UARTTransmeter(
 		endcase	
 	end
 
+	//Sequential clock based state driver 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			state <= IDLE;  
@@ -126,22 +136,26 @@ module UARTTransmeter(
 		end
 	end	
 
+	//TRANSMITTING state block
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			char_to_send <= 1;
 			index <= 0;
 			data_transmitting_done <= 0;
 		end else begin
+			//If the transmitter enters a busy state start transmitting 
 			if (!Tx_BUSY) begin
 				char_to_send <= 1;
 				index <= 0;
 				data_transmitting_done <= 0;
 			end else begin
+				//Use the divided counter as transmition clock
 				if (trans_en) begin
 					char_to_send <= data_to_send[index];
 					index <= index + 1;
 					data_transmitting_done <= 0;
 				end else begin
+					//If index is 11 then all data has been transmitted  
 					if (index == 11) begin
 						data_transmitting_done <= 1;
 						index <= 0;

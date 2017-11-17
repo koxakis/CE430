@@ -14,6 +14,8 @@ module UARTBaudController(
 	
 	reg [15:0] counter;
 
+	/*Max counter values have been calculated with this equation 
+		max_counter = ((1/Baud_rate*10^9)/clock_period)/16 */ 
 	always @(baud_select) begin
 		case (baud_select)
 		3'b000: begin
@@ -46,6 +48,8 @@ module UARTBaudController(
 		endcase	
 	end
 
+	/*Create a sample enable at when the counter reaches the desired max value 
+		that represents a specific baud_rate*/
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			counter <= 'b0;

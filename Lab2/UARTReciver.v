@@ -74,7 +74,7 @@ module UARTReciver(
 			next_state <= IDLE;
 		end else begin
 			case (state)
-			/*IDLE state is the state where the Receiver waits for the 
+			/*IDLE is the state where the Receiver waits for the 
 				main channel to become 0 denoting the start bit */
 			IDLE:
 			  begin
@@ -90,7 +90,7 @@ module UARTReciver(
 					next_state <= RECEIVING;
 				end	
 			  end
-			/*RECEIVING state is the state where the Receiver is receiving data*/
+			/*RECEIVING is the state where the Receiver is receiving data*/
 			RECEIVING:
 			  begin
 				if (data_recived_flag) begin
@@ -103,7 +103,7 @@ module UARTReciver(
 				  	next_state <= RECEIVING;
 				end	
 			  end
-			/*ERROR_CHECK state is the state where the received message is being 
+			/*ERROR_CHECK is the state where the received message is being 
 				error checked*/
 			ERROR_CHECK:
 			  begin
@@ -166,6 +166,7 @@ module UARTReciver(
 				end else begin 
 					//Baud_enable is used to receive data data with the specified baud rate  
 					if (baud_enable) begin
+						//Count 16 cycles for transmitter next transition
 						if (trans_counter == 15) begin
 							index <= index + 1;
 							trans_counter <= 0;
@@ -188,6 +189,7 @@ module UARTReciver(
 						//data_to_check[index] <= Rx_D;
 						//Sample 16 times per transmeter cycle 
 						data_to_check[index] <= Rx_D_2nd;
+						//IF the index is 11 then all data has been received 
 						if (index == 11) begin
 							data_recived_flag <= 1;
 						end else begin
