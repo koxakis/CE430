@@ -16,10 +16,11 @@ module LEDsystem(
 	e,
 	f,
 	g,
-	dp	
+	dp,
+	r_btn
 );
 
-input reset, clk;
+input reset, clk, r_btn;
 output an3, an2, an1, an0;
 output a, b, c, d, e, f, g, dp;
 
@@ -96,6 +97,7 @@ LEDfourDigitDriver LEDdriver_0(
 	.e(e) ,
 	.f(f) ,
 	.g(g) ,
-	.dp(dp)	
+	.dp(dp),
+	.r_btn(r_btn)	
 );
 endmodule // LEDsystem

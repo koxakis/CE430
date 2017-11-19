@@ -15,10 +15,11 @@ module LEDfourDigitDriver(
 	e,
 	f,
 	g,
-	dp	
+	dp,
+	r_btn	
 );
 
-input reset, clk;
+input reset, clk, r_btn;
 output wire an3, an2, an1, an0;
 output wire a, b, c, d, e, f, g, dp;
 
@@ -56,7 +57,8 @@ wire [7:0] LED;
 		.an0_out(an0),
 		.an1_out(an1),
 		.an2_out(an2),
-		.an3_out(an3)
+		.an3_out(an3),
+		.r_btn(r_btn)
 	);
 
 endmodule // LEDfourDigitDriver

@@ -9,16 +9,18 @@ module LEDstateDriver(
 	an0_out,
 	an1_out,
 	an2_out,
-	an3_out	
+	an3_out,
+	r_btn
 );
 
 	input [3:0] state_in;
 	input clk, reset;
-	
+	input r_btn;
 	output reg [3:0] char_out;
 	output reg an3_out, an2_out, an1_out, an0_out;
 
 	wire [3:0] char_an0, char_an1, char_an2, char_an3;
+	
 	/*
 	LEDsimulatedButton led_sim_btn_0(
 		.clk(clk),
@@ -32,11 +34,11 @@ module LEDstateDriver(
 		.clk(clk),
 		.reset(reset),
 		.r_btn(r_btn),
-		char_an0,
-		char_an1,
-		char_an2,
-		char_an3
-	);
+		.char_an0(char_an0),
+		.char_an1(char_an1),
+		.char_an2(char_an2),
+		.char_an3(char_an3)
+	); 
 
 	// Change the char assignment state to two cycles before the respected ANn
 	always @ ( state_in or char_an0 or char_an1 or char_an2 or char_an3) 
