@@ -45,6 +45,7 @@ UARTReciver uart_reciver_0(
 localparam CLK_PERIOD = 20;
 always #(CLK_PERIOD/2) clk=~clk;
 
+//Use clk_2 to simulate a module working on a different clock 
 localparam CLK_PERIOD_2 = 20;
 always #(CLK_PERIOD_2/2) clk_2=~clk_2;
 

@@ -11,7 +11,7 @@ reg Tx_EN, Tx_WR;
 
 wire Tx_BUSY, Tx_D;
 
-UARTSystem uart_system_0(
+ UARTTransmeter uart_transmitter_0(
 	.clk(clk) ,
 	.reset(rst_n) ,
 	.Tx_DATA(Tx_DATA) ,

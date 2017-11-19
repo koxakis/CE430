@@ -59,7 +59,7 @@ initial begin
 	#4480
 		Rx_D = 1;   
 	#4480
-		Rx_D = 0; //parity  
+		Rx_D = 1; //parity  
 	#4480
 		Rx_D = 1; //stop  
 	#(4480 *5)

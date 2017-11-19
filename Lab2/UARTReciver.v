@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////
+//Module : UART Receiver
+//File : UARTReciver.v
+//Discreption : Receive an 11-bit messagge and error check
+////////////////////////////////////////////////////
 module UARTReciver(
 	clk,
 	reset,
@@ -159,6 +164,7 @@ module UARTReciver(
 				//Don't start transmitting unless you have the start bit   
 				if (!start_reciving_flag) begin
 					index <= 0;
+					//Reset the f_error_flag for next message
 					if (data_prossecing_done) begin
 					  	f_error_flag <= 0;
 					end

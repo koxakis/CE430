@@ -1,4 +1,9 @@
-//Module used for FPGA implementation 
+////////////////////////////////////////////////////
+//Module : UART System
+//File : UARTSystem.v
+//Discreption : Top system module to connect transmitter and receiver in 
+//					order to implement on a FPGA
+////////////////////////////////////////////////////
 module UARTSystem(
 	clk,
 	reset,

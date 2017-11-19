@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////
+//Module : UART Baud Controller
+//File : UARTBaudController.v
+//Discreption : Produce a pulse at a given rate - clock 20ns
+////////////////////////////////////////////////////
 module UARTBaudController(
 	clk,
 	reset,
