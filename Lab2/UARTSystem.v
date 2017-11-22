@@ -10,9 +10,27 @@ module UARTSystem(
 	Tx_DATA,
 	Tx_WR,
 	Rx_DATA,
+	an0,
+	an1,
+	an2,
+	an3,
+	a,
+	b,
+	c,
+	d,
+	e,
+	f,
+	g,
+	dp,
+	r_btn
 );
 
 	input clk, reset;
+
+	input r_btn;
+	output an3, an2, an1, an0;
+	output a, b, c, d, e, f, g, dp;
+
 
 	input [7:0] Tx_DATA;
 	output [7:0] Rx_DATA;
@@ -51,6 +69,24 @@ module UARTSystem(
 		.Rx_DATA(Rx_DATA) ,
 		.Rx_VALID(Rx_VALID) ,
 		.Rx_D (Tx_D)
+	);
+
+	LEDsystem led_system_0 (
+		.reset(reset),
+		.clk(clk),
+		.an3(an3),
+		.an2(an2),
+		.an1(an1),
+		.an0(an0),
+		.a(a),
+		.b(b),
+		.c(c),
+		.d(d),
+		.e(e),
+		.f(f),
+		.g(g),
+		.dp(dp),
+		.r_btn(r_btn)
 	);
 
 endmodule // UARTSystem

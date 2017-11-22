@@ -98,6 +98,6 @@ LEDfourDigitDriver LEDdriver_0(
 	.f(f) ,
 	.g(g) ,
 	.dp(dp),
-	.r_btn(r_btn)	
+	.r_btn(rb_clean_wire)	
 );
 endmodule // LEDsystem
