@@ -16,12 +16,16 @@ module LEDfourDigitDriver(
 	f,
 	g,
 	dp,
-	r_btn	
+	r_btn,
+	Rx_DATA
 );
 
 input reset, clk, r_btn;
+
 output wire an3, an2, an1, an0;
 output wire a, b, c, d, e, f, g, dp;
+
+input [7:0] Rx_DATA;
 
 wire [3:0] char;
 reg [3:0] state;
@@ -58,7 +62,8 @@ wire [7:0] LED;
 		.an1_out(an1),
 		.an2_out(an2),
 		.an3_out(an3),
-		.r_btn(r_btn)
+		.r_btn(r_btn),
+		.Rx_DATA(Rx_DATA)
 	);
 
 endmodule // LEDfourDigitDriver

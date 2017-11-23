@@ -10,12 +10,16 @@ module LEDstateDriver(
 	an1_out,
 	an2_out,
 	an3_out,
-	r_btn
+	r_btn,
+	Rx_DATA
 );
 
 	input [3:0] state_in;
 	input clk, reset;
 	input r_btn;
+
+	input [7:0] Rx_DATA;
+
 	output reg [3:0] char_out;
 	output reg an3_out, an2_out, an1_out, an0_out;
 
@@ -51,7 +55,9 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an0;
+					//char_out = char_an0;
+					char_out = Rx_DATA[3:0];
+
 				end 
 			4'b0001:
 				begin
@@ -60,7 +66,9 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an0;
+					//char_out = char_an0;
+					char_out = Rx_DATA[3:0];
+
 				end
 			4'b0010:
 				begin
@@ -69,7 +77,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an0;
+					//char_out = char_an0;
+					char_out = Rx_DATA[3:0];
 				end 
 			4'b0011:
 				begin
@@ -78,7 +87,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an1;
+					//char_out = char_an1;
+					char_out = Rx_DATA[3:0];
 				end 
 			4'b0100:
 				begin
@@ -87,7 +97,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an1;
+					//char_out = char_an1;
+					char_out = Rx_DATA[3:0];
 				end 
 			4'b0101:
 				begin
@@ -96,7 +107,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an1;
+					//char_out = char_an1;
+					char_out = Rx_DATA[3:0];
 				end 
 			4'b0110:
 				begin
@@ -105,8 +117,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an1;
-
+					//char_out = char_an1;
+					char_out = Rx_DATA[3:0];
 				end
 			4'b0111:
 				begin
@@ -115,7 +127,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an2;
+					//char_out = char_an2;
+					char_out = Rx_DATA[7:4];
 				end
 			4'b1000:
 				begin
@@ -124,7 +137,9 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an2;
+					//char_out = char_an2;
+					char_out = Rx_DATA[7:4];
+
 				end 
 			4'b1001:
 				begin
@@ -133,7 +148,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an2;
+					//char_out = char_an2;
+					char_out = Rx_DATA[7:4];
 				end 
 			4'b1010: 
 				begin
@@ -142,7 +158,8 @@ module LEDstateDriver(
 					an2_out = 0;
 					an3_out = 1;
 
-					char_out = char_an2;
+					//char_out = char_an2;
+					char_out = Rx_DATA[7:4];
 				end
 			4'b1011:
 				begin
@@ -151,7 +168,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an3;
+					//char_out = char_an3;
+					char_out = Rx_DATA[7:4];
 				end 
 			4'b1100:
 				begin
@@ -160,7 +178,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an3;
+					//char_out = char_an3;
+					char_out = Rx_DATA[7:4];
 				end 
 			4'b1101:
 				begin
@@ -169,7 +188,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an3;
+					//char_out = char_an3;
+					char_out = Rx_DATA[7:4];
 				end 
 				
 			4'b1110: 
@@ -179,7 +199,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 0;
 
-					char_out = char_an3;
+					//char_out = char_an3;
+					char_out = Rx_DATA[7:4];
 				end
 			4'b1111:
 				begin
@@ -188,7 +209,8 @@ module LEDstateDriver(
 					an2_out = 1;
 					an3_out = 1;
 
-					char_out = char_an0;
+					//char_out = char_an0;
+					char_out = Rx_DATA[3:0];
 				end 
 			default:
 				begin

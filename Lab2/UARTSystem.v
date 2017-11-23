@@ -9,7 +9,7 @@ module UARTSystem(
 	reset,
 	Tx_DATA,
 	Tx_WR,
-	Rx_DATA,
+	//Rx_DATA,
 	an0,
 	an1,
 	an2,
@@ -33,7 +33,7 @@ module UARTSystem(
 
 
 	input [7:0] Tx_DATA;
-	output [7:0] Rx_DATA;
+	wire [7:0] Rx_DATA;
 
 	wire [2:0] baud_select;
 	wire Tx_EN,  Rx_EN; 
@@ -42,7 +42,6 @@ module UARTSystem(
 	wire Tx_BUSY;
 	wire Tx_D;
 	wire Rx_PERROR, Rx_FERROR, Rx_VALID;
-
 
 	assign Tx_EN = 1;
 	assign Rx_EN = 1;
@@ -70,6 +69,7 @@ module UARTSystem(
 		.Rx_VALID(Rx_VALID) ,
 		.Rx_D (Tx_D)
 	);
+	
 
 	LEDsystem led_system_0 (
 		.reset(reset),
@@ -86,7 +86,8 @@ module UARTSystem(
 		.f(f),
 		.g(g),
 		.dp(dp),
-		.r_btn(r_btn)
+		.r_btn(r_btn),
+		.Rx_DATA(Rx_DATA)
 	);
 
 endmodule // UARTSystem

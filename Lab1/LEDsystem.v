@@ -17,7 +17,8 @@ module LEDsystem(
 	f,
 	g,
 	dp,
-	r_btn
+	r_btn,
+	Rx_DATA
 );
 
 input reset, clk, r_btn;
@@ -25,6 +26,7 @@ output an3, an2, an1, an0;
 output a, b, c, d, e, f, g, dp;
 
 wire rb_clean_wire;
+input [7:0] Rx_DATA;
 
 
 // DCM_SP: Digital Clock Manager
@@ -98,6 +100,7 @@ LEDfourDigitDriver LEDdriver_0(
 	.f(f) ,
 	.g(g) ,
 	.dp(dp),
-	.r_btn(rb_clean_wire)	
+	.r_btn(rb_clean_wire),
+	.Rx_DATA(Rx_DATA)
 );
 endmodule // LEDsystem

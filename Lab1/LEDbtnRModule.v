@@ -24,14 +24,14 @@ module LEDbtnRModule(
 		begin
 			message[0] <= 4'h0;
 			message[1] <= 4'h1;
-			message[2] <= 4'h2;
-			message[3] <= 4'h3;
-			message[4] <= 4'h4;
-			message[5] <= 4'h5;
-			message[6] <= 4'h6;
-			message[7] <= 4'h7;
-			message[8] <= 4'h8;
-			message[9] <= 4'h9;
+			message[2] <= 4'h3;
+			message[3] <= 4'h4;
+			message[4] <= 4'h5;
+			message[5] <= 4'h6;
+			message[6] <= 4'h7;
+			message[7] <= 4'h8;
+			message[8] <= 4'h9;
+			message[9] <= 4'h0;
 			message[10] <= 4'ha;
 			message[11] <= 4'hb;
 			message[12] <= 4'hc;
