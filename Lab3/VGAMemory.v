@@ -1,12 +1,23 @@
 module VGAMemory(
 	reset,
 	clk,
-	pixel_addr,
-	red_out,
-	green_out,
-	blue_out1
+	pixel_addr_a,
+	pixel_addr_b,
+	red_out_p1,
+	green_out_p1,
+	blue_out_p1,
+	red_out_p2,
+	green_out_p2,
+	blue_out_p2
 );
 
+	input reset, clk;
+	input [13:0] pixel_addr_a;
+	input [13:0] pixel_addr_b;
+
+
+	output [31:0] red_out_p1, green_out_p1, blue_out_p1;
+	output [31:0] red_out_p2, green_out_p2, blue_out_p2;
 	//Red color memory 
 
 	// RAMB16BWER: 16k-bit Data and 2k-bit Parity Configurable Synchronous Dual Port Block RAM with Optional Output Registers
@@ -15,8 +26,8 @@ module VGAMemory(
 
    RAMB16BWER #(
       // DATA_WIDTH_A/DATA_WIDTH_B: 0, 1, 2, 4, 9, 18, or 36
-      .DATA_WIDTH_A(0),
-      .DATA_WIDTH_B(0),
+      .DATA_WIDTH_A(36),
+      .DATA_WIDTH_B(36),
       // DOA_REG/DOB_REG: Optional output register (0 or 1)
       .DOA_REG(0),
       .DOB_REG(0),
@@ -33,64 +44,65 @@ module VGAMemory(
       .INITP_06(256'h0000000000000000000000000000000000000000000000000000000000000000),
       .INITP_07(256'h0000000000000000000000000000000000000000000000000000000000000000),
     // INIT_00 to INIT_3F: Initial memory contents.
-		//Start of red-white alternate lines (2 lines per line) 
-      .INIT_00(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_01(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_02(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_03(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_04(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_05(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_06(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_07(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-		//End of first set of red lines
-		//Start of green-white alternate lines (2 lines per line) 
-      .INIT_08(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_09(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0A(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0B(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0C(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0D(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0E(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0F(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-	  	//End of first set of green lines
-		//Start of blue-white alternate lines (2 lines per line) 
-      .INIT_10(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_11(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_12(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_13(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_14(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_15(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_16(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_17(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
+		//Start of red-white alternate lines (2 lines per line 12 in total) 
+		//			00ff		  000c0				0080				0040		0000
+      .INIT_00(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_01(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_02(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_03(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_04(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_05(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_06(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_07(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_08(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_09(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0A(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+	  .INIT_0B(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+	  	//End of first set of red lines
+		//Start of green-white alternate lines (2 lines per line 12 in total) 
+      .INIT_0C(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0D(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0E(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0F(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_10(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_11(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_12(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_13(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_14(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_15(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_16(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+	  .INIT_17(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+		//End of first set of green lines
+		//Start of blue-white alternate lines (2 lines per line 12 in total) 
+      .INIT_18(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_19(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1A(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1B(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1C(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1D(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1E(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1F(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_20(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_21(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_22(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_23(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
 	  	//End of first set of blue lines
-		//Start of black with rgb vertical alternate lines (2 lines per line) 
-      .INIT_18(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_19(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_1A(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_1B(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_1C(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_1D(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_1E(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_1F(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_20(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-
-      .INIT_21(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_22(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_23(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_24(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_25(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_26(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_27(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_28(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_29(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_2A(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_2B(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_2C(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_2D(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_2E(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_2F(256'h00000000000000000000000000000000_00000000000000000000000000000000),
-      .INIT_30(256'h00000000000000000000000000000000_00000000000000000000000000000000),
+		//Start of black with rgb vertical alternate lines (2 lines per line 12 in total) 
+      .INIT_24(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_25(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_26(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_27(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_28(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_29(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_2A(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_2B(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_2C(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_2D(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_2E(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+      .INIT_2F(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
+	  //			00ff		  000c0				0080				0040		0000
 	  //End of image 
+      .INIT_30(256'h00000000000000000000000000000000_00000000000000000000000000000000),
       .INIT_31(256'h00000000000000000000000000000000_00000000000000000000000000000000),
       .INIT_32(256'h00000000000000000000000000000000_00000000000000000000000000000000),
       .INIT_33(256'h00000000000000000000000000000000_00000000000000000000000000000000),
@@ -129,31 +141,31 @@ module VGAMemory(
    )
    VGA_RED_memory_inst (
       // Port A Data: 32-bit (each) output: Port A data
-      .DOA(DOA),       // 32-bit output: A port data output
-      .DOPA(DOPA),     // 4-bit output: A port parity output
+      .DOA(red_out_p1),       // 32-bit output: A port data output
+      //.DOPA(DOPA),     // 4-bit output: A port parity output
       // Port B Data: 32-bit (each) output: Port B data
-      .DOB(DOB),       // 32-bit output: B port data output
-      .DOPB(DOPB),     // 4-bit output: B port parity output
+      .DOB(red_out_p2),       // 32-bit output: B port data output
+      //.DOPB(DOPB),     // 4-bit output: B port parity output
       // Port A Address/Control Signals: 14-bit (each) input: Port A address and control signals
-      .ADDRA(ADDRA),   // 14-bit input: A port address input
+      .ADDRA(pixel_addr_a),   // 14-bit input: A port address input
       .CLKA(clk),     // 1-bit input: A port clock input
-      .ENA(ENA),       // 1-bit input: A port enable input
-      .REGCEA(REGCEA), // 1-bit input: A port register clock enable input
+      .ENA(1'b1),       // 1-bit input: A port enable input
+      .REGCEA(1'b1), // 1-bit input: A port register clock enable input
       .RSTA(reset),     // 1-bit input: A port register set/reset input
-      .WEA(WEA),       // 4-bit input: Port A byte-wide write enable input
+      .WEA(4'b0000),       // 4-bit input: Port A byte-wide write enable input
       // Port A Data: 32-bit (each) input: Port A data
-      .DIA(DIA),       // 32-bit input: A port data input
-      .DIPA(DIPA),     // 4-bit input: A port parity input
+      //.DIA(DIA),       // 32-bit input: A port data input
+      //.DIPA(DIPA),     // 4-bit input: A port parity input
       // Port B Address/Control Signals: 14-bit (each) input: Port B address and control signals
-      .ADDRB(ADDRB),   // 14-bit input: B port address input
-      .CLKB(CLKB),     // 1-bit input: B port clock input
-      .ENB(ENB),       // 1-bit input: B port enable input
-      .REGCEB(REGCEB), // 1-bit input: B port register clock enable input
-      .RSTB(RSTB),     // 1-bit input: B port register set/reset input
-      .WEB(WEB),       // 4-bit input: Port B byte-wide write enable input
+      .ADDRB(pixel_addr_b),   // 14-bit input: B port address input
+      .CLKB(clk),     // 1-bit input: B port clock input
+      .ENB(1'b1),       // 1-bit input: B port enable input
+      .REGCEB(1'b1), // 1-bit input: B port register clock enable input
+      .RSTB(reset),     // 1-bit input: B port register set/reset input
+      .WEB(4'b0000)       // 4-bit input: Port B byte-wide write enable input
       // Port B Data: 32-bit (each) input: Port B data
-      .DIB(DIB),       // 32-bit input: B port data input
-      .DIPB(DIPB)      // 4-bit input: B port parity input
+      //.DIB(DIB),       // 32-bit input: B port data input
+      //.DIPB(DIPB)      // 4-bit input: B port parity input
    );
 
    // End of RAMB16BWER_inst instantiation
@@ -166,8 +178,8 @@ module VGAMemory(
 
    RAMB16BWER #(
       // DATA_WIDTH_A/DATA_WIDTH_B: 0, 1, 2, 4, 9, 18, or 36
-      .DATA_WIDTH_A(0),
-      .DATA_WIDTH_B(0),
+      .DATA_WIDTH_A(36),
+      .DATA_WIDTH_B(36),
       // DOA_REG/DOB_REG: Optional output register (0 or 1)
       .DOA_REG(0),
       .DOB_REG(0),
@@ -184,62 +196,64 @@ module VGAMemory(
       .INITP_06(256'h0000000000000000000000000000000000000000000000000000000000000000),
       .INITP_07(256'h0000000000000000000000000000000000000000000000000000000000000000),
       // INIT_00 to INIT_3F: Initial memory contents.
-	  	//Start of red-white alternate lines (2 lines per line) 
-      .INIT_00(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_01(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_02(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_03(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_04(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_05(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_06(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_07(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-		//End of first set of red lines
-		//Start of green-white alternate lines (2 lines per line) 
-      .INIT_08(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_09(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_0A(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_0B(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_0C(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_0D(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_0E(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_0F(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-	  	//End of first set of green lines
-		//Start of blue-white alternate lines (2 lines per line) 
-      .INIT_10(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_11(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_12(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_13(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_14(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_15(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_16(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_17(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-		//End of first set of blue lines
-		//Start of black with rgb vertical alternate lines (2 lines per line) 
-      .INIT_18(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_19(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1A(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1B(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1C(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1D(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1E(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1F(256'h0000000000000000000000000000000000000000000000000000000000000000),
-
-      .INIT_20(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_21(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_22(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_23(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_24(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_25(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_26(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_27(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_28(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_29(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2A(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2B(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2C(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2D(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2E(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2F(256'h0000000000000000000000000000000000000000000000000000000000000000),
+		//Start of red-white alternate lines (2 lines per line 12 in total) 
+		//			00ff		  000c0				0080				0040		0000
+      .INIT_00(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_01(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_02(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_03(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_04(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_05(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_06(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_07(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_08(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_09(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0A(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+	  .INIT_0B(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+	  	//End of first set of red lines
+		//Start of green-white alternate lines (2 lines per line 12 in total) 
+      .INIT_0C(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0D(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0E(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0F(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_10(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_11(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_12(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_13(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_14(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_15(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_16(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+	  .INIT_17(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+		//End of first set of green lines
+		//Start of blue-white alternate lines (2 lines per line 12 in total) 
+      .INIT_18(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_19(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1A(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1B(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1C(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1D(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1E(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1F(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_20(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_21(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_22(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_23(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+	  	//End of first set of blue lines
+		//Start of black with rgb vertical alternate lines (2 lines per line 12 in total) 
+      .INIT_24(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_25(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_26(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_27(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_28(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_29(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_2A(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_2B(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_2C(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_2D(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_2E(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+      .INIT_2F(256'ha666666666666666_6666666666666666_2444444444444444_4444444444444444),
+	  	//			00ff		  000c0				0080				0040		0000
+	  //End of image 
       .INIT_30(256'h0000000000000000000000000000000000000000000000000000000000000000),
       .INIT_31(256'h0000000000000000000000000000000000000000000000000000000000000000),
       .INIT_32(256'h0000000000000000000000000000000000000000000000000000000000000000),
@@ -279,31 +293,31 @@ module VGAMemory(
    )
    VGA_GREEN_memory_inst (
       // Port A Data: 32-bit (each) output: Port A data
-      .DOA(DOA),       // 32-bit output: A port data output
-      .DOPA(DOPA),     // 4-bit output: A port parity output
+      .DOA(green_out_p1),       // 32-bit output: A port data output
+      //.DOPA(DOPA),     // 4-bit output: A port parity output
       // Port B Data: 32-bit (each) output: Port B data
-      .DOB(DOB),       // 32-bit output: B port data output
-      .DOPB(DOPB),     // 4-bit output: B port parity output
+      .DOB(green_out_p2),       // 32-bit output: B port data output
+      //.DOPB(DOPB),     // 4-bit output: B port parity output
       // Port A Address/Control Signals: 14-bit (each) input: Port A address and control signals
-      .ADDRA(ADDRA),   // 14-bit input: A port address input
-      .CLKA(CLKA),     // 1-bit input: A port clock input
-      .ENA(ENA),       // 1-bit input: A port enable input
-      .REGCEA(REGCEA), // 1-bit input: A port register clock enable input
-      .RSTA(RSTA),     // 1-bit input: A port register set/reset input
-      .WEA(WEA),       // 4-bit input: Port A byte-wide write enable input
+      .ADDRA(pixel_addr_a),   // 14-bit input: A port address input
+      .CLKA(clk),     // 1-bit input: A port clock input
+      .ENA(1'b1),       // 1-bit input: A port enable input
+      .REGCEA(1'b1), // 1-bit input: A port register clock enable input
+      .RSTA(reset),     // 1-bit input: A port register set/reset input
+      .WEA(4'b0000),       // 4-bit input: Port A byte-wide write enable input
       // Port A Data: 32-bit (each) input: Port A data
-      .DIA(DIA),       // 32-bit input: A port data input
-      .DIPA(DIPA),     // 4-bit input: A port parity input
+      //.DIA(DIA),       // 32-bit input: A port data input
+      //.DIPA(DIPA),     // 4-bit input: A port parity input
       // Port B Address/Control Signals: 14-bit (each) input: Port B address and control signals
-      .ADDRB(ADDRB),   // 14-bit input: B port address input
-      .CLKB(CLKB),     // 1-bit input: B port clock input
-      .ENB(ENB),       // 1-bit input: B port enable input
-      .REGCEB(REGCEB), // 1-bit input: B port register clock enable input
-      .RSTB(RSTB),     // 1-bit input: B port register set/reset input
-      .WEB(WEB),       // 4-bit input: Port B byte-wide write enable input
+      .ADDRB(pixel_addr_b),   // 14-bit input: B port address input
+      .CLKB(clk),     // 1-bit input: B port clock input
+      .ENB(1'b1),       // 1-bit input: B port enable input
+      .REGCEB(1'b1), // 1-bit input: B port register clock enable input
+      .RSTB(reset),     // 1-bit input: B port register set/reset input
+      .WEB(4'b0000)       // 4-bit input: Port B byte-wide write enable input
       // Port B Data: 32-bit (each) input: Port B data
-      .DIB(DIB),       // 32-bit input: B port data input
-      .DIPB(DIPB)      // 4-bit input: B port parity input
+      //.DIB(DIB),       // 32-bit input: B port data input
+      //.DIPB(DIPB)      // 4-bit input: B port parity input
    );
 
    // End of RAMB16BWER_inst instantiation
@@ -316,14 +330,14 @@ module VGAMemory(
 
    RAMB16BWER #(
       // DATA_WIDTH_A/DATA_WIDTH_B: 0, 1, 2, 4, 9, 18, or 36
-      .DATA_WIDTH_A(0),
-      .DATA_WIDTH_B(0),
+      .DATA_WIDTH_A(36),
+      .DATA_WIDTH_B(36),
       // DOA_REG/DOB_REG: Optional output register (0 or 1)
       .DOA_REG(0),
-      .DOB_REG(0),
+      //.DOB_REG(0),
       // EN_RSTRAM_A/EN_RSTRAM_B: Enable/disable RST
       .EN_RSTRAM_A("TRUE"),
-      .EN_RSTRAM_B("TRUE"),
+      //.EN_RSTRAM_B("TRUE"),
       // INITP_00 to INITP_07: Initial memory contents.
       .INITP_00(256'h0000000000000000000000000000000000000000000000000000000000000000),
       .INITP_01(256'h0000000000000000000000000000000000000000000000000000000000000000),
@@ -334,61 +348,64 @@ module VGAMemory(
       .INITP_06(256'h0000000000000000000000000000000000000000000000000000000000000000),
       .INITP_07(256'h0000000000000000000000000000000000000000000000000000000000000000),
       // INIT_00 to INIT_3F: Initial memory contents.
-	  	//Start of red-white alternate lines (2 lines per line) 
-      .INIT_00(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_01(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_02(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_03(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_04(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_05(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_06(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_07(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-		//End of first set of red lines
-		//Start of green-white alternate lines (2 lines per line) 
-      .INIT_08(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_09(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0A(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0B(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0C(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0D(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0E(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-      .INIT_0F(256'h00000000000000000000000000000000_ffffffffffffffffffffffffffffffff),
-	  	//End of first set of green lines
-		//Start of blue-white alternate lines (2 lines per line) 
-      .INIT_10(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_11(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_12(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_13(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_14(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_15(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_16(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
-      .INIT_17(256'hffffffffffffffffffffffffffffffff_ffffffffffffffffffffffffffffffff),
+		//Start of red-white alternate lines (2 lines per line 12 in total) 
+		//			00ff		  000c0				0080			0040		   0000
+      .INIT_00(256'h0000000000000000_000000000000000f_ffffffffffffffff_ffffffffffffffff),
+      .INIT_01(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_02(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_03(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_04(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_05(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_06(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_07(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_08(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_09(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0A(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+	  .INIT_0B(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+	  	//End of first set of red lines
+		//Start of green-white alternate lines (2 lines per line 12 in total) 
+      .INIT_0C(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0D(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0E(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_0F(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_10(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_11(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_12(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_13(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_14(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_15(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+      .INIT_16(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+	  .INIT_17(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
+		//End of first set of green lines
+		//Start of blue-white alternate lines (2 lines per line 12 in total) 
+      .INIT_18(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_19(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1A(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1B(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1C(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1D(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1E(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_1F(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_20(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_21(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_22(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+      .INIT_23(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
 	  	//End of first set of blue lines
-		//Start of black with rgb vertical alternate lines (2 lines per line) 
-      .INIT_18(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_19(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1A(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1B(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1C(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1D(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1E(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_1F(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_20(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_21(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_22(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_23(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_24(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_25(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_26(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_27(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_28(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_29(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2A(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2B(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2C(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2D(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2E(256'h0000000000000000000000000000000000000000000000000000000000000000),
-      .INIT_2F(256'h0000000000000000000000000000000000000000000000000000000000000000),
+		//Start of black with rgb vertical alternate lines (2 lines per line 12 in total) 
+      .INIT_24(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_25(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_26(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_27(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_28(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_29(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_2A(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_2B(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_2C(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_2D(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_2E(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+      .INIT_2F(256'hc999999999999999_9999999999999999_4888888888888888_8888888888888888),
+	  	//			00ff		  000c0				0080			0040		   0000
+	  //End of image 
       .INIT_30(256'h0000000000000000000000000000000000000000000000000000000000000000),
       .INIT_31(256'h0000000000000000000000000000000000000000000000000000000000000000),
       .INIT_32(256'h0000000000000000000000000000000000000000000000000000000000000000),
@@ -425,34 +442,33 @@ module VGAMemory(
       // WRITE_MODE_A/WRITE_MODE_B: "WRITE_FIRST", "READ_FIRST", or "NO_CHANGE" 
       .WRITE_MODE_A("WRITE_FIRST"),
       .WRITE_MODE_B("WRITE_FIRST") 
-   )
-   VGA_BLUE_memory_inst (
+   ) VGA_BLUE_memory_inst (
       // Port A Data: 32-bit (each) output: Port A data
-      .DOA(DOA),       // 32-bit output: A port data output
-      .DOPA(DOPA),     // 4-bit output: A port parity output
+      .DOA(blue_out_p1),       // 32-bit output: A port data output
+      //.DOPA(DOPA),     // 4-bit output: A port parity output
       // Port B Data: 32-bit (each) output: Port B data
-      .DOB(DOB),       // 32-bit output: B port data output
-      .DOPB(DOPB),     // 4-bit output: B port parity output
+      .DOB(blue_out_p2),       // 32-bit output: B port data output
+      //.DOPB(DOPB),     // 4-bit output: B port parity output
       // Port A Address/Control Signals: 14-bit (each) input: Port A address and control signals
-      .ADDRA(ADDRA),   // 14-bit input: A port address input
-      .CLKA(CLKA),     // 1-bit input: A port clock input
-      .ENA(ENA),       // 1-bit input: A port enable input
-      .REGCEA(REGCEA), // 1-bit input: A port register clock enable input
-      .RSTA(RSTA),     // 1-bit input: A port register set/reset input
-      .WEA(WEA),       // 4-bit input: Port A byte-wide write enable input
+      .ADDRA(pixel_addr_a),   // 14-bit input: A port address input
+      .CLKA(clk),     // 1-bit input: A port clock input
+      .ENA(1'b1),       // 1-bit input: A port enable input
+      .REGCEA(1'b1), // 1-bit input: A port register clock enable input
+      .RSTA(reset),     // 1-bit input: A port register set/reset input
+      .WEA(4'b0000),       // 4-bit input: Port A byte-wide write enable input
       // Port A Data: 32-bit (each) input: Port A data
-      .DIA(DIA),       // 32-bit input: A port data input
-      .DIPA(DIPA),     // 4-bit input: A port parity input
+      //.DIA(DIA),       // 32-bit input: A port data input
+      //.DIPA(DIPA),     // 4-bit input: A port parity input
       // Port B Address/Control Signals: 14-bit (each) input: Port B address and control signals
-      .ADDRB(ADDRB),   // 14-bit input: B port address input
-      .CLKB(CLKB),     // 1-bit input: B port clock input
-      .ENB(ENB),       // 1-bit input: B port enable input
-      .REGCEB(REGCEB), // 1-bit input: B port register clock enable input
-      .RSTB(RSTB),     // 1-bit input: B port register set/reset input
-      .WEB(WEB),       // 4-bit input: Port B byte-wide write enable input
+      .ADDRB(pixel_addr_b),   // 14-bit input: B port address input
+      .CLKB(clk),     // 1-bit input: B port clock input
+      .ENB(1'b1),       // 1-bit input: B port enable input
+      .REGCEB(1'b1), // 1-bit input: B port register clock enable input
+      .RSTB(reset),     // 1-bit input: B port register set/reset input
+      .WEB(4'b0000)    // 4-bit input: Port B byte-wide write enable input
       // Port B Data: 32-bit (each) input: Port B data
-      .DIB(DIB),       // 32-bit input: B port data input
-      .DIPB(DIPB)      // 4-bit input: B port parity input
+      //.DIB(DIB),       // 32-bit input: B port data input
+      //.DIPB(DIPB)      // 4-bit input: B port parity input
    );
 
    // End of RAMB16BWER_inst instantiation
