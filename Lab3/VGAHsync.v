@@ -67,26 +67,26 @@ module VGAHsync(
 					h_sync <= 0;
 					master_hsync_count <= master_hsync_count + 1;
 				end else begin
-					if (master_hsync_count == 192) begin
+					if (master_hsync_count == 191) begin
 						h_sync <= 1;
 						master_hsync_count <= master_hsync_count + 1;
 					end else begin
-						if (master_hsync_count == 288) begin
+						if (master_hsync_count == 287) begin
 							h_sync <= 1;
 							display_time_en <= 1;
 							master_hsync_count <= master_hsync_count + 1;
 						end else begin
-							if (master_hsync_count == 1568) begin
+							if (master_hsync_count == 1567) begin
 								h_sync <= 1;
 								display_time_en <= 0;
 								master_hsync_count <= master_hsync_count + 1;
 							end else begin
-								if (master_hsync_count == 1600) begin
+								if (master_hsync_count == 1599) begin
 									h_sync <= 0;
 									display_time_en <= 0;
 									master_hsync_count <= master_hsync_count + 1;
 								end else begin
-									if (master_hsync_count == 1792) begin
+									if (master_hsync_count == 1791) begin
 										h_sync <= 1;
 										master_hsync_count <= 0;
 										display_time_en <= 0;								
@@ -118,7 +118,7 @@ module VGAHsync(
 				line_comp_counter <= 0;
 				pixel_scale_count <= 0;
 			end else begin
-				if (line_comp_counter == 2) begin
+				if (line_comp_counter == 1) begin
 					pixel_counter <= 0;
 					//line_comp_counter <= 0;
 					pixel_scale_count <= 0;
@@ -127,13 +127,13 @@ module VGAHsync(
 					port_a_b_data_green <= {port_b_green_data , port_a_green_data };
 					port_a_b_data_blue <= {port_b_blue_data , port_a_blue_data };
 
-					if (pixel_counter == 64) begin
+					if (pixel_counter == 63) begin
 						port_a_addr <= port_a_addr + 14'h40;
 						port_b_addr <= port_b_addr + 14'h40;
 						pixel_counter <= 0;
 						line_comp_counter <= line_comp_counter + 1;
 					end else begin
-						if (pixel_scale_count == 5) begin
+						if (pixel_scale_count == 4) begin
 							pixel_counter <= pixel_counter + 1;
 							pixel_scale_count <= 0;
 						end else begin
