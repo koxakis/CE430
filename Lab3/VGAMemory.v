@@ -45,19 +45,19 @@ module VGAMemory(
       .INITP_07(256'h0000000000000000000000000000000000000000000000000000000000000000),
     // INIT_00 to INIT_3F: Initial memory contents.
 		//Start of red-white alternate lines (2 lines per line 12 in total) 
-		//			00ff		  000c0				0080				0040		0000
-      .INIT_00(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_01(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_02(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_03(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_04(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_05(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_06(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_07(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_08(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_09(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-      .INIT_0A(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
-	  .INIT_0B(256'hffffffffffffffff_ffffffffffffffff_ffffffffffffffff_ffffffffffffffff),
+		//			00ff   00e0	    000c0	 00a0	  0080 	   0060		0040	0020   0000
+      .INIT_00(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_01(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_02(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_03(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_04(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_05(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_06(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_07(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_08(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_09(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+      .INIT_0A(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
+	  .INIT_0B(256'hffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff_ffffffff),
 	  	//End of first set of red lines
 		//Start of green-white alternate lines (2 lines per line 12 in total) 
       .INIT_0C(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
@@ -88,19 +88,19 @@ module VGAMemory(
       .INIT_23(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
 	  	//End of first set of blue lines
 		//Start of black with rgb vertical alternate lines (2 lines per line 12 in total) 
-      .INIT_24(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_25(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_26(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_27(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_28(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_29(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_2A(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_2B(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_2C(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_2D(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_2E(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-      .INIT_2F(256'h9333333333333333_3333333333333333_1222222222222222_2222222222222222),
-	  //			00ff		  000c0				0080				0040		0000
+      .INIT_24(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_25(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_26(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_27(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_28(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_29(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_2A(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_2B(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_2C(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_2D(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_2E(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+      .INIT_2F(256'h93333333_33333333_33333333_33333333_12222222_22222222_22222222_22222222),
+		//			00ff   00e0	    000c0	 00a0	  0080 	   0060		0040	0020   0000
 	  //End of image 
       .INIT_30(256'h00000000000000000000000000000000_00000000000000000000000000000000),
       .INIT_31(256'h00000000000000000000000000000000_00000000000000000000000000000000),
@@ -350,7 +350,7 @@ module VGAMemory(
       // INIT_00 to INIT_3F: Initial memory contents.
 		//Start of red-white alternate lines (2 lines per line 12 in total) 
 		//			00ff		  000c0				0080			0040		   0000
-      .INIT_00(256'h0000000000000000_000000000000000f_ffffffffffffffff_ffffffffffffffff),
+      .INIT_00(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
       .INIT_01(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
       .INIT_02(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),
       .INIT_03(256'h0000000000000000_0000000000000000_ffffffffffffffff_ffffffffffffffff),

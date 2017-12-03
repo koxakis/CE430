@@ -30,14 +30,21 @@ initial begin
 	clk = 1;
 	#20; 
 	rst_n = 0;
-	pixel_addr_a = 14'h2400;
-	pixel_addr_b = 14'h2440;
-	#200;
-	pixel_addr_a = 14'h2480;
-	pixel_addr_b = 14'h24c0;
+	#200
+	pixel_addr_a = 14'h0000;
+	pixel_addr_b = 14'h0020;
 	#20;
-	pixel_addr_a = 14'h24ff;
-	pixel_addr_b = 14'h2500;
+	pixel_addr_a = 14'h0040;
+	pixel_addr_b = 14'h0060;
+	#20;
+	pixel_addr_a = 14'h0080;
+	pixel_addr_b = 14'h00a0;
+	#20;
+	pixel_addr_a = 14'h00c0;
+	pixel_addr_b = 14'h00e0;
+	#20;
+	pixel_addr_a = 14'h00ff;
+	pixel_addr_b = 14'h0100;
 
 	#1000
 	$finish;

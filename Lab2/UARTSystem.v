@@ -22,7 +22,11 @@ module UARTSystem(
 	f,
 	g,
 	dp,
-	r_btn
+	r_btn,
+	Tx_BUSY,
+	Rx_VALID,
+	Rx_PERROR,
+	Rx_FERROR
 );
 
 	input clk, reset;
@@ -39,9 +43,10 @@ module UARTSystem(
 	wire Tx_EN,  Rx_EN; 
 	input Tx_WR;
 
-	wire Tx_BUSY;
+	output Tx_BUSY;
 	wire Tx_D;
-	wire Rx_PERROR, Rx_FERROR, Rx_VALID;
+	output Rx_PERROR, Rx_FERROR, Rx_VALID;
+	
 
 	assign Tx_EN = 1;
 	assign Rx_EN = 1;

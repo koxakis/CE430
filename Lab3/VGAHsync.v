@@ -1,0 +1,148 @@
+module VGAHsync(
+	clk,
+	clk_d,
+	reset,
+	h_sync,
+	vga_red,
+	vga_green,
+	vga_blue,
+	h_sync_en
+);
+
+	input clk, reset;
+	input h_sync_en;
+
+	input clk_d;
+
+	output reg h_sync;
+
+	output reg vga_red, vga_green, vga_blue;
+
+	reg [63:0] port_a_b_data_red;
+	reg [63:0] port_a_b_data_green;
+	reg [63:0] port_a_b_data_blue;
+
+	wire [31:0] port_a_red_data;
+	wire [31:0] port_b_red_data;
+
+	wire [31:0] port_a_green_data;
+	wire [31:0] port_b_green_data;
+
+	wire [31:0] port_a_blue_data;
+	wire [31:0] port_b_blue_data;
+
+	reg [13:0] port_a_addr, port_b_addr;
+	reg [11:0] master_hsync_count;
+	reg [6:0] pixel_counter;
+	reg [2:0] pixel_scale_count;
+
+	reg [1:0]line_comp_counter;
+	reg display_time_en;
+
+	VGAMemory vga_vram_0(
+		.reset (reset),
+		.clk (clk),
+  		.pixel_addr_a(port_a_addr),
+		.pixel_addr_b(port_b_addr),
+		.red_out_p1 (port_a_red_data),
+		.green_out_p1 (port_a_green_data),
+		.blue_out_p1 (port_a_blue_data) ,
+		.red_out_p2 (port_b_red_data),
+		.green_out_p2 (port_b_green_data),
+		.blue_out_p2 (port_b_blue_data)
+	);
+
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			h_sync <= 1;
+			master_hsync_count <= 0;
+			display_time_en <= 0;
+		end else begin
+			if (!h_sync_en) begin
+				h_sync <= 1;
+				master_hsync_count <= 0;
+				display_time_en <= 0;
+			end else begin
+				if (master_hsync_count == 0) begin
+					h_sync <= 0;
+					master_hsync_count <= master_hsync_count + 1;
+				end else begin
+					if (master_hsync_count == 192) begin
+						h_sync <= 1;
+						master_hsync_count <= master_hsync_count + 1;
+					end else begin
+						if (master_hsync_count == 288) begin
+							h_sync <= 1;
+							display_time_en <= 1;
+							master_hsync_count <= master_hsync_count + 1;
+						end else begin
+							if (master_hsync_count == 1568) begin
+								h_sync <= 1;
+								display_time_en <= 0;
+								master_hsync_count <= master_hsync_count + 1;
+							end else begin
+								if (master_hsync_count == 1600) begin
+									h_sync <= 0;
+									display_time_en <= 0;
+									master_hsync_count <= master_hsync_count + 1;
+								end else begin
+									if (master_hsync_count == 1792) begin
+										h_sync <= 1;
+										master_hsync_count <= 0;
+										display_time_en <= 0;								
+									end else begin
+										master_hsync_count <= master_hsync_count + 1;
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			port_a_addr <= 14'h0000;
+			port_b_addr <= 14'h0020;
+			pixel_counter <= 0;
+			line_comp_counter <= 0;
+			pixel_scale_count <= 0;
+		end else begin
+			if ( !display_time_en ) begin
+				pixel_counter <= 0;
+				line_comp_counter <= 0;
+				pixel_scale_count <= 0;
+			end else begin
+				if (line_comp_counter == 2) begin
+					pixel_counter <= 0;
+					line_comp_counter <= 0;
+					pixel_scale_count <= 0;
+				end else begin
+					port_a_b_data_red <= {port_b_red_data, port_a_red_data};
+					port_a_b_data_green <= {port_b_green_data , port_a_green_data };
+					port_a_b_data_blue <= {port_b_blue_data , port_a_blue_data };
+
+					if (pixel_counter == 64) begin
+						port_a_addr <= port_a_addr + 14'h40;
+						port_b_addr <= port_b_addr + 14'h40;
+						pixel_counter <= 0;
+						line_comp_counter <= line_comp_counter + 1;
+					end else begin
+						if (pixel_scale_count == 5) begin
+							pixel_counter <= pixel_counter + 1;
+							pixel_scale_count <= 0;
+						end else begin
+							vga_red <= port_a_b_data_red[pixel_counter];
+							vga_green <= port_a_b_data_green[pixel_counter];
+							vga_blue <= port_a_b_data_blue[pixel_counter];
+							pixel_scale_count <= pixel_scale_count + 1;
+						end
+					end
+				end
+			end
+		end
+	end
+
+endmodule // VGAHsync
