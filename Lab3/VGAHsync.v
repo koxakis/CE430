@@ -110,19 +110,18 @@ module VGAHsync(
 			line_comp_counter <= 0;
 			pixel_scale_count <= 0;
 		end else begin
-			if ( !display_time_en ) begin
-				vga_red <= 0;
-				vga_green <= 0;
-				vga_blue <= 0;
+			if (line_comp_counter == 2) begin
+				port_a_addr <= port_a_addr + 14'h40;
+				port_b_addr <= port_b_addr + 14'h40;
 				pixel_counter <= 0;
 				line_comp_counter <= 0;
 				pixel_scale_count <= 0;
 			end else begin
-				if (line_comp_counter == 2) begin
-					port_a_addr <= port_a_addr + 14'h40;
-					port_b_addr <= port_b_addr + 14'h40;
+				if ( !display_time_en ) begin
+					vga_red <= 0;
+					vga_green <= 0;
+					vga_blue <= 0;
 					pixel_counter <= 0;
-					line_comp_counter <= 0;
 					pixel_scale_count <= 0;
 				end else begin
 					port_a_b_data_red <= {port_b_red_data, port_a_red_data};
