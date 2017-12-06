@@ -86,9 +86,9 @@ module VGAHsync(
 									h_sync <= 1;
 									display_time_en <= 0;
 									master_hsync_count <= 0;			
-									end else begin
-										master_hsync_count <= master_hsync_count + 1;
-									end
+								end else begin
+									master_hsync_count <= master_hsync_count + 1;
+								end
 							end
 						end
 					end
