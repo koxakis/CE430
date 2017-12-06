@@ -54,17 +54,17 @@ module VGAVsync(
 						h_sync_en <= 0;
 						master_vsync_count <= master_vsync_count + 1;
 					end else begin
-						if (master_vsync_count == 49600) begin
+						if (master_vsync_count == 49599) begin
 							h_sync_en <= 1;
 							v_sync <= 1;
 							master_vsync_count <= master_vsync_count + 1;
 						end else begin
-							if (master_vsync_count == 817600) begin
+							if (master_vsync_count == 817599) begin
 								h_sync_en <= 0;
 								v_sync <= 1;
 								master_vsync_count <= master_vsync_count + 1;
 							end else begin
-								if (master_vsync_count == 833600) begin
+								if (master_vsync_count == 833599) begin
 									h_sync_en <= 0;
 									v_sync <= 1;
 									master_vsync_count <= 0;
