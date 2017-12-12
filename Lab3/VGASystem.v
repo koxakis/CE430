@@ -10,12 +10,10 @@ module VGASystem(
   VGA_Blue1,
   VGA_Blue2,
   VGA_HSYNC,
-  VGA_VSYNC,
-  v_sync_en
+  VGA_VSYNC
 );
 
 input reset, clk;
-input v_sync_en;
 
 output VGA_Red0, VGA_Red1, VGA_Red2; 
 output VGA_Green0, VGA_Green1, VGA_Green2;
@@ -29,7 +27,7 @@ assign VGA_Green1 = 0;
 assign VGA_Green2 = 0;
 
 assign VGA_Blue2 = 0;
-
+/*
 // DCM_SP: Digital Clock Manager
    //         Spartan-6
    // Xilinx HDL Language Template, version 14.7
@@ -72,7 +70,7 @@ assign VGA_Blue2 = 0;
 		//.PSEN(PSEN),         // 1-bit input: Phase shift enable
 		//.PSINCDEC(PSINCDEC), // 1-bit input: Phase shift increment/decrement input
 		.RST(reset)            // 1-bit input: Active high reset input
-	);
+	); */
 
 //instansiate memory module - test returning values through thest bench
 VGAVsync vga_vsync_0(
@@ -82,8 +80,7 @@ VGAVsync vga_vsync_0(
 	.vga_green(VGA_Green0) ,
 	.vga_blue(VGA_Blue1) ,
 	.h_sync(VGA_HSYNC) ,
-	.v_sync(VGA_VSYNC) ,
-	.v_sync_en(v_sync_en)
+	.v_sync(VGA_VSYNC) 
 );
 //instansiate Hsync
 
