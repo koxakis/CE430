@@ -14,7 +14,7 @@ module VGAHsync(
 
 	input clk_d;
 
-	output reg h_sync;
+	output h_sync;
 
 	output reg vga_red, vga_green, vga_blue;
 
@@ -37,7 +37,7 @@ module VGAHsync(
 	reg [2:0] pixel_scale_count;
 
 	reg [1:0]line_comp_counter;
-	reg display_time_en;
+	wire display_time_en;
 
 	VGAMemory vga_vram_0(
 		.reset (reset),
@@ -54,48 +54,20 @@ module VGAHsync(
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
-			h_sync <= 1;
 			master_hsync_count <= 0;
-			display_time_en <= 0;
 		end else begin
-			if (!h_sync_en) begin
-				h_sync <= 1;
+			master_hsync_count <= master_hsync_count + 1;
+			if (master_hsync_count == 1599) begin
 				master_hsync_count <= 0;
-				display_time_en <= 0;
-			end else begin
-				if (master_hsync_count == 0) begin
-					h_sync <= 0;
-					master_hsync_count <= master_hsync_count + 1;
-				end else begin
-					if (master_hsync_count == 192) begin
-						h_sync <= 1;
-						display_time_en <= 0;
-						master_hsync_count <= master_hsync_count + 1;
-					end else begin
-						if (master_hsync_count == 287) begin
-							h_sync <= 1;
-							display_time_en <= 1;
-							master_hsync_count <= master_hsync_count + 1;
-						end else begin
-							if (master_hsync_count == 1567) begin
-								h_sync <= 1;
-								display_time_en <= 0;
-								master_hsync_count <= master_hsync_count + 1;
-							end else begin
-								if (master_hsync_count == 1599) begin
-									h_sync <= 1;
-									display_time_en <= 0;
-									master_hsync_count <= 0;			
-								end else begin
-									master_hsync_count <= master_hsync_count + 1;
-								end
-							end
-						end
-					end
-				end
 			end
 		end
 	end
+
+	assign h_sync = ( (h_sync_en) && ( (master_hsync_count >= 0) && (master_hsync_count <= 12'd191) ) ) ? 0 : 1;
+	//assign h_sync = ( (h_sync_en) && ( (master_hsync_count > 12'd95) || (master_hsync_count == 12'd799) ) ) ? 0 : 1;
+
+	assign display_time_en = ( (h_sync_en) && ( (master_hsync_count >= 12'd287) && (master_hsync_count <= 12'd1566) ) ) ? 1 : 0;
+	//assign display_time_en = ( (h_sync_en) && ( (master_hsync_count >= 12'd798) && (master_hsync_count <= 12'd2078) ) ) ? 1 : 0;
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin

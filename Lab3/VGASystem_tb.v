@@ -37,10 +37,10 @@ initial begin
 	#20; 
 	//v_sync_en = 1;
 	rst_n = 0;
-	#200
+	#200;
 
-	#1000000
-	$finish;
+	//#1000000
+	//$finish;
 end
 
 endmodule
