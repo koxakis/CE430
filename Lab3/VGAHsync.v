@@ -63,11 +63,9 @@ module VGAHsync(
 		end
 	end
 
-	assign h_sync = ( (h_sync_en) && ( (master_hsync_count >= 0) && (master_hsync_count <= 12'd191) ) ) ? 0 : 1;
-	//assign h_sync = ( (h_sync_en) && ( (master_hsync_count > 12'd95) || (master_hsync_count == 12'd799) ) ) ? 0 : 1;
+	assign h_sync = ( (master_hsync_count >= 0) && (master_hsync_count <= 12'd191) ) ? 0 : 1;
 
-	assign display_time_en = ( (h_sync_en) && ( (master_hsync_count >= 12'd287) && (master_hsync_count <= 12'd1566) ) ) ? 1 : 0;
-	//assign display_time_en = ( (h_sync_en) && ( (master_hsync_count >= 12'd798) && (master_hsync_count <= 12'd2078) ) ) ? 1 : 0;
+	assign display_time_en = ( (h_sync_en) && ( (master_hsync_count >= 12'd287) && (master_hsync_count <= 12'd1567) ) ) ? 1 : 0;
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin

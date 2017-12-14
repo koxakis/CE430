@@ -40,7 +40,7 @@ module VGAVsync(
 		end
 	end
 
-	assign v_sync = ( (master_vsync_count > 20'd0) && (master_vsync_count <= 20'd3199) ) ? 0 : 1;
-	assign h_sync_en = ( (master_vsync_count > 20'd49600) || (master_vsync_count <= 20'd817600) ) ? 1 : 0;
+	assign v_sync = ( (master_vsync_count >= 20'd0) && (master_vsync_count <= 20'd3199) ) ? 0 : 1;
+	assign h_sync_en = ( (master_vsync_count > 20'd49599) && (master_vsync_count <= 20'd817599) ) ? 1 : 0;
 
 endmodule // VGAVsync	
