@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////
 //Module : VGA System module
 //File : VGASystem.v
-//Discreption : Top module for VGA system
+//Discreption : Top module for VGA system - Spartan 6 implementaton
 ////////////////////////////////////////////////////
 module VGASystem(
   clk,
@@ -25,6 +25,8 @@ output VGA_Green0, VGA_Green1, VGA_Green2;
 output VGA_Blue1, VGA_Blue2;
 output VGA_HSYNC, VGA_VSYNC;
 
+/*Spartan 6 FPGA supports 8bit color image is created with a 3bit color space the
+	extra signals that are not in use are assigned to 0 */
 assign VGA_Red1 = 0;
 assign VGA_Red2 = 0;
 
