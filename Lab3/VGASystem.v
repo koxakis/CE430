@@ -27,13 +27,13 @@ assign VGA_Green1 = 0;
 assign VGA_Green2 = 0;
 
 assign VGA_Blue2 = 0;
-/*
+
 // DCM_SP: Digital Clock Manager
    //         Spartan-6
    // Xilinx HDL Language Template, version 14.7
 
    DCM_SP #(
-		.CLKDV_DIVIDE(4.0),                   // CLKDV divide value
+		.CLKDV_DIVIDE(2.0),                   // CLKDV divide value
 											// (1.5,2,2.5,3,3.5,4,4.5,5,5.5,6,6.5,7,7.5,8,9,10,11,12,13,14,15,16).
 		.CLKFX_DIVIDE(1),                     // Divide value on CLKFX outputs - D - (1-32)
 		.CLKFX_MULTIPLY(4),                   // Multiply value on CLKFX outputs - M - (2-32)
@@ -70,11 +70,11 @@ assign VGA_Blue2 = 0;
 		//.PSEN(PSEN),         // 1-bit input: Phase shift enable
 		//.PSINCDEC(PSINCDEC), // 1-bit input: Phase shift increment/decrement input
 		.RST(reset)            // 1-bit input: Active high reset input
-	); */
+	); 
 
 //instansiate memory module - test returning values through thest bench
 VGAVsync vga_vsync_0(
-	.clk(clk) , 
+	.clk(CLKDV) , 
 	.reset(reset) ,
 	.vga_red(VGA_Red0) ,
 	.vga_green(VGA_Green0) ,
