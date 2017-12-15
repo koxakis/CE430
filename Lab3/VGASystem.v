@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////
+//Module : VGA System module
+//File : VGASystem.v
+//Discreption : Top module for VGA system
+////////////////////////////////////////////////////
 module VGASystem(
   clk,
   reset,
@@ -72,7 +77,7 @@ assign VGA_Blue2 = 0;
 		.RST(reset)            // 1-bit input: Active high reset input
 	); 
 
-//instansiate memory module - test returning values through thest bench
+//VSYNC Module 
 VGAVsync vga_vsync_0(
 	.clk(CLKDV) , 
 	.reset(reset) ,
@@ -82,6 +87,5 @@ VGAVsync vga_vsync_0(
 	.h_sync(VGA_HSYNC) ,
 	.v_sync(VGA_VSYNC) 
 );
-//instansiate Hsync
 
 endmodule // VGASystem
