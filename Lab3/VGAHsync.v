@@ -85,12 +85,10 @@ module VGAHsync(
 				end else begin
 					pixel_scale_count_line <= pixel_scale_count_line + 1;
 				end
-
 				if (port_a_addr == 'h3000) begin
 					port_a_addr <= 'h0000;
 					port_b_addr <= 'h0020;
 				end
-
 				pixel_counter <= 0;
 				line_comp_counter <= 0;
 				pixel_scale_count <= 0;
