@@ -35,6 +35,7 @@ module VGAHsync(
 	reg [11:0] master_hsync_count;
 	reg [6:0] pixel_counter;
 	reg [2:0] pixel_scale_count;
+	reg [2:0] pixel_scale_count_line;
 
 	reg [1:0]line_comp_counter;
 	wire display_time_en;
@@ -65,7 +66,7 @@ module VGAHsync(
 
 	assign h_sync = ( (master_hsync_count >= 0) && (master_hsync_count <= 12'd191) ) ? 0 : 1;
 
-	assign display_time_en = (( (h_sync_en) && (master_hsync_count >= 12'd287) && (master_hsync_count < 12'd1567) ) ) ? 1 : 0;
+	assign display_time_en = (( (h_sync_en) && (master_hsync_count >= 12'd287) && (master_hsync_count < 12'd1566) ) ) ? 1 : 0;
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
@@ -74,10 +75,16 @@ module VGAHsync(
 			pixel_counter <= 0;
 			line_comp_counter <= 0;
 			pixel_scale_count <= 0;
+			pixel_scale_count_line <= 0;
 		end else begin
 			if (line_comp_counter == 2) begin
-				port_a_addr <= port_a_addr + 'h40;
-				port_b_addr <= port_b_addr + 'h40;
+				if (pixel_scale_count_line == 4) begin
+					port_a_addr <= port_a_addr + 'h40;
+					port_b_addr <= port_b_addr + 'h40;
+					pixel_scale_count_line <= 0;
+				end else begin
+					pixel_scale_count_line <= pixel_scale_count_line + 1;
+				end
 
 				if (port_a_addr == 'h3000) begin
 					port_a_addr <= 'h0000;
