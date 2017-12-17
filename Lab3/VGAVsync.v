@@ -26,7 +26,6 @@ module VGAVsync(
 	//HSYNC module
 	VGAHsync vga_hsync_0(
 		.clk(clk) ,
-		.clk_d(clk_d) ,
 		.reset(reset) ,
 		.h_sync(h_sync) ,
 		.vga_red(vga_red) ,

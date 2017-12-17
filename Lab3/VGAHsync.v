@@ -5,7 +5,6 @@
 ////////////////////////////////////////////////////
 module VGAHsync(
 	clk,
-	clk_d,
 	reset,
 	h_sync,
 	vga_red,
@@ -16,8 +15,6 @@ module VGAHsync(
 
 	input clk, reset;
 	input h_sync_en;
-
-	input clk_d;
 
 	output h_sync;
 
@@ -136,8 +133,8 @@ module VGAHsync(
 						pixel_counter <= 0;
 						line_comp_counter <= line_comp_counter + 1;
 					end else begin
-					/*This counter keeps eatch address for 5 times in order to scale the image to the 
-						desired resolution and then we move to the next index*/
+						/*This counter keeps eatch address for 5 times in order to scale the image to the 
+							desired resolution and then we move to the next index*/
 						if (pixel_scale_count == 4) begin
 							pixel_counter <= pixel_counter + 1;
 							pixel_scale_count <= 0;
