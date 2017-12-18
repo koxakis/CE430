@@ -123,7 +123,7 @@ module VGAHsync(
 					pixel_counter <= 0;
 					pixel_scale_count <= 0;
 				end else begin
-					//Concitinate port a and port b output in a single 54bit reg to make it easyer to be accessed for each colour
+					//Concitinate port a and port b output in a single 64bit reg to make it easyer to be accessed for each colour
 					port_a_b_data_red <= {port_b_red_data, port_a_red_data};
 					port_a_b_data_green <= {port_b_green_data , port_a_green_data };
 					port_a_b_data_blue <= {port_b_blue_data , port_a_blue_data };
