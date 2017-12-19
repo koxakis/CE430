@@ -27,13 +27,6 @@ output VGA_HSYNC, VGA_VSYNC;
 
 /*Spartan 6 FPGA supports 8bit color image is created with a 3bit color space the
 	extra signals that are not in use are assigned to 0 */
-assign VGA_Red1 = 0;
-assign VGA_Red2 = 0;
-
-assign VGA_Green1 = 0;
-assign VGA_Green2 = 0;
-
-assign VGA_Blue2 = 0;
 
 // DCM_SP: Digital Clock Manager
    //         Spartan-6
@@ -81,12 +74,17 @@ assign VGA_Blue2 = 0;
 
 //VSYNC Module 
 VGAVsync vga_vsync_0(
-	.clk(CLKDV) , 
-	.reset(reset) ,
-	.vga_red(VGA_Red0) ,
-	.vga_green(VGA_Green0) ,
-	.vga_blue(VGA_Blue1) ,
-	.h_sync(VGA_HSYNC) ,
+	.clk(CLKDV), 
+	.reset(reset),
+	.vga_red_0(VGA_Red0),
+	.vga_red_1(VGA_Red1),
+	.vga_red_2(VGA_Red2),
+	.vga_green_0(VGA_Green0),
+	.vga_green_1(VGA_Green1),
+	.vga_green_2(VGA_Green2),
+	.vga_blue_1(VGA_Blue1),
+	.vga_blue_2(VGA_Blue2),
+	.h_sync(VGA_HSYNC),
 	.v_sync(VGA_VSYNC) 
 );
 

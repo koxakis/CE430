@@ -7,9 +7,14 @@ module VGAHsync(
 	clk,
 	reset,
 	h_sync,
-	vga_red,
-	vga_green,
-	vga_blue,
+	vga_red_0,
+	vga_red_1,
+	vga_red_2,
+	vga_green_0,
+	vga_green_1,
+	vga_green_2,
+	vga_blue_1,
+	vga_blue_2,
 	h_sync_en
 );
 
@@ -18,7 +23,9 @@ module VGAHsync(
 
 	output h_sync;
 
-	output reg vga_red, vga_green, vga_blue;
+	output reg vga_red_0, vga_red_1, vga_red_2;
+	output reg vga_green_0, vga_green_1, vga_green_2;
+	output reg vga_blue_1, vga_blue_2;
 
 	//64bit Reg storage for concatinated BRAM for both ports a, b red, green, blue data
 	reg [63:0] port_a_b_data_red;
@@ -117,9 +124,16 @@ module VGAHsync(
 			end else begin
 				//If the enable signal is not activated RGB outputs are grounded as to not be wasted 
 				if ( !display_time_en ) begin
-					vga_red <= 0;
-					vga_green <= 0;
-					vga_blue <= 0;
+					vga_red_0 <= 0;
+					vga_green_0 <= 0;
+					vga_blue_1 <= 0;
+
+					vga_red_1 <= 0;
+					vga_green_1 <= 0;
+					vga_blue_2 <= 0;
+
+					vga_red_2 <=0;
+					vga_green_2 <= 0;
 					pixel_counter <= 0;
 					pixel_scale_count <= 0;
 				end else begin
@@ -140,9 +154,17 @@ module VGAHsync(
 							pixel_scale_count <= 0;
 						end else begin
 							//Output the index from the reg to the screen 
-							vga_red <= port_a_b_data_red[pixel_counter];
-							vga_green <= port_a_b_data_green[pixel_counter];
-							vga_blue <= port_a_b_data_blue[pixel_counter];
+							vga_red_0 <= port_a_b_data_red[pixel_counter];
+							vga_green_0 <= port_a_b_data_green[pixel_counter];
+							vga_blue_1 <= port_a_b_data_blue[pixel_counter];
+
+							vga_red_1 <= port_a_b_data_red[pixel_counter];
+							vga_green_1 <= port_a_b_data_green[pixel_counter];
+							vga_blue_2 <= port_a_b_data_blue[pixel_counter];
+
+							vga_red_2 <= port_a_b_data_red[pixel_counter];
+							vga_green_2 <= port_a_b_data_green[pixel_counter];
+
 							pixel_scale_count <= pixel_scale_count + 1;
 						end
 					end

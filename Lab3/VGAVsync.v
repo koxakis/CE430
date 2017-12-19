@@ -6,16 +6,23 @@
 module VGAVsync(
 	clk,
 	reset,
-	vga_red,
-	vga_green,
-	vga_blue,
+	vga_red_0,
+	vga_red_1,
+	vga_red_2,
+	vga_green_0,
+	vga_green_1,
+	vga_green_2,
+	vga_blue_1,
+	vga_blue_2,
 	h_sync,
 	v_sync
 );
 
 	input clk, reset;
 
-	output vga_red, vga_green, vga_blue;
+	output vga_red_0, vga_red_1, vga_red_2;
+	output vga_green_0, vga_green_1, vga_green_2;
+	output vga_blue_1, vga_blue_2;
 	output wire v_sync; 
 	output wire h_sync;
 
@@ -28,9 +35,14 @@ module VGAVsync(
 		.clk(clk) ,
 		.reset(reset) ,
 		.h_sync(h_sync) ,
-		.vga_red(vga_red) ,
-		.vga_green(vga_green) ,
-		.vga_blue(vga_blue) ,
+		.vga_red_0( vga_red_0),
+		.vga_red_1( vga_red_1) ,
+		.vga_red_2( vga_red_2) ,
+		.vga_green_0 (vga_green_0),
+		.vga_green_1 (vga_green_1),
+		.vga_green_2 (vga_green_2),
+		.vga_blue_1	(vga_blue_1),
+		.vga_blue_2	(vga_blue_2),
 		.h_sync_en(h_sync_en)
 	);
 
