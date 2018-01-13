@@ -1,6 +1,7 @@
 module LCD_inst_decode(
 	clk,
 	reset,
+	instruction,
 	LCD_RS,
 	LCD_RW,
 	LCD_upper_4,
@@ -15,6 +16,8 @@ output reg LCD_RS, LCD_RW;
 
 output reg [3:0] LCD_upper_4;
 output reg [3:0] LCD_lower_4;
+
+input instruction;
 
 
 always @(posedge clk or posedge reset) begin
@@ -117,6 +120,7 @@ always @(posedge clk or posedge reset) begin
 				LCD_RW <= 1'b0;
 				LCD_upper_4 <= 4'b0000;
 				LCD_lower_4 <= 4'b0011;
+			end
 			default:
 			begin
 				LCD_RS <= 1'b0;

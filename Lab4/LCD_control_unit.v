@@ -8,17 +8,29 @@ module LCD_control_unit(
 );
 
 input clk, reset;
-
-output LCD_RC, LCD_RW, LCD_EN_send;
+output [3:0] LCD_SF_D;
+output LCD_RC, LCD_RW, LCD_EN;
 reg [4:0] LCD_4_bit_out;
 
 reg [7:0] message [30:0];
-output [3:0] LCD_SF_D;
+
+reg LCD_EN_send, LCD_EN_cont;
 reg upper_flag;
 reg cont_send_flag;
 reg cont_control_flag;
-reg 8_bit_data_reg;
+reg data_reg;
 reg in_send_flag;
+reg send_state;
+reg send_counter;
+reg upper;
+reg send_complete_flag;
+reg next_send_state;
+reg control_state;
+reg next_control_state;
+reg control_counter;
+reg message_counter;
+reg cont_flag;
+reg message_send_flag;
 
 LCD_inst_decode lcd_decode_0(
 	.clk(clk) ,
@@ -27,7 +39,7 @@ LCD_inst_decode lcd_decode_0(
 	.LCD_RW(LCD_RW) ,
 	.LCD_upper_4(LCD_upper_4) ,
 	.LCD_lower_4(LCD_lower_4) ,
-	.address_reg(8_bit_data_reg)
+	.address_reg(data_reg)
 );
 
 assign LCD_SF_D = (upper_flag) ? LCD_upper_4 : LCD_lower_4;
@@ -98,7 +110,6 @@ always @(posedge clk or posedge reset) begin
 		upper <= 'b0;
 		in_send_flag <= 1'b0;
 		send_complete_flag <= 1'b0;
-		
 	end else begin
 		case (send_state)
 			'd1:
@@ -216,7 +227,9 @@ always @(posedge clk or posedge reset) begin
 			end
 			default: 
 			begin
-				  
+				upper <= 'b0;
+				in_send_flag <= 1'b0;
+				send_complete_flag <= 1'b0;
 			end
 		endcase
 	end
@@ -233,11 +246,11 @@ end
 always @(posedge clk or posedge reset) begin
 	if (reset) begin
 		control_counter <= 'b0;
-		message_counter;
+		message_counter <= 'b0;
 	end else begin
 		control_counter <= control_counter + 1'b1;
 		message_counter <= message_counter + 1'b1;
-		if (message_counter = 'd30) begin
+		if (message_counter == 'd30) begin
 			message_counter <= 1'b0;
 		end
 	end
@@ -246,7 +259,6 @@ end
 //Control FSM
 always @(posedge clk or posedge reset) begin
 	if (reset) begin	
-		control_counter <= 1'b0;
 		cont_flag <= 1'b0;
 	end else begin
 		case (control_counter)
@@ -264,6 +276,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd3;
 				end else begin
 					next_control_state <= 'd2;
+				end
 			end 
 			'd3:
 			begin
@@ -271,6 +284,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd4;
 				end else begin
 					next_control_state <= 'd3;
+				end
 			end 
 			'd4:
 			begin
@@ -278,6 +292,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd5;
 				end else begin
 					next_control_state <= 'd4;
+				end
 			end 
 			'd5:
 			begin
@@ -285,6 +300,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd6;
 				end else begin
 					next_control_state <= 'd5;
+				end
 			end
 			'd6:
 			begin
@@ -292,6 +308,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd7;
 				end else begin
 					next_control_state <= 'd6;		
+				end
 			end
 			'd7:
 			begin
@@ -299,6 +316,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd8;
 				end else begin
 					next_control_state <= 'd7;				
+				end
 			end  
 			'd8:
 			begin
@@ -306,6 +324,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd9;
 				end else begin
 					next_control_state <= 'd8;				
+				end
 			end 
 			'd9:
 			begin
@@ -313,13 +332,15 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd10;
 				end else begin 
 					next_control_state <= 'd9;				
+				end
 			end 
 			'd10:
 			begin
 				if (send_complete_flag) begin
 					next_control_state <= 'd11;
 				end else begin
-					next_control_state <= 'd10;				
+					next_control_state <= 'd10;	
+				end			
 			end 
 			'd11:
 			begin
@@ -327,6 +348,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd12;
 				end else begin
 					next_control_state <= 'd11;				
+				end
 			end
 			'd12:
 			begin
@@ -334,21 +356,23 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd13;
 				end else begin
 					next_control_state <= 'd12;				
+				end
 			end  
 			'd13:
 			begin
-				  
 				if (send_complete_flag) begin
 					next_control_state <= 'd14;
 				end else begin
 					next_control_state <= 'd13;				
+				end
 			end 
 			'd14:
 			begin
 				if (control_counter == 7796048) begin
 					next_control_state <= 'd15;
 				end else begin
-					next_control_state <= 'd14;			
+					next_control_state <= 'd14;	
+				end
 			end 
 			'd15:
 			begin
@@ -356,6 +380,7 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd16;
 				end else begin
 					next_control_state <= 'd15;				
+				end
 			end 
 			'd16:
 			begin
@@ -363,8 +388,12 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd10;
 				end else begin
 					next_control_state <= 'd15;				
+				end
 			end 			 
 			default: 
+			begin
+				cont_flag <= 1'b0;
+			end
 		endcase
 	end
 end
