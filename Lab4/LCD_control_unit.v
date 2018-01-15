@@ -18,9 +18,7 @@ reg upper_flag;
 reg [7:0] data_reg;
 reg in_send_flag;
 
-reg [3:0] send_state;
 reg [3:0] next_send_state;
-reg [4:0] control_state;
 reg [4:0] next_control_state;
 
 reg [12:0] send_counter;
@@ -91,19 +89,11 @@ end
 
 always @(posedge clk or posedge reset) begin
 	if (reset) begin
-		send_state <= 'd1;
-	end else begin
-		send_state <= next_send_state;
-	end
-end
-
-always @(posedge clk or posedge reset) begin
-	if (reset) begin
 		send_counter <= 'b0;
 	end else begin
 		if (cont_flag) begin
 			send_counter <= send_counter + 1'b1;
-			if (send_counter == 'd2083) begin
+			if (send_counter == 'd2080) begin
 				send_counter <= 'b0;
 			end
 		end
@@ -119,22 +109,18 @@ always @(posedge clk or posedge reset) begin
 		LCD_EN_send <= 1'b0;
 		next_send_state <= 'd1;
 	end else begin
-		case (send_state)
+		case (next_send_state)
 			'd1:
 			begin
 				if ((send_counter == 'd2) && cont_flag) begin	
-					upper_flag <= 1'b1;
 					in_send_flag <= 1'b1;
 					LCD_EN_send <= 1'b1;
 					next_send_state <= 'd2;
 				end else begin
 					send_complete_flag <= 1'b0;
-					/*else begin
-					upper_flag <= 1'b1;
-					in_send_flag <= 1'b0;
-					LCD_EN_send <= 1'b0;
-					next_send_state <= 'd1;
-				end */
+					if (send_counter == 'd1) begin
+						upper_flag <= 1'b1;
+					end
 				end
 			end
 			'd2:
@@ -144,98 +130,62 @@ always @(posedge clk or posedge reset) begin
 					in_send_flag <= 1'b1;
 					LCD_EN_send <= 1'b0;
 					next_send_state <= 'd3;
-				end /*else begin
-					upper_flag <= 1'b1;
-					in_send_flag <= 1'b1;
-					LCD_EN_send <= 1'b1;
-					next_send_state <= 'd2;
-				end */
+				end 
 			end
 			'd3:
 			begin
-				if (send_counter == 'd16) begin	
-					upper_flag <= 1'b0;
+				if (send_counter == 'd15) begin	
+					upper_flag <= 1'b1;
 					LCD_EN_send <= 1'b0;
 					in_send_flag <= 1'b1;
 					next_send_state <= 'd4;
-				end /*else begin
-					LCD_EN_send <= 1'b0;
-					upper_flag <= 1'b1;
-					in_send_flag <= 1'b1;
-					next_send_state <= 'd3;
-				end */
+				end 
 			end
 			'd4:
 			begin
-				if (send_counter == 'd66) begin	
+				if (send_counter == 'd65) begin	
 					upper_flag <= 1'b0;
 					in_send_flag <= 1'b1;
 					LCD_EN_send <= 1'b0;
 					next_send_state <= 'd5;
-				end /*else begin
-					LCD_EN_send <= 1'b0;
-					upper_flag <= 1'b0;
-					in_send_flag <= 1'b1;
-					next_send_state <= 'd4;
-				end */
+				end 
 			end
 			'd5:
 			begin  
-				if (send_counter == 'd68) begin
+				if (send_counter == 'd67) begin
 					upper_flag <= 1'b0;
 					in_send_flag <= 1'b1;
 					LCD_EN_send <= 1'b1;
 					next_send_state <= 'd6;
-				end /*else begin
-					upper_flag <= 1'b0;
-					in_send_flag <= 1'b1;
-					LCD_EN_send <= 1'b0;
-					next_send_state <= 'd5;
-				end */
+				end
 			end
 			'd6:
 			begin
-				if (send_counter == 'd80) begin
+				if (send_counter == 'd79) begin
 					upper_flag <= 1'b0;
 					in_send_flag <= 1'b1;
 					LCD_EN_send <= 1'b0;	
 					next_send_state <= 'd7;
-				end /* else begin
-					upper_flag <= 1'b0;
-					in_send_flag <= 1'b1;
-					LCD_EN_send <= 1'b1;
-					next_send_state <= 'd6;
-				end */
+				end 
 			end
 			'd7:
 			begin	  
-				if (send_counter == 'd82) begin	
+				if (send_counter == 'd80) begin	
 					upper_flag <= 1'b0;
 					in_send_flag <= 1'b1;
 					LCD_EN_send <= 1'b0;
 					next_send_state <= 'd8;
-				end /* else begin
-					upper_flag <= 1'b0;
-					in_send_flag <= 1'b1;
-					LCD_EN_send <= 1'b0;
-					next_send_state <= 'd7;
-				end */
+				end
 			end
 			'd8:
 			begin	  
-				if (send_counter == 'd2082) begin
+				if (send_counter == 'd2080) begin
 					upper_flag <= 1'b0;
 					in_send_flag <= 1'b0;
 					LCD_EN_send <= 1'b0;	
 					send_complete_flag <= 1'b1;
 					next_send_state <= 'd1;
-				end /*else begin
-					upper_flag <= 1'b0;
-					in_send_flag <= 1'b1;
-					LCD_EN_send <= 1'b0;
-					send_complete_flag <= 1'b0;
-					next_send_state <= 1'd0;
-				end*/
+				end 
 			end
 			default: 
 			begin
@@ -244,14 +194,6 @@ always @(posedge clk or posedge reset) begin
 				send_complete_flag <= 1'b0;
 			end
 		endcase
-	end
-end
-
-always @(posedge clk or posedge reset) begin
-	if (reset) begin
-		control_state <= 'd1;
-	end else begin
-		control_state <= next_control_state;
 	end
 end
 
@@ -281,7 +223,7 @@ always @(posedge clk or posedge reset) begin
 		data_reg <= 'd0;
 		instruction <= 'd0;
 	end else begin
-		case (control_state)
+		case (next_control_state)
 			'd1:
 			begin	  
 				if (control_counter == 'd750000) begin
@@ -289,24 +231,16 @@ always @(posedge clk or posedge reset) begin
 					LCD_EN_cont <= 1'b1;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd2;
-				end /*else begin
-					instruction <= 'd0;
-					LCD_EN_cont <= 1'b0;
-					next_control_state <= 'd1;
-				end */
+				end 
 			end 
 			'd2:
 			begin
 				if (control_counter == 750012) begin
-					instruction <= 'd13;
+					//instruction <= 'd13;
 					LCD_EN_cont <= 1'b0;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd3;
-				end /*else begin
-					instruction <= 'd11;
-					LCD_EN_cont <= 1'b1;
-					next_control_state <= 'd2;
-				end*/
+				end 
 			end 
 			'd3:
 			begin
@@ -315,24 +249,16 @@ always @(posedge clk or posedge reset) begin
 					LCD_EN_cont <= 1'b1;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd4;
-				end /*else begin
-					instruction <= 'd0;
-					LCD_EN_cont <= 1'b0;
-					next_control_state <= 'd3;
-				end*/
-			end 
+				end 
+			end
 			'd4:
 			begin
 				if (control_counter == 955024) begin
-					instruction <= 'd13;
+					//instruction <= 'd13;
 					LCD_EN_cont <= 1'b0;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd5;
-				end /*else begin
-					instruction <= 'd11;
-					LCD_EN_cont <= 1'b1;
-					next_control_state <= 'd4;
-				end */
+				end 
 			end 
 			'd5:
 			begin
@@ -341,24 +267,16 @@ always @(posedge clk or posedge reset) begin
 					LCD_EN_cont <= 1'b1;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd6;
-				end /* else begin
-					instruction <= 'd0;
-					LCD_EN_cont <= 1'b0;
-					next_control_state <= 'd5;
-				end */
+				end 
 			end
 			'd6:
 			begin
 				if (control_counter == 960036) begin
-					instruction <= 'd13;
+					//instruction <= 'd13;
 					LCD_EN_cont <= 1'b0;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd7;
-				end /*else begin
-					instruction <= 'd11;
-					LCD_EN_cont <= 1'b1;
-					next_control_state <= 'd6;		
-				end */
+				end 
 			end
 			'd7:
 			begin
@@ -367,24 +285,16 @@ always @(posedge clk or posedge reset) begin
 					LCD_EN_cont <= 1'b1;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd8;
-				end/* else begin
-					instruction <= 'd0;
-					LCD_EN_cont <= 1'b0;
-					next_control_state <= 'd7;				
-				end */
+				end
 			end  
 			'd8:
 			begin
 				if (control_counter == 962048) begin
-					instruction <= 'd13;
+					//instruction <= 'd13;
 					LCD_EN_cont <= 1'b0;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd9;
-				end/* else begin
-					instruction <= 'd12;
-					LCD_EN_cont <= 1'b1;
-					next_control_state <= 'd8;				
-				end*/
+				end
 			end 
 			'd9:
 			begin
@@ -394,11 +304,7 @@ always @(posedge clk or posedge reset) begin
 					cont_flag <= 1'b1;
 					cont_counter <= 1'b0;
 					next_control_state <= 'd10;
-				end/* else begin 
-					instruction <= 'd0;
-					LCD_EN_cont <= 1'b0;
-					next_control_state <= 'd9;				
-				end */
+				end
 			end 
 			'd10:
 			begin
@@ -426,18 +332,18 @@ always @(posedge clk or posedge reset) begin
 			'd12:
 			begin
 				if (send_complete_flag) begin
-					instruction <= 'd13;
+					instruction <= 'd3;
 					LCD_EN_cont <= 1'b0;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd13;
-				end  else begin
+				end else begin
 					cont_flag <= 1'b1;
 				end
 			end  
 			'd13:
 			begin
 				if (send_complete_flag) begin
-					instruction <= 'd13;
+					instruction <= 'd0;
 					LCD_EN_cont <= 1'b0;
 					cont_counter <= 1'b1;
 					cont_flag <= 1'b0;
@@ -449,19 +355,17 @@ always @(posedge clk or posedge reset) begin
 			'd14:
 			begin
 				if (control_counter == 1046048) begin
-					data_reg <= message[message_counter];
+					data_reg <= message_counter;
 					instruction <= 'd7;
 					cont_flag <= 1'b1;
 					cont_counter <= 1'b0;
 					next_control_state <= 'd15;
-				end /*else begin
-					cont_counter <= 1'b1;
-					next_control_state <= 'd14;	
-				end */
+				end 
 			end 
 			'd15:
 			begin
 				if (send_complete_flag) begin
+					message_counter <= message_counter + 1'b1;
 					data_reg <= message[message_counter];
 					instruction <= 'd9;
 					cont_flag <= 1'b0;
@@ -479,21 +383,16 @@ always @(posedge clk or posedge reset) begin
 					next_control_state <= 'd10;
 				end else begin
 					if (send_complete_flag) begin
-						instruction <= 'd7;
+						instruction <= 'd9;
 						cont_flag <= 1'b0;
 						message_counter <= message_counter + 1'b1;
-						if (message_counter == 31) begin
+						data_reg <= message[message_counter];
+						if (message_counter == 30) begin
 							message_counter <= 'b0;
 							message_send_flag <= 1'b1;
 						end 
-					  	next_control_state <= 'd15;		
+					  	next_control_state <= 'd16;		
 					end else begin
-						/*data_reg <= message[message_counter];
-						message_counter <= message_counter + 1'b1;
-						if (message_counter == 31) begin
-							message_counter <= 'b0;
-							message_send_flag <= 1'b1;
-						end */
 						cont_flag <= 1'b1;
 					end
 				end
