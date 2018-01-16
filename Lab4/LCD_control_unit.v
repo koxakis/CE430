@@ -55,7 +55,7 @@ always @(posedge clk or posedge reset) begin
 		message[2] <= 'h20;
 		message[3] <= 'h4f;
 		message[4] <= 'h6c;
-		message[5] <= 'h76;
+		message[5] <= 'h79;
 		message[6] <= 'h6d;
 		message[7] <= 'h70;
 		message[8] <= 'h69;
@@ -386,7 +386,17 @@ always @(posedge clk or posedge reset) begin
 						instruction <= 'd9;
 						cont_flag <= 1'b0;
 						message_counter <= message_counter + 1'b1;
-						data_reg <= message[message_counter];
+						if (message_counter <= 16) begin
+							data_reg <= message[message_counter];
+						end else begin
+							data_reg <= message[message_counter-1'b1];
+						end
+						if (message_counter == 16) begin
+							if (send_complete_flag) begin
+								data_reg <= 'h40;
+								instruction <=7;
+							end
+						end
 						if (message_counter == 30) begin
 							message_counter <= 'b0;
 							message_send_flag <= 1'b1;
