@@ -8,7 +8,7 @@ wire LCD_RW;
 wire LCD_EN;
 wire [3:0] LCD_SF_D; 
 
-LCD_control_unit dut_LCD_control_inst(
+LCD_controller_module dut_LCD_controller_inst(
 	.clk(clk) ,
 	.reset(reset) ,
 	.LCD_RS(LCD_RS) ,
