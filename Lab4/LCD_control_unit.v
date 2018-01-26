@@ -72,16 +72,16 @@ assign LCD_EN = (in_send_flag) ? LCD_EN_send : LCD_EN_cont;
 //Message
 always @(posedge clk or posedge reset) begin
 	if (reset) begin
-		message[0] <= 'h48;
-		message[1] <= 'h69;
-		message[2] <= 'h20;
-		message[3] <= 'h4f;
-		message[4] <= 'h6c;
-		message[5] <= 'h79;
-		message[6] <= 'h6d;
-		message[7] <= 'h70;
-		message[8] <= 'h69;
-		message[9] <= 'h61;
+		message[0] <= 'h41;
+		message[1] <= 'h68;
+		message[2] <= 'h6d;
+		message[3] <= 'h65;
+		message[4] <= 'h74;
+		message[5] <= 'h21;
+		message[6] <= 'h21;
+		message[7] <= 'h21;
+		message[8] <= 'h21;
+		message[9] <= 'h21;
 		message[10] <= 'h21;
 		message[11] <= 'h21;
 		message[12] <= 'h3c;
@@ -396,6 +396,7 @@ always @(posedge clk or posedge reset) begin
 				if (send_complete_flag) begin
 					instruction <= 'd0;
 					LCD_EN_cont <= 1'b0;
+					//Unfreeze control counter in order to wait for the next state 
 					cont_counter <= 1'b1;
 					cont_flag <= 1'b0;
 					next_control_state <= 'd14;
