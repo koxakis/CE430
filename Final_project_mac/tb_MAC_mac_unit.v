@@ -9,8 +9,15 @@ reg [7:0] in_2;
 reg [7:0] in_add, num_a, num_x, num_b, num_c;
 reg mode;
 reg mul_input_mux, adder_input_mux;
-wire [15:0] mac_output;
+wire [16:0] mac_output;
 reg [16:0] check_tri;
+
+reg [7:0] num_a_test [2:0];
+reg [7:0] num_x_test [2:0];
+reg [7:0] num_b_test [2:0];
+reg [7:0] num_c_test [2:0];
+
+reg [1:0] tri_test_inputs;
 
 MAC_mac_unit dut_mac_0(
 	.clk(clk) ,
@@ -41,60 +48,59 @@ always @(posedge clk or posedge reset) begin
 	end
 end
 
+always @(posedge clk or posedge reset) begin
+	if (reset) begin
+		num_a_test[0] <= 'd5;
+		num_x_test[0] <= 'd3;
+		num_b_test[0] <= 'd2;
+		num_c_test[0] <= 'd1;
+
+		num_a_test[1] <= 'd9;
+		num_x_test[1] <= 'd8;
+		num_b_test[1] <= 'd7;
+		num_c_test[1] <= 'd6;
+
+		num_a_test[2] <= 'd5;
+		num_x_test[2] <= 'd5;
+		num_b_test[2] <= 'd5;
+		num_c_test[2] <= 'd5;
+	end
+end
+
 initial begin
 	$display("\t\tin_1,\tin_2,\tin_add,\tmode,\tmac_output, \tideal_out");
 	clk = 1;
 	reset = 1;
+	//tri_test_inputs = 'b0;
 	#10;
 	reset = 0;
 	//Assert/De-assert reset
 	//#1 -> reset_triger;#19;
 
-	//(a*x + b)*x+c
-	//For test (5*3 + 2)*3 + 1;
-	mul_input_mux = 1'b0;
-	adder_input_mux = 1'b0;
-	//Mode 1 for tri
-	mode = 'd1;
-	//a
-	in_1 = 'd5;
-	num_a = 'd5;
-	//x
-	in_2 = 'd3; 
-	num_x = 'd3;
-	//b
-	in_add = 'd2;
-	num_b = 'd2; 
-	//c for testing
-	num_c = 'd1; 
-	#10;
-	//c
-	mul_input_mux = 1'b1;
-	in_add = 'd1;
+	for (tri_test_inputs = 0; tri_test_inputs < 3; tri_test_inputs = tri_test_inputs + 1'b1) begin
+		//(a*x + b)*x+c
+		mul_input_mux = 1'b0;
+		adder_input_mux = 1'b0;
+		//Mode 1 for tri
+		mode = 'd1;
+		//a
+		in_1 = num_a_test[tri_test_inputs];
+		num_a = num_a_test[tri_test_inputs];
+		//x
+		in_2 = num_x_test[tri_test_inputs]; 
+		num_x = num_x_test[tri_test_inputs];
+		//b
+		in_add = num_b_test[tri_test_inputs];
+		num_b = num_b_test[tri_test_inputs]; 
+		//c for testing
+		num_c = num_c_test[tri_test_inputs]; 
+		#10;
+		//c
+		mul_input_mux = 1'b1;
+		in_add = num_c_test[tri_test_inputs];
 
-	#30;
-
-	//(a*x + b)*x+c
-	//For test (9*8 + 7)*8 + 6
-	mul_input_mux = 1'b0;
-	adder_input_mux = 1'b0;
-	//Mode 1 for tri
-	mode = 'd1;
-	//a
-	in_1 = 'd9;
-	num_a = 'd9;
-	//x
-	in_2 = 'd8; 
-	num_x = 'd8;
-	//b
-	in_add = 'd7;
-	num_b = 'd7; 
-	//c for testing
-	num_c = 'd6; 
-	#10;
-	//c
-	mul_input_mux = 1'b1;
-	in_add = 'd6;
+		#30;
+	end
 	#60
 	$finish;
 end
