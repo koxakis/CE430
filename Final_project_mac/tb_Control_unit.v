@@ -15,8 +15,8 @@ wire [16:0] final_output;
 reg mode;
 reg [16:0] check_tri;
 
-reg [7:0] num_a_test [2:0];
-reg [7:0] num_x_test [2:0];
+reg [7:0] num_a_test [4:0];
+reg [7:0] num_x_test [4:0];
 reg [7:0] num_b_test [2:0];
 reg [7:0] num_c_test [2:0];
 
@@ -75,6 +75,16 @@ always @(posedge clk or posedge reset) begin
 		num_x_test[2] <= $random;
 		num_b_test[2] <= $random;
 		num_c_test[2] <= $random;
+
+		num_a_test[3] <= $random;
+		num_x_test[3] <= $random;
+
+		num_a_test[4] <= $random;
+		num_x_test[4] <= $random;
+
+		num_a_test[5] <= $random;
+		num_x_test[5] <= $random;
+		
 	end
 end
 
@@ -120,7 +130,7 @@ initial begin
 		end 
 		TEST_SUMP:
 		begin
-			for (tri_test_inputs = 0; tri_test_inputs < 3 ; tri_test_inputs = tri_test_inputs + 1'b1 ) begin
+			for (tri_test_inputs = 0; tri_test_inputs < 6; tri_test_inputs = tri_test_inputs + 1'b1 ) begin
 				mode = 1'b0;
 				
 				valid_input = 1'b1;

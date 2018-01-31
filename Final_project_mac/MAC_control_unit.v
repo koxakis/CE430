@@ -43,7 +43,10 @@ module MAC_control_unit(
 	parameter MUL_WITH_REG = 2'b10;
 
 	//SUMP states
+	/*Wait for valid and last input that indicates these are the last 2
+		inputs unitl the next ones x1 a1 then x2 a2*/
 	parameter IDLE_SUM = 0;
+	// Do the culculation (a*x) + (previous (a*x))
 	parameter CULCULATE = 1;
 
 	MAC_mac_unit mac_0(
@@ -78,6 +81,7 @@ module MAC_control_unit(
 				case (tri_state)
 					IDLE_TRI:
 					begin
+					//Wait for input from higher level
 						valid_output <= 1'b0;
 						mul_input_mux <= 1'b0;
 						tri_state_counter <= tri_state_counter + 1'b1;
@@ -89,6 +93,7 @@ module MAC_control_unit(
 						end
 					end
 					MUL_WITH_INPUT:
+					//Multiply with the first three inputs of the trinomial a*x+b
 					begin
 						in_1 <= num_a;
 						in_2 <= num_x;
@@ -101,6 +106,7 @@ module MAC_control_unit(
 						end 
 					end
 					MUL_WITH_REG:
+					//Multiply with the first three inputs of the trinomial r*x+c
 					begin
 						in_add <= num_c;
 						mul_input_mux <= 1'b1;
