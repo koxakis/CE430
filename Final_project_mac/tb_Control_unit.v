@@ -1,15 +1,18 @@
 `timescale 1ns/1ps
 
-module tb_MAC_mac_unit;
+module tb_Control_unit;
 reg clk;
 reg reset;
 
-reg [7:0] in_1;
-reg [7:0] in_2;
-reg [7:0] in_add, num_a, num_x, num_b, num_c;
+reg [7:0] num_a_in, num_b_in, num_c_in, num_x_in;
+reg [7:0] num_a, num_x, num_b, num_c;
+reg valid_input, last_input;
+
+wire valid_output;
+
+wire [16:0] final_output;
+
 reg mode;
-reg mul_input_mux, adder_input_mux;
-wire [16:0] mac_output;
 reg [16:0] check_tri;
 
 reg [7:0] num_a_test [2:0];
@@ -24,16 +27,18 @@ reg test_mode;
 parameter TEST_TRI = 1'b0;
 parameter TEST_SUMP = 1'b1;
 
-MAC_mac_unit dut_mac_0(
+MAC_top_level MAC_top_level_0(
 	.clk(clk) ,
 	.reset(reset) ,
-	.in_1(in_1) ,
-	.in_2(in_2) ,
-	.in_add(in_add) ,
-	.mode(mode),
-	.mul_input_mux(mul_input_mux) ,
-	.adder_input_mux(adder_input_mux) ,
-	.mac_output(mac_output)
+	.valid_input(valid_input) ,
+	.valid_output(valid_output) ,
+	.last_input(last_input) ,
+	.num_a(num_a_in) ,
+	.num_b(num_b_in) ,
+	.num_c(num_c_in) ,
+	.num_x(num_x_in) ,
+	.final_output(final_output) ,
+	.mode(mode)
 );
 //Trinomial ideal unit
 always @ (posedge clk or posedge reset) begin
@@ -47,9 +52,9 @@ always @ (posedge clk or posedge reset) begin
 end
 //Trinomial checker
 always @(posedge clk or posedge reset) begin
-	if (check_tri == mac_output) begin
+	if (check_tri == final_output) begin
 		$display ("Success\n");
-		$display("\t%d,\t%d,\t%d,\t%d,\t%d,\t%d", in_1, in_2, in_add, mode, mac_output, check_tri);
+		$display("\t%d,\t%d,\t%d,\t%d,\t%d,\t%d", num_a, num_x, num_b, num_c, final_output, check_tri);
 	end
 end
 
@@ -75,11 +80,14 @@ end
 initial begin
 	$display("\t\tin_1,\tin_2,\tin_add,\tmode,\tmac_output, \tideal_out");
 	clk = 1;
-	reset = 1;
+	reset = 1;				
+	valid_input = 1'b0;
+	last_input = 1'b0;
+	test_mode = TEST_TRI;
 	//tri_test_inputs = 'b0;
 	#10;
 	reset = 0;
-	test_mode = TEST_TRI;
+
 	//Assert/De-assert reset
 	//#1 -> reset_triger;#19;
 
@@ -87,28 +95,31 @@ initial begin
 		TEST_TRI:
 		begin
 			for (tri_test_inputs = 0; tri_test_inputs < 3; tri_test_inputs = tri_test_inputs + 1'b1) begin
+				//change to control control unit
 				//(a*x + b)*x+c
-				mul_input_mux = 1'b0;
-				adder_input_mux = 1'b0;
 				//Mode 1 for tri
 				mode = 'd1;
+				valid_input = 1'b1;
 				//a
-				in_1 = num_a_test[tri_test_inputs];
+				num_a_in = num_a_test[tri_test_inputs];
 				num_a = num_a_test[tri_test_inputs];
 				//x
-				in_2 = num_x_test[tri_test_inputs]; 
+				num_x_in = num_x_test[tri_test_inputs]; 
 				num_x = num_x_test[tri_test_inputs];
 				//b
-				in_add = num_b_test[tri_test_inputs];
+				num_b_in = num_b_test[tri_test_inputs];
 				num_b = num_b_test[tri_test_inputs]; 
 				//c for testing
 				num_c = num_c_test[tri_test_inputs]; 
-				#10;
 				//c
-				mul_input_mux = 1'b1;
-				in_add = num_c_test[tri_test_inputs];
+				num_c_in = num_c_test[tri_test_inputs];
+				last_input = 1'b1;
 
-				#30;
+
+				#40;
+				last_input = 1'b0;
+				valid_input = 1'b0;
+				#10;
 			end
 		end 
 		TEST_SUMP:
