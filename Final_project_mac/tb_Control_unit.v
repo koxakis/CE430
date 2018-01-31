@@ -54,7 +54,8 @@ end
 always @(posedge clk or posedge reset) begin
 	if (check_tri == final_output) begin
 		$display ("Success\n");
-		$display("\t%d,\t%d,\t%d,\t%d,\t%d,\t%d", num_a, num_x, num_b, num_c, final_output, check_tri);
+		$display("\tin_1 (a),\tin_2 (x),\tin_add (b),\tin_add (c),\tmac_output, \tideal_out");
+		$display("\t%d,\t%d,\t%d,\t%d,\t%d,\t%d", num_a_in, num_x_in, num_b_in, num_c_in, final_output, check_tri);
 	end
 end
 
@@ -78,18 +79,13 @@ always @(posedge clk or posedge reset) begin
 end
 
 initial begin
-	$display("\t\tin_1,\tin_2,\tin_add,\tmode,\tmac_output, \tideal_out");
 	clk = 1;
 	reset = 1;				
 	valid_input = 1'b0;
 	last_input = 1'b0;
-	test_mode = TEST_TRI;
-	//tri_test_inputs = 'b0;
+	test_mode = TEST_SUMP;
 	#10;
 	reset = 0;
-
-	//Assert/De-assert reset
-	//#1 -> reset_triger;#19;
 
 	case (test_mode)
 		TEST_TRI:
@@ -124,7 +120,20 @@ initial begin
 		end 
 		TEST_SUMP:
 		begin
+			for (tri_test_inputs = 0; tri_test_inputs < 3 ; tri_test_inputs = tri_test_inputs + 1'b1 ) begin
+				mode = 1'b0;
+				
+				valid_input = 1'b1;
 
+				num_a_in = num_a_test[tri_test_inputs];
+				num_x_in = num_x_test[tri_test_inputs];
+
+				last_input = 1'b1;
+				#20;
+				valid_input = 1'b0;
+				last_input = 1'b0;
+				#10;
+			end
 		end
 		default: 
 		begin
@@ -135,21 +144,6 @@ initial begin
 
 	$finish;
 end
-
-//code for reset logic 
-event reset_triger;
-	event reset_done_trigger;
-
-	initial begin
-		forever begin
-			@(reset_triger);
-			@(posedge clk);
-			reset = 1'b1;
-			@(posedge clk);
-			reset = 1'b0;
-			-> reset_done_trigger;
-		end
-	end
 
 localparam CLK_PERIOD = 10;
 always #(CLK_PERIOD/2) clk=~clk;

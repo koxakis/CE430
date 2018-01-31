@@ -11,7 +11,6 @@ module MAC_control_unit(
 	final_output,
 	mode
 );
-
 	input clk, reset;
 
 	input valid_input, last_input;
@@ -23,16 +22,29 @@ module MAC_control_unit(
 
 	reg [1:0] tri_state;
 	reg [2:0] tri_state_counter;
+
+	reg sump_state;
+	reg [1:0] sump_state_counter;
 	wire [16:0] mac_output;
 
 	reg mul_input_mux, adder_input_mux;
 	reg [7:0] in_1, in_2, in_add;
 
 	//Trinomial states
-	parameter IDLE = 2'b00;
+	//Wait for valid and last input
+	parameter IDLE_TRI = 2'b00;
+	/*Multiply with the input from the control unit a and x 
+		and add with third in_add number b
+		1st step of the culculation (a*x) + b = r*/
 	parameter MUL_WITH_INPUT = 2'b01;
+	/*Multiply with the input from the register r and x 
+		and add with third in_add number c
+		2nd step of the culculation (r*x) + c */
 	parameter MUL_WITH_REG = 2'b10;
-	parameter OUTPUT_FINAL = 2'b11;
+
+	//SUMP states
+	parameter IDLE_SUM = 0;
+	parameter CULCULATE = 1;
 
 	MAC_mac_unit mac_0(
 		.clk(clk) ,
@@ -47,22 +59,7 @@ module MAC_control_unit(
 	);
 
 	//Valid output is 1 the output is redirected to the final out
-	assign final_output = (valid_output) ? mac_output : 'b0;
-
-	always @(posedge clk or posedge reset) begin
-		if (reset) begin
-			tri_state_counter <= 'b0;
-		end else begin
-			if (!last_input) begin
-				tri_state_counter <= 'b0;
-			end else begin
-				tri_state_counter <= tri_state_counter + 1'b1;
-				if (tri_state_counter == 6) begin
-					tri_state_counter <= 'b0;
-				end
-			end
-		end
-	end
+	assign final_output = (valid_output) ? mac_output : 17'b0;
 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
@@ -74,50 +71,79 @@ module MAC_control_unit(
 			in_2 <= 'b0;
 			in_add <= 'b0;
 			tri_state_counter <= 'b0;
+			sump_state <= 'b0;
+			sump_state_counter <= 'b0;
 		end else begin
-			case (tri_state)
-				IDLE:
-				begin
-					valid_output <= 1'b0;
-					mul_input_mux <= 1'b0;
-					tri_state_counter <= tri_state_counter + 1'b1;
-					if ((last_input) && (valid_input) ) begin
+			if (mode) begin
+				case (tri_state)
+					IDLE_TRI:
+					begin
+						valid_output <= 1'b0;
+						mul_input_mux <= 1'b0;
+						tri_state_counter <= tri_state_counter + 1'b1;
+						if ((last_input) && (valid_input) ) begin
+							in_1 <= num_a;
+							in_2 <= num_x;
+							in_add <= num_b;
+							tri_state <= MUL_WITH_INPUT;
+						end
+					end
+					MUL_WITH_INPUT:
+					begin
 						in_1 <= num_a;
 						in_2 <= num_x;
 						in_add <= num_b;
-						tri_state <= MUL_WITH_INPUT;
+						mul_input_mux <= 1'b0;
+						adder_input_mux <= 1'b0;
+						tri_state_counter <= tri_state_counter + 1'b1;
+						if ((tri_state_counter == 1) ) begin
+							tri_state <= MUL_WITH_REG;
+						end 
 					end
-				end
-				MUL_WITH_INPUT:
-				begin
-					in_1 <= num_a;
-					in_2 <= num_x;
-					in_add <= num_b;
-					mul_input_mux <= 1'b0;
-					adder_input_mux <= 1'b0;
-					tri_state_counter <= tri_state_counter + 1'b1;
-					if ((tri_state_counter == 1) ) begin
-						tri_state <= MUL_WITH_REG;
+					MUL_WITH_REG:
+					begin
+						in_add <= num_c;
+						mul_input_mux <= 1'b1;
+						tri_state_counter <= tri_state_counter + 1'b1;
+						if (tri_state_counter == 3) begin
+							tri_state_counter <= 'b0;
+							valid_output <= 1'b1;
+							tri_state <= IDLE_TRI;
+						end
+					end
+					default: 
+					begin
+					end
+				endcase	
+			end else begin
+				case (sump_state)
+					IDLE_SUM:
+					begin
+						valid_output <= 1'b0;
+						mul_input_mux <= 1'b0;
+						adder_input_mux <= 1'b1;
+						if ((valid_input) && (last_input)) begin
+							in_1 <= num_a;
+							in_2 <= num_x;
+							sump_state <= CULCULATE;
+						end
 					end 
-				end
-				MUL_WITH_REG:
-				begin
-					in_add <= num_c;
-					mul_input_mux <= 1'b1;
-					tri_state_counter <= tri_state_counter + 1'b1;
-					if (tri_state_counter == 4) begin
-						tri_state_counter <= 'b0;
-						valid_output <= 1'b1;
-						tri_state <= IDLE;
+					CULCULATE:
+					begin
+						in_1 <= num_a;
+						in_2 <= num_x;
+						sump_state_counter <= sump_state_counter + 1'b1;
+						if (sump_state_counter == 1) begin
+							valid_output <= 1'b1;
+							sump_state_counter <= 0;
+							sump_state <= IDLE_SUM;
+						end
 					end
-				end
-				OUTPUT_FINAL:
-				begin
-				end
-				default: 
-				begin
-				end
-			endcase			
+					default: 
+					begin
+					end
+				endcase
+			end		
 		end
 	end
 

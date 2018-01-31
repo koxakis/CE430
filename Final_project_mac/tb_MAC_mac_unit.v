@@ -79,7 +79,7 @@ initial begin
 	//tri_test_inputs = 'b0;
 	#10;
 	reset = 0;
-	test_mode = TEST_TRI;
+	test_mode = TEST_SUMP;
 	//Assert/De-assert reset
 	//#1 -> reset_triger;#19;
 
@@ -113,7 +113,18 @@ initial begin
 		end 
 		TEST_SUMP:
 		begin
+			for (tri_test_inputs = 0; tri_test_inputs < 3 ; tri_test_inputs = tri_test_inputs + 1'b1 ) begin
+				mul_input_mux = 1'b0;
+				adder_input_mux = 1'b1;
 
+				mode = 1'b0;
+
+				in_1 = num_a_test[tri_test_inputs];
+				in_2 = num_x_test[tri_test_inputs];
+
+				#20;
+
+			end
 		end
 		default: 
 		begin
