@@ -25,7 +25,8 @@ module MAC_mac_unit(
 	reg [16:0] intermidiate_res;
 
 	//output Select for output mux mode modes 1 for tri 0 for sump
-	assign mac_output = (mode) ? intermidiate_res : intermidiate_res ;
+	//assign mac_output = (mode) ? intermidiate_res : intermidiate_res ;
+	assign mac_output = intermidiate_res;
 
 	//Do the mul with out delay 
 	//Input Select for mul Mux modes 1 for reg 0 for in_1

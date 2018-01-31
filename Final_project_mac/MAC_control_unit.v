@@ -84,7 +84,7 @@ module MAC_control_unit(
 					//Wait for input from higher level
 						valid_output <= 1'b0;
 						mul_input_mux <= 1'b0;
-						tri_state_counter <= tri_state_counter + 1'b1;
+						//tri_state_counter <= tri_state_counter + 1'b1;
 						if ((last_input) && (valid_input) ) begin
 							in_1 <= num_a;
 							in_2 <= num_x;
@@ -102,6 +102,7 @@ module MAC_control_unit(
 						adder_input_mux <= 1'b0;
 						tri_state_counter <= tri_state_counter + 1'b1;
 						if ((tri_state_counter == 1) ) begin
+							mul_input_mux <= 1'b1;
 							tri_state <= MUL_WITH_REG;
 						end 
 					end
@@ -111,7 +112,7 @@ module MAC_control_unit(
 						in_add <= num_c;
 						mul_input_mux <= 1'b1;
 						tri_state_counter <= tri_state_counter + 1'b1;
-						if (tri_state_counter == 3) begin
+						if (tri_state_counter == 4) begin
 							tri_state_counter <= 'b0;
 							valid_output <= 1'b1;
 							tri_state <= IDLE_TRI;
@@ -124,6 +125,7 @@ module MAC_control_unit(
 			end else begin
 				case (sump_state)
 					IDLE_SUM:
+					//Wait for the first two inputs
 					begin
 						valid_output <= 1'b0;
 						mul_input_mux <= 1'b0;
@@ -135,6 +137,7 @@ module MAC_control_unit(
 						end
 					end 
 					CULCULATE:
+					//Calculate the product and sum it to previous result
 					begin
 						in_1 <= num_a;
 						in_2 <= num_x;
