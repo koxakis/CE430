@@ -13,7 +13,7 @@ wire valid_output;
 wire [16:0] final_output;
 
 reg mode;
-reg [16:0] check_tri;
+reg [16:0] check_tri, check_sump, y_reg;
 
 reg [7:0] num_a_test [5:0];
 reg [7:0] num_x_test [5:0];
@@ -43,7 +43,7 @@ MAC_top_level MAC_top_level_0(
 //Trinomial ideal unit
 always @ (posedge clk or posedge reset) begin
 	if (reset) begin
-		check_tri <= 1'b0;
+		check_tri <= 'b0;
 	end else begin
 		//(a*x + b)*x+c
 		//(in_1*in_2 + in_add)*in_2 + in_add
@@ -52,10 +52,31 @@ always @ (posedge clk or posedge reset) begin
 end
 //Trinomial checker
 always @(posedge clk or posedge reset) begin
-	if (check_tri == final_output) begin
+	if ((check_tri == final_output) && (mode)) begin
 		$display ("Success\n");
 		$display("\tin_1 (a),\tin_2 (x),\tin_add (b),\tin_add (c),\tmac_output, \tideal_out");
 		$display("\t%d,\t%d,\t%d,\t%d,\t%d,\t%d", num_a_in, num_x_in, num_b_in, num_c_in, final_output, check_tri);
+	end
+end
+
+//SumP ideal unit
+always @(posedge clk or posedge reset) begin
+	if (reset) begin
+		check_sump <= 'b0;
+		y_reg <= 'b0;
+	end else begin
+		check_sump <= (num_a*num_x) + y_reg;
+		y_reg <= check_sump;
+		#20;
+	end
+end
+
+//SumP checker
+always @(posedge clk or posedge reset) begin
+	if ((check_sump == final_output) && (!mode)) begin
+		$display ("Success\n");
+		$display("\tin_1 (a),\tin_2 (x),\ty (y),\tmac_output, \tideal_out");
+		$display("\t%d,\t%d,\t%d,\t%d", num_a_in, num_x_in,final_output, check_sump);
 	end
 end
 
@@ -96,7 +117,8 @@ initial begin
 	reset = 1;				
 	valid_input = 1'b0;
 	last_input = 1'b0;
-	test_mode = TEST_TRI;
+	//test_mode = TEST_TRI;
+	test_mode = TEST_SUMP;
 	#10;
 	reset = 0;
 
@@ -139,7 +161,10 @@ initial begin
 				valid_input = 1'b1;
 
 				num_a_in = num_a_test[tri_test_inputs];
+				num_a = num_a_test[tri_test_inputs];
+
 				num_x_in = num_x_test[tri_test_inputs];
+				num_x = num_x_test[tri_test_inputs];
 
 				last_input = 1'b1;
 				#20;
