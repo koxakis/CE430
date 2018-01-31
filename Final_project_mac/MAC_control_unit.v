@@ -24,7 +24,7 @@ module MAC_control_unit(
 	reg [2:0] tri_state_counter;
 
 	reg sump_state;
-	reg [1:0] sump_state_counter;
+	reg sump_state_counter;
 	wire [16:0] mac_output;
 
 	reg mul_input_mux, adder_input_mux;
@@ -55,7 +55,7 @@ module MAC_control_unit(
 		.in_1(in_1) ,
 		.in_2(in_2) ,
 		.in_add(in_add) ,
-		.mode(mode),
+		//.mode(mode),
 		.mul_input_mux(mul_input_mux) ,
 		.adder_input_mux(adder_input_mux) ,
 		.mac_output(mac_output)

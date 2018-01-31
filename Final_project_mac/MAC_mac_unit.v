@@ -4,7 +4,7 @@ module MAC_mac_unit(
 	in_1,
 	in_2,
 	in_add,
-	mode,
+	//mode,
 	mul_input_mux,
 	adder_input_mux,
 	mac_output
@@ -15,7 +15,7 @@ module MAC_mac_unit(
 	input mul_input_mux, adder_input_mux;
 
 	input [7:0] in_add;
-	input mode;
+	//input mode;
 
 	//Due to carry-out and mull oporation the output is 17 bit 
 	output [16:0] mac_output;
