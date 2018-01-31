@@ -84,7 +84,7 @@ module MAC_control_unit(
 					//Wait for input from higher level
 						valid_output <= 1'b0;
 						mul_input_mux <= 1'b0;
-						//tri_state_counter <= tri_state_counter + 1'b1;
+						//Start the culculation only when last input and valid input
 						if ((last_input) && (valid_input) ) begin
 							in_1 <= num_a;
 							in_2 <= num_x;
@@ -100,6 +100,7 @@ module MAC_control_unit(
 						in_add <= num_b;
 						mul_input_mux <= 1'b0;
 						adder_input_mux <= 1'b0;
+						//Wait for the 1st part to be completed until the next calculation
 						tri_state_counter <= tri_state_counter + 1'b1;
 						if ((tri_state_counter == 1) ) begin
 							mul_input_mux <= 1'b1;
@@ -111,8 +112,10 @@ module MAC_control_unit(
 					begin
 						in_add <= num_c;
 						mul_input_mux <= 1'b1;
+						//Wait util the 2nd part of the culculation to be completed 
 						tri_state_counter <= tri_state_counter + 1'b1;
 						if (tri_state_counter == 4) begin
+							//Reset and return to the IDLE state for the next input
 							tri_state_counter <= 'b0;
 							valid_output <= 1'b1;
 							tri_state <= IDLE_TRI;
@@ -130,6 +133,7 @@ module MAC_control_unit(
 						valid_output <= 1'b0;
 						mul_input_mux <= 1'b0;
 						adder_input_mux <= 1'b1;
+						//Start the culculation only when last input and valid input
 						if ((valid_input) && (last_input)) begin
 							in_1 <= num_a;
 							in_2 <= num_x;
@@ -141,6 +145,7 @@ module MAC_control_unit(
 					begin
 						in_1 <= num_a;
 						in_2 <= num_x;
+						//Wait until the result is ready for either output or use for the next culculator
 						sump_state_counter <= sump_state_counter + 1'b1;
 						if (sump_state_counter == 1) begin
 							valid_output <= 1'b1;

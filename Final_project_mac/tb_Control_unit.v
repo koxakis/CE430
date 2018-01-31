@@ -15,8 +15,8 @@ wire [16:0] final_output;
 reg mode;
 reg [16:0] check_tri, check_sump, y_reg;
 
-reg [7:0] num_a_test [5:0];
-reg [7:0] num_x_test [5:0];
+reg [7:0] num_a_test [6:0];
+reg [7:0] num_x_test [6:0];
 reg [7:0] num_b_test [2:0];
 reg [7:0] num_c_test [2:0];
 
@@ -65,9 +65,9 @@ always @(posedge clk or posedge reset) begin
 		check_sump <= 'b0;
 		y_reg <= 'b0;
 	end else begin
+		#20;
 		check_sump <= (num_a*num_x) + y_reg;
 		y_reg <= check_sump;
-		#20;
 	end
 end
 
@@ -117,8 +117,8 @@ initial begin
 	reset = 1;				
 	valid_input = 1'b0;
 	last_input = 1'b0;
-	//test_mode = TEST_TRI;
-	test_mode = TEST_SUMP;
+	test_mode = TEST_TRI;
+	//test_mode = TEST_SUMP;
 	#10;
 	reset = 0;
 
