@@ -18,12 +18,43 @@ module interconect_cells(
 	output valid_output;
 	output [16:0] final_output;
 
-	assign div_res[30] = wire_out_quotient_30;
-	
+	assign final_output = (mode) div_res : mod_res;
+
+	assign div_res[14] = wire_out_quotient_14;
+	assign div_res[13] = wire_out_quotient_13;
+	assign div_res[12] = wire_out_quotient_12;
+	assign div_res[11] = wire_out_quotient_11;
+	assign div_res[10] = wire_out_quotient_10;
+	assign div_res[9] = wire_out_quotient_9;
+	assign div_res[8] = wire_out_quotient_8;
+	assign div_res[7] = wire_out_quotient_7;
+	assign div_res[6] = wire_out_quotient_6;
+	assign div_res[5] = wire_out_quotient_5;
+	assign div_res[4] = wire_out_quotient_4;
+	assign div_res[3] = wire_out_quotient_3;
+	assign div_res[2] = wire_out_quotient_2;
+	assign div_res[1] = wire_out_quotient_1;
+	assign div_res[0] = wire_out_quotient_0;
+
+	assign mod_res[14] = wire_out_remainder_14;
+	assign mod_res[13] = wire_out_remainder_13;
+	assign mod_res[12] = wire_out_remainder_12;
+	assign mod_res[11] = wire_out_remainder_11;
+	assign mod_res[10] = wire_out_remainder_10;
+	assign mod_res[9] = wire_out_remainder_9;
+	assign mod_res[8] = wire_out_remainder_8;
+	assign mod_res[7] = wire_out_remainder_7;
+	assign mod_res[6] = wire_out_remainder_6;
+	assign mod_res[5] = wire_out_remainder_5;
+	assign mod_res[4] = wire_out_remainder_4;
+	assign mod_res[3] = wire_out_remainder_3;
+	assign mod_res[2] = wire_out_remainder_2;
+	assign mod_res[1] = wire_out_remainder_1;
+	assign mod_res[0] = wire_out_remainder_0;	
 
 	//div_cell cas_X_Y (clk,reset,T_in,Divisor_in,Remainder_in/dividend,Remainder_out,C_in,C_out);
 	//1st row
-	div_cell cas_0_14 (.clk(clk), .reset(reset), .1'b1(T_in), .divisor[14](Divisor_in), .dividend[30](Remainder_in), .wire_out_quotient_30(Remainder_out), .wire_13_14_curry(C_in), .(C_out) );
+	div_cell cas_0_14 (.clk(clk), .reset(reset), .1'b1(T_in), .divisor[14](Divisor_in), .dividend[30](Remainder_in), .wire_out_quotient_14(Remainder_out), .wire_13_14_curry(C_in), .(C_out) );
 	div_cell cas_0_13 (.clk(clk), .reset(reset), .1'b1(T_in), .divisor[13](Divisor_in), .dividend[29](Remainder_in), .wire_0_13_1_13_remainter(Remainder_out), .wire_12_13_curry(C_in), .wire_13_14_curry(C_out) );
 	div_cell cas_0_12 (.clk(clk), .reset(reset), .1'b1(T_in), .divisor[12](Divisor_in), .dividend[28](Remainder_in), .wire_0_12_1_12_remainter(Remainder_out), .wire_11_12_curry(C_in), .wire_12_13_curry(C_out) );
 	div_cell cas_0_11 (.clk(clk), .reset(reset), .1'b1(T_in), .divisor[11](Divisor_in), .dividend[27](Remainder_in), .wire_0_11_1_11_remainter(Remainder_out), .wire_10_11_curry(C_in), .wire_11_12_curry(C_out) );
@@ -246,8 +277,5 @@ module interconect_cells(
 	div_cell cas_13_2 ();
 	div_cell cas_13_1 ();
 	div_cell cas_13_0 ();
-
-
-	assign final_output = (mode) div_res : mod_res;
 
 endmodule // interconect_cells
