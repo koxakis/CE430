@@ -117,8 +117,8 @@ initial begin
 	reset = 1;				
 	valid_input = 1'b0;
 	last_input = 1'b0;
-	test_mode = TEST_TRI;
-	//test_mode = TEST_SUMP;
+	//test_mode = TEST_TRI;
+	test_mode = TEST_SUMP;
 	#10;
 	reset = 0;
 
