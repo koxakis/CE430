@@ -1,6 +1,4 @@
 module div_cell(
-	clk,
-	reset,
 	T_in,
 	Divisor_in,
 	Remainder_in,
