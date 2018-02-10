@@ -1,8 +1,15 @@
 `default_nettype none
 
 module tb_divider;
-reg clk;
-reg rst_n;
+
+reg signed [31:0] dividend;
+reg signed [15:0] divisor;
+
+reg clk, reset;
+reg valid_input, mode;
+
+wire valid_output;
+wire [17:0] final_output;
 
 Div_mod_top_level divider_dut 
 (
@@ -20,19 +27,14 @@ localparam CLK_PERIOD = 10;
 always #(CLK_PERIOD/2) clk=~clk;
 
 initial begin
-  dumpfile("tb_divider.vcd");
-  dumpvars(0, tb_divider);
-end
+	clk = 1;
+	mode = 1;
+	reset = 1;
+	#50;
+	reset = 0;
 
-initial begin
-  #1 rst_n<=1'bx;clk<=1'bx;
-  #(CLK_PERIOD*3) rst_n<=1;
-  #(CLK_PERIOD*3) rst_n<=0;clk<=0;
-  repeat(5) @(posedge clk);
-  rst_n<=1;
-  @(posedge clk);
-  repeat(2) @(posedge clk);
-  finish(2);
+	divisor = 16'd10;
+	dividend = 32'd80;
 end
 
 endmodule
