@@ -339,41 +339,44 @@ module interconect_cells(
 	div_cell cas_13_0 (.~wire_out_quotient_3(T_in), .divisor[0](Divisor_in), .dividend[3](Remainder_in), .wire_13_0_14_1_remainter(Remainder_out), .~wire_out_quotient_3(C_in), .wire_13_00_01_curry(C_out));
 
 	//15th row
-	div_cell cas_13_15 (.~wire_out_quotient_3(T_in), .divisor[15](Divisor_in), .wire_12_14_13_15_remainter(Remainder_in), .wire_out_quotient_2(Remainder_out), .wire_13_14_15_curry(C_in), .hang_13_wire_15(C_out));
+	div_cell cas_14_15 (.~wire_out_quotient_2(T_in), .divisor[15](Divisor_in), .wire_13_14_14_15_remainter(Remainder_in), .wire_out_quotient_1(Remainder_out), .wire_14_14_15_curry(C_in), .hang_14_wire_15(C_out));
 
-	div_cell cas_13_14 (.~wire_out_quotient_3(T_in), .divisor[14](Divisor_in), .wire_12_13_13_14_remainter(Remainder_in), .wire_13_14_14_15_remainter(Remainder_out), .wire_13_13_14_curry(C_in), .wire_13_14_15_curry(C_out));
-	div_cell cas_13_13 (.~wire_out_quotient_3(T_in), .divisor[13](Divisor_in), .wire_12_12_13_13_remainter(Remainder_in), .wire_13_13_14_14_remainter(Remainder_out), .wire_13_12_13_curry(C_in), .wire_13_13_14_curry(C_out));
-	div_cell cas_13_12 (.~wire_out_quotient_3(T_in), .divisor[12](Divisor_in), .wire_12_11_13_12_remainter(Remainder_in), .wire_13_12_14_13_remainter(Remainder_out), .wire_13_11_12_curry(C_in), .wire_13_12_13_curry(C_out));
-	div_cell cas_13_11 (.~wire_out_quotient_3(T_in), .divisor[11](Divisor_in), .wire_12_10_13_11_remainter(Remainder_in), .wire_13_11_14_12_remainter(Remainder_out), .wire_13_10_11_curry(C_in), .wire_13_11_12_curry(C_out));
-	div_cell cas_13_10 (.~wire_out_quotient_3(T_in), .divisor[10](Divisor_in), .wire_12_9_13_10_remainter(Remainder_in), .wire_13_10_14_11_remainter(Remainder_out), .wire_13_09_10_curry(C_in), .wire_13_10_11_curry(C_out));
-	div_cell cas_13_9 (.~wire_out_quotient_3(T_in), .divisor[9](Divisor_in), .wire_12_8_13_9_remainter(Remainder_in), .wire_13_9_14_10_remainter(Remainder_out), .wire_13_08_09_curry(C_in), .wire_13_09_10_curry(C_out));
-	div_cell cas_13_8 (.~wire_out_quotient_3(T_in), .divisor[8](Divisor_in), .wire_12_7_13_8_remainter(Remainder_in), .wire_13_8_14_9_remainter(Remainder_out), .wire_13_07_08_curry(C_in), .wire_13_08_09_curry(C_out));
-	div_cell cas_13_7 (.~wire_out_quotient_3(T_in), .divisor[7](Divisor_in), .wire_12_6_13_7_remainter(Remainder_in), .wire_13_7_14_8_remainter(Remainder_out), .wire_13_06_07_curry(C_in), .wire_13_07_08_curry(C_out));
-	div_cell cas_13_6 (.~wire_out_quotient_3(T_in), .divisor[6](Divisor_in), .wire_12_5_13_6_remainter(Remainder_in), .wire_13_6_14_7_remainter(Remainder_out), .wire_13_05_06_curry(C_in), .wire_13_06_07_curry(C_out));
-	div_cell cas_13_5 (.~wire_out_quotient_3(T_in), .divisor[5](Divisor_in), .wire_12_4_13_5_remainter(Remainder_in), .wire_13_5_14_6_remainter(Remainder_out), .wire_13_04_05_curry(C_in), .wire_13_05_06_curry(C_out));
-	div_cell cas_13_4 (.~wire_out_quotient_3(T_in), .divisor[4](Divisor_in), .wire_12_3_13_4_remainter(Remainder_in), .wire_13_4_14_5_remainter(Remainder_out), .wire_13_03_04_curry(C_in), .wire_13_04_05_curry(C_out));
-	div_cell cas_13_3 (.~wire_out_quotient_3(T_in), .divisor[3](Divisor_in), .wire_12_2_13_3_remainter(Remainder_in), .wire_13_3_14_4_remainter(Remainder_out), .wire_13_02_03_curry(C_in), .wire_13_03_04_curry(C_out));
-	div_cell cas_13_2 (.~wire_out_quotient_3(T_in), .divisor[2](Divisor_in), .wire_12_1_13_2_remainter(Remainder_in), .wire_13_2_14_3_remainter(Remainder_out), .wire_13_01_02_curry(C_in), .wire_13_02_03_curry(C_out));
-	div_cell cas_13_1 (.~wire_out_quotient_3(T_in), .divisor[1](Divisor_in), .wire_12_0_13_1_remainter(Remainder_in), .wire_13_1_14_2_remainter(Remainder_out), .wire_13_00_01_curry(C_in), .wire_13_01_02_curry(C_out));
+	div_cell cas_14_14 (.~wire_out_quotient_2(T_in), .divisor[14](Divisor_in), .wire_13_13_14_14_remainter(Remainder_in), .wire_14_14_15_15_remainter(Remainder_out), .wire_14_13_14_curry(C_in), .wire_14_14_15_curry(C_out));
+	div_cell cas_14_13 (.~wire_out_quotient_2(T_in), .divisor[13](Divisor_in), .wire_13_12_14_13_remainter(Remainder_in), .wire_14_13_15_14_remainter(Remainder_out), .wire_14_12_13_curry(C_in), .wire_14_13_14_curry(C_out));
+	div_cell cas_14_12 (.~wire_out_quotient_2(T_in), .divisor[12](Divisor_in), .wire_13_11_14_12_remainter(Remainder_in), .wire_14_12_15_13_remainter(Remainder_out), .wire_14_11_12_curry(C_in), .wire_14_12_13_curry(C_out));
+	div_cell cas_14_11 (.~wire_out_quotient_2(T_in), .divisor[11](Divisor_in), .wire_13_10_14_11_remainter(Remainder_in), .wire_14_11_15_12_remainter(Remainder_out), .wire_14_10_11_curry(C_in), .wire_14_11_12_curry(C_out));
+	div_cell cas_14_10 (.~wire_out_quotient_2(T_in), .divisor[10](Divisor_in), .wire_13_9_14_10_remainter(Remainder_in), .wire_14_10_15_11_remainter(Remainder_out), .wire_14_09_10_curry(C_in), .wire_14_10_11_curry(C_out));
+	div_cell cas_14_9 (.~wire_out_quotient_2(T_in), .divisor[9](Divisor_in), .wire_13_8_14_9_remainter(Remainder_in), .wire_14_9_15_10_remainter(Remainder_out), .wire_14_08_09_curry(C_in), .wire_14_09_10_curry(C_out));
+	div_cell cas_14_8 (.~wire_out_quotient_2(T_in), .divisor[8](Divisor_in), .wire_13_7_14_8_remainter(Remainder_in), .wire_14_8_15_9_remainter(Remainder_out), .wire_14_07_08_curry(C_in), .wire_14_08_09_curry(C_out));
+	div_cell cas_14_7 (.~wire_out_quotient_2(T_in), .divisor[7](Divisor_in), .wire_13_6_14_7_remainter(Remainder_in), .wire_14_7_15_8_remainter(Remainder_out), .wire_14_06_07_curry(C_in), .wire_14_07_08_curry(C_out));
+	div_cell cas_14_6 (.~wire_out_quotient_2(T_in), .divisor[6](Divisor_in), .wire_13_5_14_6_remainter(Remainder_in), .wire_14_6_15_7_remainter(Remainder_out), .wire_14_05_06_curry(C_in), .wire_14_06_07_curry(C_out));
+	div_cell cas_14_5 (.~wire_out_quotient_2(T_in), .divisor[5](Divisor_in), .wire_13_4_14_5_remainter(Remainder_in), .wire_14_5_15_6_remainter(Remainder_out), .wire_14_04_05_curry(C_in), .wire_14_05_06_curry(C_out));
+	div_cell cas_14_4 (.~wire_out_quotient_2(T_in), .divisor[4](Divisor_in), .wire_13_3_14_4_remainter(Remainder_in), .wire_14_4_15_5_remainter(Remainder_out), .wire_14_03_04_curry(C_in), .wire_14_04_05_curry(C_out));
+	div_cell cas_14_3 (.~wire_out_quotient_2(T_in), .divisor[3](Divisor_in), .wire_13_2_14_3_remainter(Remainder_in), .wire_14_3_15_4_remainter(Remainder_out), .wire_14_02_03_curry(C_in), .wire_14_03_04_curry(C_out));
+	div_cell cas_14_2 (.~wire_out_quotient_2(T_in), .divisor[2](Divisor_in), .wire_13_1_14_2_remainter(Remainder_in), .wire_14_2_15_3_remainter(Remainder_out), .wire_14_01_02_curry(C_in), .wire_14_02_03_curry(C_out));
+	div_cell cas_14_1 (.~wire_out_quotient_2(T_in), .divisor[1](Divisor_in), .wire_13_0_14_1_remainter(Remainder_in), .wire_14_1_15_2_remainter(Remainder_out), .wire_14_00_01_curry(C_in), .wire_14_01_02_curry(C_out));
 	
-	div_cell cas_13_0 (.~wire_out_quotient_3(T_in), .divisor[0](Divisor_in), .dividend[3](Remainder_in), .wire_13_0_14_1_remainter(Remainder_out), .~wire_out_quotient_3(C_in), .wire_13_00_01_curry(C_out));
+	div_cell cas_14_0 (.~wire_out_quotient_2(T_in), .divisor[0](Divisor_in), .dividend[3](Remainder_in), .wire_14_0_15_1_remainter(Remainder_out), .~wire_out_quotient_2(C_in), .wire_14_00_01_curry(C_out));
 
 	//16th row
-	div_cell cas_13_14 (. (T_in), . (Divisor_in), . (Remainder_in), . (Remainder_out), . (C_in), . (C_out));
-	div_cell cas_13_13 ();
-	div_cell cas_13_12 ();
-	div_cell cas_13_11 ();
-	div_cell cas_13_10 ();
-	div_cell cas_13_9 ();
-	div_cell cas_13_8 ();
-	div_cell cas_13_7 ();
-	div_cell cas_13_6 ();
-	div_cell cas_13_5 ();
-	div_cell cas_13_4 ();
-	div_cell cas_13_3 ();
-	div_cell cas_13_2 ();
-	div_cell cas_13_1 ();
-	div_cell cas_13_0 ();
+	div_cell cas_14_15 (.~wire_out_quotient_2(T_in), .divisor[15](Divisor_in), .wire_13_14_14_15_remainter(Remainder_in), .wire_out_quotient_1(Remainder_out), .wire_14_14_15_curry(C_in), .hang_14_wire_15(C_out));
+
+	div_cell cas_14_14 (.~wire_out_quotient_2(T_in), .divisor[14](Divisor_in), .wire_13_13_14_14_remainter(Remainder_in), .wire_14_14_15_15_remainter(Remainder_out), .wire_14_13_14_curry(C_in), .wire_14_14_15_curry(C_out));
+	div_cell cas_14_13 (.~wire_out_quotient_2(T_in), .divisor[13](Divisor_in), .wire_13_12_14_13_remainter(Remainder_in), .wire_14_13_15_14_remainter(Remainder_out), .wire_14_12_13_curry(C_in), .wire_14_13_14_curry(C_out));
+	div_cell cas_14_12 (.~wire_out_quotient_2(T_in), .divisor[12](Divisor_in), .wire_13_11_14_12_remainter(Remainder_in), .wire_14_12_15_13_remainter(Remainder_out), .wire_14_11_12_curry(C_in), .wire_14_12_13_curry(C_out));
+	div_cell cas_14_11 (.~wire_out_quotient_2(T_in), .divisor[11](Divisor_in), .wire_13_10_14_11_remainter(Remainder_in), .wire_14_11_15_12_remainter(Remainder_out), .wire_14_10_11_curry(C_in), .wire_14_11_12_curry(C_out));
+	div_cell cas_14_10 (.~wire_out_quotient_2(T_in), .divisor[10](Divisor_in), .wire_13_9_14_10_remainter(Remainder_in), .wire_14_10_15_11_remainter(Remainder_out), .wire_14_09_10_curry(C_in), .wire_14_10_11_curry(C_out));
+	div_cell cas_14_9 (.~wire_out_quotient_2(T_in), .divisor[9](Divisor_in), .wire_13_8_14_9_remainter(Remainder_in), .wire_14_9_15_10_remainter(Remainder_out), .wire_14_08_09_curry(C_in), .wire_14_09_10_curry(C_out));
+	div_cell cas_14_8 (.~wire_out_quotient_2(T_in), .divisor[8](Divisor_in), .wire_13_7_14_8_remainter(Remainder_in), .wire_14_8_15_9_remainter(Remainder_out), .wire_14_07_08_curry(C_in), .wire_14_08_09_curry(C_out));
+	div_cell cas_14_7 (.~wire_out_quotient_2(T_in), .divisor[7](Divisor_in), .wire_13_6_14_7_remainter(Remainder_in), .wire_14_7_15_8_remainter(Remainder_out), .wire_14_06_07_curry(C_in), .wire_14_07_08_curry(C_out));
+	div_cell cas_14_6 (.~wire_out_quotient_2(T_in), .divisor[6](Divisor_in), .wire_13_5_14_6_remainter(Remainder_in), .wire_14_6_15_7_remainter(Remainder_out), .wire_14_05_06_curry(C_in), .wire_14_06_07_curry(C_out));
+	div_cell cas_14_5 (.~wire_out_quotient_2(T_in), .divisor[5](Divisor_in), .wire_13_4_14_5_remainter(Remainder_in), .wire_14_5_15_6_remainter(Remainder_out), .wire_14_04_05_curry(C_in), .wire_14_05_06_curry(C_out));
+	div_cell cas_14_4 (.~wire_out_quotient_2(T_in), .divisor[4](Divisor_in), .wire_13_3_14_4_remainter(Remainder_in), .wire_14_4_15_5_remainter(Remainder_out), .wire_14_03_04_curry(C_in), .wire_14_04_05_curry(C_out));
+	div_cell cas_14_3 (.~wire_out_quotient_2(T_in), .divisor[3](Divisor_in), .wire_13_2_14_3_remainter(Remainder_in), .wire_14_3_15_4_remainter(Remainder_out), .wire_14_02_03_curry(C_in), .wire_14_03_04_curry(C_out));
+	div_cell cas_14_2 (.~wire_out_quotient_2(T_in), .divisor[2](Divisor_in), .wire_13_1_14_2_remainter(Remainder_in), .wire_14_2_15_3_remainter(Remainder_out), .wire_14_01_02_curry(C_in), .wire_14_02_03_curry(C_out));
+	div_cell cas_14_1 (.~wire_out_quotient_2(T_in), .divisor[1](Divisor_in), .wire_13_0_14_1_remainter(Remainder_in), .wire_14_1_15_2_remainter(Remainder_out), .wire_14_00_01_curry(C_in), .wire_14_01_02_curry(C_out));
+	
+	div_cell cas_14_0 (.~wire_out_quotient_2(T_in), .divisor[0](Divisor_in), .dividend[3](Remainder_in), .wire_14_0_15_1_remainter(Remainder_out), .~wire_out_quotient_2(C_in), .wire_14_00_01_curry(C_out));
 
 	//17th row
 	div_cell cas_13_14 (. (T_in), . (Divisor_in), . (Remainder_in), . (Remainder_out), . (C_in), . (C_out));
