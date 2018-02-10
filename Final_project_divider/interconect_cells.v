@@ -101,14 +101,17 @@ module interconect_cells(
 			mod_res[2] = wire_out_remainder[2];
 			mod_res[1] = wire_out_remainder[1];
 			mod_res[0] = wire_out_remainder[0];	
+			if (mod_res[15] == 1) begin
+				mod_res = mod_res + divisor;
+			end 
 		end
 	end
 
-	always @(*) begin
-		if (mod_res[15] == 1) begin
-			mod_res = mod_res + divisor;
-		end
-	end
+	// always @(*) begin
+		// if (mod_res[15] == 1) begin
+			// mod_res = mod_res + divisor;
+		// end 
+	// end
 
 	assign final_output = (mode) ? div_res : mod_res;
 
