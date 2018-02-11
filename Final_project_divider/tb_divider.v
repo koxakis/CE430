@@ -33,8 +33,8 @@ initial begin
 	#50;
 	reset = 0;
 
-	divisor = 16'd3;
-	dividend = 32'd80;
+	divisor = -16'd3;
+	dividend = -32'd80;
 end
 
 endmodule
