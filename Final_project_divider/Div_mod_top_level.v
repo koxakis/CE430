@@ -9,14 +9,14 @@ module Div_mod_top_level(
 	final_output
 );
 
-	input [31:0] dividend;
-	input [15:0] divisor;
+	input signed [31:0] dividend;
+	input signed [15:0] divisor;
 
 	input clk, reset;
 	input valid_input, mode;
 
 	output valid_output;
-	output [17:0] final_output;
+	output signed [16:0] final_output;
 
 	interconect_cells connected_cells 
 	(

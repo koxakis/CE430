@@ -9,7 +9,7 @@ reg clk, reset;
 reg valid_input, mode;
 
 wire valid_output;
-wire [17:0] final_output;
+wire signed [16:0] final_output;
 
 Div_mod_top_level divider_dut 
 (
@@ -33,7 +33,7 @@ initial begin
 	#50;
 	reset = 0;
 
-	divisor = 16'd10;
+	divisor = 16'd3;
 	dividend = 32'd80;
 end
 

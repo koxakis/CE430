@@ -9,17 +9,17 @@ module interconect_cells(
 	final_output
 );
 
-	input [31:0] dividend;
-	input [15:0] divisor;
+	input signed [31:0] dividend;
+	input signed [15:0] divisor;
 
 	input clk, reset;
 	input valid_input, mode;
 
 	output valid_output;
-	output [17:0] final_output;
+	output signed [16:0] final_output;
 
-	reg [16:0] div_res;
-	reg [15:0] mod_res;
+	reg signed [16:0] div_res;
+	reg signed [15:0] mod_res;
 
 	wire [16:0] wire_out_quotient;
 	wire [14:0] wire_out_remainder;
@@ -101,17 +101,12 @@ module interconect_cells(
 			mod_res[2] = wire_out_remainder[2];
 			mod_res[1] = wire_out_remainder[1];
 			mod_res[0] = wire_out_remainder[0];	
+			//If the remainder is negative add the divisor as per non-restoring algorithm
 			if (mod_res[15] == 1) begin
 				mod_res = mod_res + divisor;
 			end 
 		end
 	end
-
-	// always @(*) begin
-		// if (mod_res[15] == 1) begin
-			// mod_res = mod_res + divisor;
-		// end 
-	// end
 
 	assign final_output = (mode) ? div_res : mod_res;
 
