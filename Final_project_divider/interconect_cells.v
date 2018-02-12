@@ -34,6 +34,24 @@ module interconect_cells(
 
 	reg [2:0] cycle_count;
 
+	reg [14:0] reg_14_15;
+	reg [14:0] reg_12_13;
+	reg [14:0] reg_10_11;
+	reg [14:0] reg_8_9;
+	reg [14:0] reg_6_7;
+	reg [14:0] reg_4_5;
+	reg [14:0] reg_2_3;
+	reg [14:0] reg_0_1;
+
+	reg reg_14_15_curry;
+	reg reg_12_13_curry;
+	reg reg_10_11_curry;
+	reg reg_8_9_curry;
+	reg reg_6_7_curry;
+	reg reg_4_5_curry;
+	reg reg_2_3_curry;
+	reg reg_0_1_curry;
+
 	//Registeed input set in order to make negative slack apperar 
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
@@ -214,26 +232,52 @@ module interconect_cells(
 
 	div_cell cas_0_0 ( one ,  two_sc_divisor[0] ,  two_sc_dividend[16] ,  wire_0_0_1_1_remainter ,  one ,  wire_0_00_01_curry );
 
+	//Pipeline register from 1st row to 3rd row 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			reg_0_1 <= 'b0; 
+			reg_0_1_curry <= 'b0;
+		end else begin
+			reg_0_1[14] <= wire_0_14_1_15_remainter;
+			reg_0_1[13] <= wire_0_13_1_14_remainter; 
+			reg_0_1[12] <= wire_0_12_1_13_remainter;
+			reg_0_1[11] <= wire_0_11_1_12_remainter;
+			reg_0_1[10] <= wire_0_10_1_11_remainter;
+			reg_0_1[9] <= wire_0_9_1_10_remainter;
+			reg_0_1[8] <= wire_0_8_1_9_remainter;
+			reg_0_1[7] <= wire_0_7_1_8_remainter;
+			reg_0_1[6] <= wire_0_6_1_7_remainter;
+			reg_0_1[5] <= wire_0_5_1_6_remainter;
+			reg_0_1[4] <= wire_0_4_1_5_remainter;
+			reg_0_1[3] <= wire_0_3_1_4_remainter;
+			reg_0_1[2] <= wire_0_2_1_3_remainter;
+			reg_0_1[1] <= wire_0_1_1_2_remainter;
+			reg_0_1[0] <= wire_0_0_1_1_remainter;
+
+			reg_0_1_curry <= wire_out_quotient[16];
+		end
+	end
+
 	//div_cell cas_X_Y (T_in,Divisor_in,Remainder_in/two_sc_dividend,Remainder_out,C_in,C_out);
 	//2nd row
-	div_cell cas_1_15 (~wire_out_quotient[16], two_sc_divisor[15], wire_0_14_1_15_remainter,  wire_out_quotient[15], wire_1_14_15_curry, hang_1_wire_15);
+	div_cell cas_1_15 (~reg_0_1_curry, two_sc_divisor[15], reg_0_1[14] ,  wire_out_quotient[15], wire_1_14_15_curry, hang_1_wire_15);
 
-	div_cell cas_1_14 ( ~wire_out_quotient[16] ,  two_sc_divisor[14] ,  wire_0_13_1_14_remainter ,  wire_1_14_2_15_remainter ,  wire_1_13_14_curry ,  wire_1_14_15_curry );
-	div_cell cas_1_13 ( ~wire_out_quotient[16] ,  two_sc_divisor[13] ,  wire_0_12_1_13_remainter ,  wire_1_13_2_14_remainter ,  wire_1_12_13_curry ,  wire_1_13_14_curry );
-	div_cell cas_1_12 ( ~wire_out_quotient[16] ,  two_sc_divisor[12] ,  wire_0_11_1_12_remainter ,  wire_1_12_2_13_remainter ,  wire_1_11_12_curry ,  wire_1_12_13_curry );
-	div_cell cas_1_11 ( ~wire_out_quotient[16] ,  two_sc_divisor[11] ,  wire_0_10_1_11_remainter ,  wire_1_11_2_12_remainter ,  wire_1_10_11_curry ,  wire_1_11_12_curry );
-	div_cell cas_1_10 ( ~wire_out_quotient[16] ,  two_sc_divisor[10] ,  wire_0_9_1_10_remainter ,  wire_1_10_2_11_remainter ,  wire_1_09_10_curry ,  wire_1_10_11_curry );
-	div_cell cas_1_9 ( ~wire_out_quotient[16] ,  two_sc_divisor[9] ,  wire_0_8_1_9_remainter ,  wire_1_9_2_10_remainter ,  wire_1_08_09_curry ,  wire_1_09_10_curry );
-	div_cell cas_1_8 ( ~wire_out_quotient[16] ,  two_sc_divisor[8] ,  wire_0_7_1_8_remainter ,  wire_1_8_2_9_remainter ,  wire_1_07_08_curry ,  wire_1_08_09_curry );
-	div_cell cas_1_7 ( ~wire_out_quotient[16] ,  two_sc_divisor[7] ,  wire_0_6_1_7_remainter ,  wire_1_7_2_8_remainter ,  wire_1_06_07_curry ,  wire_1_07_08_curry );
-	div_cell cas_1_6 ( ~wire_out_quotient[16] ,  two_sc_divisor[6] ,  wire_0_5_1_6_remainter ,  wire_1_6_2_7_remainter ,  wire_1_05_06_curry ,  wire_1_06_07_curry );
-	div_cell cas_1_5 ( ~wire_out_quotient[16] ,  two_sc_divisor[5] ,  wire_0_4_1_5_remainter ,  wire_1_5_2_6_remainter ,  wire_1_04_05_curry ,  wire_1_05_06_curry );
-	div_cell cas_1_4 ( ~wire_out_quotient[16] ,  two_sc_divisor[4] ,  wire_0_3_1_4_remainter ,  wire_1_4_2_5_remainter ,  wire_1_03_04_curry ,  wire_1_04_05_curry );
-	div_cell cas_1_3 ( ~wire_out_quotient[16] ,  two_sc_divisor[3] ,  wire_0_2_1_3_remainter ,  wire_1_3_2_4_remainter ,  wire_1_02_03_curry ,  wire_1_03_04_curry );
-	div_cell cas_1_2 ( ~wire_out_quotient[16] ,  two_sc_divisor[2] ,  wire_0_1_1_2_remainter ,  wire_1_2_2_3_remainter ,  wire_1_01_02_curry ,  wire_1_02_03_curry );
-	div_cell cas_1_1 ( ~wire_out_quotient[16] ,  two_sc_divisor[1] ,  wire_0_0_1_1_remainter ,  wire_1_1_2_2_remainter ,  wire_1_00_01_curry ,  wire_1_01_02_curry );
+	div_cell cas_1_14 ( ~reg_0_1_curry ,  two_sc_divisor[14] ,  reg_0_1[13] ,  wire_1_14_2_15_remainter ,  wire_1_13_14_curry ,  wire_1_14_15_curry );
+	div_cell cas_1_13 ( ~reg_0_1_curry ,  two_sc_divisor[13] ,  reg_0_1[12] ,  wire_1_13_2_14_remainter ,  wire_1_12_13_curry ,  wire_1_13_14_curry );
+	div_cell cas_1_12 ( ~reg_0_1_curry ,  two_sc_divisor[12] ,  reg_0_1[11] ,  wire_1_12_2_13_remainter ,  wire_1_11_12_curry ,  wire_1_12_13_curry );
+	div_cell cas_1_11 ( ~reg_0_1_curry ,  two_sc_divisor[11] ,  reg_0_1[10] ,  wire_1_11_2_12_remainter ,  wire_1_10_11_curry ,  wire_1_11_12_curry );
+	div_cell cas_1_10 ( ~reg_0_1_curry ,  two_sc_divisor[10] ,  reg_0_1[9],  wire_1_10_2_11_remainter ,  wire_1_09_10_curry ,  wire_1_10_11_curry );
+	div_cell cas_1_9 ( ~reg_0_1_curry ,  two_sc_divisor[9] ,  reg_0_1[8] ,  wire_1_9_2_10_remainter ,  wire_1_08_09_curry ,  wire_1_09_10_curry );
+	div_cell cas_1_8 ( ~reg_0_1_curry ,  two_sc_divisor[8] ,  reg_0_1[7] ,  wire_1_8_2_9_remainter ,  wire_1_07_08_curry ,  wire_1_08_09_curry );
+	div_cell cas_1_7 ( ~reg_0_1_curry ,  two_sc_divisor[7] ,  reg_0_1[6] ,  wire_1_7_2_8_remainter ,  wire_1_06_07_curry ,  wire_1_07_08_curry );
+	div_cell cas_1_6 ( ~reg_0_1_curry ,  two_sc_divisor[6] ,  reg_0_1[5] ,  wire_1_6_2_7_remainter ,  wire_1_05_06_curry ,  wire_1_06_07_curry );
+	div_cell cas_1_5 ( ~reg_0_1_curry ,  two_sc_divisor[5] ,  reg_0_1[4] ,  wire_1_5_2_6_remainter ,  wire_1_04_05_curry ,  wire_1_05_06_curry );
+	div_cell cas_1_4 ( ~reg_0_1_curry ,  two_sc_divisor[4] ,  reg_0_1[3] ,  wire_1_4_2_5_remainter ,  wire_1_03_04_curry ,  wire_1_04_05_curry );
+	div_cell cas_1_3 ( ~reg_0_1_curry ,  two_sc_divisor[3] ,  reg_0_1[2] ,  wire_1_3_2_4_remainter ,  wire_1_02_03_curry ,  wire_1_03_04_curry );
+	div_cell cas_1_2 ( ~reg_0_1_curry ,  two_sc_divisor[2] ,  reg_0_1[1] ,  wire_1_2_2_3_remainter ,  wire_1_01_02_curry ,  wire_1_02_03_curry );
+	div_cell cas_1_1 ( ~reg_0_1_curry ,  two_sc_divisor[1] ,  reg_0_1[0] ,  wire_1_1_2_2_remainter ,  wire_1_00_01_curry ,  wire_1_01_02_curry );
 
-	div_cell cas_1_0 ( ~wire_out_quotient[16] ,  two_sc_divisor[0] ,  two_sc_dividend[15] ,  wire_1_0_2_1_remainter ,  ~wire_out_quotient[16] ,  wire_1_00_01_curry );
+	div_cell cas_1_0 ( ~reg_0_1_curry ,  two_sc_divisor[0] ,  two_sc_dividend[15] ,  wire_1_0_2_1_remainter ,  ~reg_0_1_curry ,  wire_1_00_01_curry );
 
 	//3rd row
 	div_cell cas_2_15 ( ~wire_out_quotient[15] ,  two_sc_divisor[15] ,  wire_1_14_2_15_remainter ,   wire_out_quotient[14] ,  wire_2_14_15_curry ,  hang_2_wire_15 );
@@ -255,25 +299,51 @@ module interconect_cells(
 
 	div_cell cas_2_0 ( ~wire_out_quotient[15] ,  two_sc_divisor[0] ,  two_sc_dividend[14] ,  wire_2_0_3_1_remainter ,  ~wire_out_quotient[15] ,  wire_2_00_01_curry );
 
+	//Pipeline register from 3rd row to 4th row 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			reg_2_3 <= 'b0; 
+			reg_2_3_curry <= 'b0;
+		end else begin
+			reg_2_3[14] <= wire_2_14_3_15_remainter;
+			reg_2_3[13] <= wire_2_13_3_14_remainter; 
+			reg_2_3[12] <= wire_2_12_3_13_remainter;
+			reg_2_3[11] <= wire_2_11_3_12_remainter;
+			reg_2_3[10] <= wire_2_10_3_11_remainter;
+			reg_2_3[9] <= wire_2_9_3_10_remainter;
+			reg_2_3[8] <= wire_2_8_3_9_remainter;
+			reg_2_3[7] <= wire_2_7_3_8_remainter;
+			reg_2_3[6] <= wire_2_6_3_7_remainter;
+			reg_2_3[5] <= wire_2_5_3_6_remainter;
+			reg_2_3[4] <= wire_2_4_3_5_remainter;
+			reg_2_3[3] <= wire_2_3_3_4_remainter;
+			reg_2_3[2] <= wire_2_2_3_3_remainter;
+			reg_2_3[1] <= wire_2_1_3_2_remainter;
+			reg_2_3[0] <= wire_2_0_3_1_remainter;
+
+			reg_2_3_curry <= wire_out_quotient[14];
+		end
+	end
+
 	//4th row
-	div_cell cas_3_15 ( ~wire_out_quotient[14] ,  two_sc_divisor[15] ,  wire_2_14_3_15_remainter ,   wire_out_quotient[13] ,  wire_3_14_15_curry ,  hang_3_wire_15 );
+	div_cell cas_3_15 ( ~reg_2_3_curry ,  two_sc_divisor[15] ,  reg_2_3[14] ,   wire_out_quotient[13] ,  wire_3_14_15_curry ,  hang_3_wire_15 );
 
-	div_cell cas_3_14 ( ~wire_out_quotient[14] ,  two_sc_divisor[14] ,  wire_2_13_3_14_remainter ,  wire_3_14_4_15_remainter ,  wire_3_13_14_curry ,  wire_3_14_15_curry );
-	div_cell cas_3_13 ( ~wire_out_quotient[14] ,  two_sc_divisor[13] ,  wire_2_12_3_13_remainter ,  wire_3_13_4_14_remainter ,  wire_3_12_13_curry ,  wire_3_13_14_curry );
-	div_cell cas_3_12 ( ~wire_out_quotient[14] ,  two_sc_divisor[12] ,  wire_2_11_3_12_remainter ,  wire_3_12_4_13_remainter ,  wire_3_11_12_curry ,  wire_3_12_13_curry );
-	div_cell cas_3_11 ( ~wire_out_quotient[14] ,  two_sc_divisor[11] ,  wire_2_10_3_11_remainter ,  wire_3_11_4_12_remainter ,  wire_3_10_11_curry ,  wire_3_11_12_curry );
-	div_cell cas_3_10 ( ~wire_out_quotient[14] ,  two_sc_divisor[10] ,  wire_2_9_3_10_remainter ,  wire_3_10_4_11_remainter ,  wire_3_09_10_curry ,  wire_3_10_11_curry );
-	div_cell cas_3_9 ( ~wire_out_quotient[14] ,  two_sc_divisor[9] ,  wire_2_8_3_9_remainter ,  wire_3_9_4_10_remainter ,  wire_3_08_09_curry ,  wire_3_09_10_curry );
-	div_cell cas_3_8 ( ~wire_out_quotient[14] ,  two_sc_divisor[8] ,  wire_2_7_3_8_remainter ,  wire_3_8_4_9_remainter ,  wire_3_07_08_curry ,  wire_3_08_09_curry );
-	div_cell cas_3_7 ( ~wire_out_quotient[14] ,  two_sc_divisor[7] ,  wire_2_6_3_7_remainter ,  wire_3_7_4_8_remainter ,  wire_3_06_07_curry ,  wire_3_07_08_curry );
-	div_cell cas_3_6 ( ~wire_out_quotient[14] ,  two_sc_divisor[6] ,  wire_2_5_3_6_remainter ,  wire_3_6_4_7_remainter ,  wire_3_05_06_curry ,  wire_3_06_07_curry );
-	div_cell cas_3_5 ( ~wire_out_quotient[14] ,  two_sc_divisor[5] ,  wire_2_4_3_5_remainter ,  wire_3_5_4_6_remainter ,  wire_3_04_05_curry ,  wire_3_05_06_curry );
-	div_cell cas_3_4 ( ~wire_out_quotient[14] ,  two_sc_divisor[4] ,  wire_2_3_3_4_remainter ,  wire_3_4_4_5_remainter ,  wire_3_03_04_curry ,  wire_3_04_05_curry );
-	div_cell cas_3_3 ( ~wire_out_quotient[14] ,  two_sc_divisor[3] ,  wire_2_2_3_3_remainter ,  wire_3_3_4_4_remainter ,  wire_3_02_03_curry ,  wire_3_03_04_curry );
-	div_cell cas_3_2 ( ~wire_out_quotient[14] ,  two_sc_divisor[2] ,  wire_2_1_3_2_remainter ,  wire_3_2_4_3_remainter ,  wire_3_01_02_curry ,  wire_3_02_03_curry );
-	div_cell cas_3_1 ( ~wire_out_quotient[14] ,  two_sc_divisor[1] ,  wire_2_0_3_1_remainter ,  wire_3_1_4_2_remainter ,  wire_3_00_01_curry ,  wire_3_01_02_curry );
+	div_cell cas_3_14 ( ~reg_2_3_curry ,  two_sc_divisor[14] ,  reg_2_3[13] ,  wire_3_14_4_15_remainter ,  wire_3_13_14_curry ,  wire_3_14_15_curry );
+	div_cell cas_3_13 ( ~reg_2_3_curry ,  two_sc_divisor[13] ,  reg_2_3[12] ,  wire_3_13_4_14_remainter ,  wire_3_12_13_curry ,  wire_3_13_14_curry );
+	div_cell cas_3_12 ( ~reg_2_3_curry ,  two_sc_divisor[12] ,  reg_2_3[11] ,  wire_3_12_4_13_remainter ,  wire_3_11_12_curry ,  wire_3_12_13_curry );
+	div_cell cas_3_11 ( ~reg_2_3_curry ,  two_sc_divisor[11] ,  reg_2_3[10] ,  wire_3_11_4_12_remainter ,  wire_3_10_11_curry ,  wire_3_11_12_curry );
+	div_cell cas_3_10 ( ~reg_2_3_curry ,  two_sc_divisor[10] ,  reg_2_3[9],  wire_3_10_4_11_remainter ,  wire_3_09_10_curry ,  wire_3_10_11_curry );
+	div_cell cas_3_9 ( ~reg_2_3_curry ,  two_sc_divisor[9] ,  reg_2_3[8] ,  wire_3_9_4_10_remainter ,  wire_3_08_09_curry ,  wire_3_09_10_curry );
+	div_cell cas_3_8 ( ~reg_2_3_curry ,  two_sc_divisor[8] ,  reg_2_3[7] ,  wire_3_8_4_9_remainter ,  wire_3_07_08_curry ,  wire_3_08_09_curry );
+	div_cell cas_3_7 ( ~reg_2_3_curry ,  two_sc_divisor[7] ,  reg_2_3[6] ,  wire_3_7_4_8_remainter ,  wire_3_06_07_curry ,  wire_3_07_08_curry );
+	div_cell cas_3_6 ( ~reg_2_3_curry ,  two_sc_divisor[6] ,  reg_2_3[5] ,  wire_3_6_4_7_remainter ,  wire_3_05_06_curry ,  wire_3_06_07_curry );
+	div_cell cas_3_5 ( ~reg_2_3_curry ,  two_sc_divisor[5] ,  reg_2_3[4] ,  wire_3_5_4_6_remainter ,  wire_3_04_05_curry ,  wire_3_05_06_curry );
+	div_cell cas_3_4 ( ~reg_2_3_curry ,  two_sc_divisor[4] ,  reg_2_3[3] ,  wire_3_4_4_5_remainter ,  wire_3_03_04_curry ,  wire_3_04_05_curry );
+	div_cell cas_3_3 ( ~reg_2_3_curry ,  two_sc_divisor[3] ,  reg_2_3[2] ,  wire_3_3_4_4_remainter ,  wire_3_02_03_curry ,  wire_3_03_04_curry );
+	div_cell cas_3_2 ( ~reg_2_3_curry ,  two_sc_divisor[2] ,  reg_2_3[1] ,  wire_3_2_4_3_remainter ,  wire_3_01_02_curry ,  wire_3_02_03_curry );
+	div_cell cas_3_1 ( ~reg_2_3_curry ,  two_sc_divisor[1] ,  reg_2_3[0] ,  wire_3_1_4_2_remainter ,  wire_3_00_01_curry ,  wire_3_01_02_curry );
 
-	div_cell cas_3_0 ( ~wire_out_quotient[14] ,  two_sc_divisor[0] ,  two_sc_dividend[13] ,  wire_3_0_4_1_remainter ,  ~wire_out_quotient[14] ,  wire_3_00_01_curry );
+	div_cell cas_3_0 ( ~reg_2_3_curry ,  two_sc_divisor[0] ,  two_sc_dividend[13] ,  wire_3_0_4_1_remainter ,  ~reg_2_3_curry ,  wire_3_00_01_curry );
 
 	//5th row
 	div_cell cas_4_15 ( ~wire_out_quotient[13] ,  two_sc_divisor[15] ,  wire_3_14_4_15_remainter ,   wire_out_quotient[12] ,  wire_4_14_15_curry ,  hang_4_wire_15 );
@@ -295,25 +365,51 @@ module interconect_cells(
 
 	div_cell cas_4_0 ( ~wire_out_quotient[13] ,  two_sc_divisor[0] ,  two_sc_dividend[12] ,  wire_4_0_5_1_remainter ,  ~wire_out_quotient[13] ,  wire_4_00_01_curry );
 
+	//Pipeline register from 5th row to 6th row 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			reg_4_5 <= 'b0; 
+			reg_4_5_curry <= 'b0;
+		end else begin
+			reg_4_5[14] <= wire_4_14_5_15_remainter;
+			reg_4_5[13] <= wire_4_13_5_14_remainter; 
+			reg_4_5[12] <= wire_4_12_5_13_remainter;
+			reg_4_5[11] <= wire_4_11_5_12_remainter;
+			reg_4_5[10] <= wire_4_10_5_11_remainter;
+			reg_4_5[9] <= wire_4_9_5_10_remainter;
+			reg_4_5[8] <= wire_4_8_5_9_remainter;
+			reg_4_5[7] <= wire_4_7_5_8_remainter;
+			reg_4_5[6] <= wire_4_6_5_7_remainter;
+			reg_4_5[5] <= wire_4_5_5_6_remainter;
+			reg_4_5[4] <= wire_4_4_5_5_remainter;
+			reg_4_5[3] <= wire_4_3_5_4_remainter;
+			reg_4_5[2] <= wire_4_2_5_3_remainter;
+			reg_4_5[1] <= wire_4_1_5_2_remainter;
+			reg_4_5[0] <= wire_4_0_5_1_remainter;
+
+			reg_4_5_curry <= wire_out_quotient[12];
+		end
+	end
+
 	//6th row
-	div_cell cas_5_15 ( ~wire_out_quotient[12] ,  two_sc_divisor[15] ,  wire_4_14_5_15_remainter ,   wire_out_quotient[11] ,  wire_5_14_15_curry ,  hang_5_wire_15 );
+	div_cell cas_5_15 ( ~reg_4_5_curry ,  two_sc_divisor[15] ,reg_4_5[14] ,   wire_out_quotient[11] ,  wire_5_14_15_curry ,  hang_5_wire_15 );
 
-	div_cell cas_5_14 ( ~wire_out_quotient[12] ,  two_sc_divisor[14] ,  wire_4_13_5_14_remainter ,  wire_5_14_6_15_remainter ,  wire_5_13_14_curry ,  wire_5_14_15_curry );
-	div_cell cas_5_13 ( ~wire_out_quotient[12] ,  two_sc_divisor[13] ,  wire_4_12_5_13_remainter ,  wire_5_13_6_14_remainter ,  wire_5_12_13_curry ,  wire_5_13_14_curry );
-	div_cell cas_5_12 ( ~wire_out_quotient[12] ,  two_sc_divisor[12] ,  wire_4_11_5_12_remainter ,  wire_5_12_6_13_remainter ,  wire_5_11_12_curry ,  wire_5_12_13_curry );
-	div_cell cas_5_11 ( ~wire_out_quotient[12] ,  two_sc_divisor[11] ,  wire_4_10_5_11_remainter ,  wire_5_11_6_12_remainter ,  wire_5_10_11_curry ,  wire_5_11_12_curry );
-	div_cell cas_5_10 ( ~wire_out_quotient[12] ,  two_sc_divisor[10] ,  wire_4_9_5_10_remainter ,  wire_5_10_6_11_remainter ,  wire_5_09_10_curry ,  wire_5_10_11_curry );
-	div_cell cas_5_9 ( ~wire_out_quotient[12] ,  two_sc_divisor[9] ,  wire_4_8_5_9_remainter ,  wire_5_9_6_10_remainter ,  wire_5_08_09_curry ,  wire_5_09_10_curry );
-	div_cell cas_5_8 ( ~wire_out_quotient[12] ,  two_sc_divisor[8] ,  wire_4_7_5_8_remainter ,  wire_5_8_6_9_remainter ,  wire_5_07_08_curry ,  wire_5_08_09_curry );
-	div_cell cas_5_7 ( ~wire_out_quotient[12] ,  two_sc_divisor[7] ,  wire_4_6_5_7_remainter ,  wire_5_7_6_8_remainter ,  wire_5_06_07_curry ,  wire_5_07_08_curry );
-	div_cell cas_5_6 ( ~wire_out_quotient[12] ,  two_sc_divisor[6] ,  wire_4_5_5_6_remainter ,  wire_5_6_6_7_remainter ,  wire_5_05_06_curry ,  wire_5_06_07_curry );
-	div_cell cas_5_5 ( ~wire_out_quotient[12] ,  two_sc_divisor[5] ,  wire_4_4_5_5_remainter ,  wire_5_5_6_6_remainter ,  wire_5_04_05_curry ,  wire_5_05_06_curry );
-	div_cell cas_5_4 ( ~wire_out_quotient[12] ,  two_sc_divisor[4] ,  wire_4_3_5_4_remainter ,  wire_5_4_6_5_remainter ,  wire_5_03_04_curry ,  wire_5_04_05_curry );
-	div_cell cas_5_3 ( ~wire_out_quotient[12] ,  two_sc_divisor[3] ,  wire_4_2_5_3_remainter ,  wire_5_3_6_4_remainter ,  wire_5_02_03_curry ,  wire_5_03_04_curry );
-	div_cell cas_5_2 ( ~wire_out_quotient[12] ,  two_sc_divisor[2] ,  wire_4_1_5_2_remainter ,  wire_5_2_6_3_remainter ,  wire_5_01_02_curry ,  wire_5_02_03_curry );
-	div_cell cas_5_1 ( ~wire_out_quotient[12] ,  two_sc_divisor[1] ,  wire_4_0_5_1_remainter ,  wire_5_1_6_2_remainter ,  wire_5_00_01_curry ,  wire_5_01_02_curry );
+	div_cell cas_5_14 ( ~reg_4_5_curry ,  two_sc_divisor[14] ,reg_4_5[13] ,  wire_5_14_6_15_remainter ,  wire_5_13_14_curry ,  wire_5_14_15_curry );
+	div_cell cas_5_13 ( ~reg_4_5_curry ,  two_sc_divisor[13] ,reg_4_5[12] ,  wire_5_13_6_14_remainter ,  wire_5_12_13_curry ,  wire_5_13_14_curry );
+	div_cell cas_5_12 ( ~reg_4_5_curry ,  two_sc_divisor[12] ,reg_4_5[11] ,  wire_5_12_6_13_remainter ,  wire_5_11_12_curry ,  wire_5_12_13_curry );
+	div_cell cas_5_11 ( ~reg_4_5_curry ,  two_sc_divisor[11] ,reg_4_5[10] ,  wire_5_11_6_12_remainter ,  wire_5_10_11_curry ,  wire_5_11_12_curry );
+	div_cell cas_5_10 ( ~reg_4_5_curry ,  two_sc_divisor[10] ,reg_4_5[9] ,  wire_5_10_6_11_remainter ,  wire_5_09_10_curry ,  wire_5_10_11_curry );
+	div_cell cas_5_9 ( ~reg_4_5_curry ,  two_sc_divisor[9] , reg_4_5[8] ,  wire_5_9_6_10_remainter ,  wire_5_08_09_curry ,  wire_5_09_10_curry );
+	div_cell cas_5_8 ( ~reg_4_5_curry ,  two_sc_divisor[8] , reg_4_5[7] ,  wire_5_8_6_9_remainter ,  wire_5_07_08_curry ,  wire_5_08_09_curry );
+	div_cell cas_5_7 ( ~reg_4_5_curry ,  two_sc_divisor[7] , reg_4_5[6] ,  wire_5_7_6_8_remainter ,  wire_5_06_07_curry ,  wire_5_07_08_curry );
+	div_cell cas_5_6 ( ~reg_4_5_curry ,  two_sc_divisor[6] , reg_4_5[5] ,  wire_5_6_6_7_remainter ,  wire_5_05_06_curry ,  wire_5_06_07_curry );
+	div_cell cas_5_5 ( ~reg_4_5_curry ,  two_sc_divisor[5] , reg_4_5[4] ,  wire_5_5_6_6_remainter ,  wire_5_04_05_curry ,  wire_5_05_06_curry );
+	div_cell cas_5_4 ( ~reg_4_5_curry ,  two_sc_divisor[4] , reg_4_5[3] ,  wire_5_4_6_5_remainter ,  wire_5_03_04_curry ,  wire_5_04_05_curry );
+	div_cell cas_5_3 ( ~reg_4_5_curry ,  two_sc_divisor[3] , reg_4_5[2] ,  wire_5_3_6_4_remainter ,  wire_5_02_03_curry ,  wire_5_03_04_curry );
+	div_cell cas_5_2 ( ~reg_4_5_curry ,  two_sc_divisor[2] , reg_4_5[1] ,  wire_5_2_6_3_remainter ,  wire_5_01_02_curry ,  wire_5_02_03_curry );
+	div_cell cas_5_1 ( ~reg_4_5_curry ,  two_sc_divisor[1] , reg_4_5[0] ,  wire_5_1_6_2_remainter ,  wire_5_00_01_curry ,  wire_5_01_02_curry );
 
-	div_cell cas_5_0 ( ~wire_out_quotient[12] ,  two_sc_divisor[0] ,  two_sc_dividend[11] ,  wire_5_0_6_1_remainter ,  ~wire_out_quotient[12] ,  wire_5_00_01_curry );
+	div_cell cas_5_0 ( ~reg_4_5_curry ,  two_sc_divisor[0] ,  two_sc_dividend[11] ,  wire_5_0_6_1_remainter ,  ~reg_4_5_curry ,  wire_5_00_01_curry );
 
 	//7th row
 	div_cell cas_6_15 ( ~wire_out_quotient[11] ,  two_sc_divisor[15] ,  wire_5_14_6_15_remainter ,   wire_out_quotient[10] ,  wire_6_14_15_curry ,  hang_6_wire_15 );
@@ -335,25 +431,51 @@ module interconect_cells(
 
 	div_cell cas_6_0 ( ~wire_out_quotient[11] ,  two_sc_divisor[0] ,  two_sc_dividend[10] ,  wire_6_0_7_1_remainter ,  ~wire_out_quotient[11] ,  wire_6_00_01_curry );
 
-	//8th row
-	div_cell cas_7_15 ( ~wire_out_quotient[10] ,  two_sc_divisor[15] ,  wire_6_14_7_15_remainter ,   wire_out_quotient[9] ,  wire_7_14_15_curry ,  hang_7_wire_15 );
+	//Pipeline register from 7th row to 8th row 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			reg_6_7 <= 'b0; 
+			reg_6_7_curry <= 'b0;
+		end else begin
+			reg_6_7[14] <= wire_6_14_7_15_remainter;
+			reg_6_7[13] <= wire_6_13_7_14_remainter; 
+			reg_6_7[12] <= wire_6_12_7_13_remainter;
+			reg_6_7[11] <= wire_6_11_7_12_remainter;
+			reg_6_7[10] <= wire_6_10_7_11_remainter;
+			reg_6_7[9] <= wire_6_9_7_10_remainter;
+			reg_6_7[8] <= wire_6_8_7_9_remainter;
+			reg_6_7[7] <= wire_6_7_7_8_remainter;
+			reg_6_7[6] <= wire_6_6_7_7_remainter;
+			reg_6_7[5] <= wire_6_5_7_6_remainter;
+			reg_6_7[4] <= wire_6_4_7_5_remainter;
+			reg_6_7[3] <= wire_6_3_7_4_remainter;
+			reg_6_7[2] <= wire_6_2_7_3_remainter;
+			reg_6_7[1] <= wire_6_1_7_2_remainter;
+			reg_6_7[0] <= wire_6_0_7_1_remainter;
 
-	div_cell cas_7_14 ( ~wire_out_quotient[10] ,  two_sc_divisor[14] ,  wire_6_13_7_14_remainter ,  wire_7_14_8_15_remainter ,  wire_7_13_14_curry ,  wire_7_14_15_curry );
-	div_cell cas_7_13 ( ~wire_out_quotient[10] ,  two_sc_divisor[13] ,  wire_6_12_7_13_remainter ,  wire_7_13_8_14_remainter ,  wire_7_12_13_curry ,  wire_7_13_14_curry );
-	div_cell cas_7_12 ( ~wire_out_quotient[10] ,  two_sc_divisor[12] ,  wire_6_11_7_12_remainter ,  wire_7_12_8_13_remainter ,  wire_7_11_12_curry ,  wire_7_12_13_curry );
-	div_cell cas_7_11 ( ~wire_out_quotient[10] ,  two_sc_divisor[11] ,  wire_6_10_7_11_remainter ,  wire_7_11_8_12_remainter ,  wire_7_10_11_curry ,  wire_7_11_12_curry );
-	div_cell cas_7_10 ( ~wire_out_quotient[10] ,  two_sc_divisor[10] ,  wire_6_9_7_10_remainter ,  wire_7_10_8_11_remainter ,  wire_7_09_10_curry ,  wire_7_10_11_curry );
-	div_cell cas_7_9 ( ~wire_out_quotient[10] ,  two_sc_divisor[9] ,  wire_6_8_7_9_remainter ,  wire_7_9_8_10_remainter ,  wire_7_08_09_curry ,  wire_7_09_10_curry );
-	div_cell cas_7_8 ( ~wire_out_quotient[10] ,  two_sc_divisor[8] ,  wire_6_7_7_8_remainter ,  wire_7_8_8_9_remainter ,  wire_7_07_08_curry ,  wire_7_08_09_curry );
-	div_cell cas_7_7 ( ~wire_out_quotient[10] ,  two_sc_divisor[7] ,  wire_6_6_7_7_remainter ,  wire_7_7_8_8_remainter ,  wire_7_06_07_curry ,  wire_7_07_08_curry );
-	div_cell cas_7_6 ( ~wire_out_quotient[10] ,  two_sc_divisor[6] ,  wire_6_5_7_6_remainter ,  wire_7_6_8_7_remainter ,  wire_7_05_06_curry ,  wire_7_06_07_curry );
-	div_cell cas_7_5 ( ~wire_out_quotient[10] ,  two_sc_divisor[5] ,  wire_6_4_7_5_remainter ,  wire_7_5_8_6_remainter ,  wire_7_04_05_curry ,  wire_7_05_06_curry );
-	div_cell cas_7_4 ( ~wire_out_quotient[10] ,  two_sc_divisor[4] ,  wire_6_3_7_4_remainter ,  wire_7_4_8_5_remainter ,  wire_7_03_04_curry ,  wire_7_04_05_curry );
-	div_cell cas_7_3 ( ~wire_out_quotient[10] ,  two_sc_divisor[3] ,  wire_6_2_7_3_remainter ,  wire_7_3_8_4_remainter ,  wire_7_02_03_curry ,  wire_7_03_04_curry );
-	div_cell cas_7_2 ( ~wire_out_quotient[10] ,  two_sc_divisor[2] ,  wire_6_1_7_2_remainter ,  wire_7_2_8_3_remainter ,  wire_7_01_02_curry ,  wire_7_02_03_curry );
-	div_cell cas_7_1 ( ~wire_out_quotient[10] ,  two_sc_divisor[1] ,  wire_6_0_7_1_remainter ,  wire_7_1_8_2_remainter ,  wire_7_00_01_curry ,  wire_7_01_02_curry );
+			reg_6_7_curry <= wire_out_quotient[10];
+		end
+	end
+
+	//8th row
+	div_cell cas_7_15 ( ~reg_6_7_curry ,  two_sc_divisor[15] ,  reg_6_7[14] ,   wire_out_quotient[9] ,  wire_7_14_15_curry ,  hang_7_wire_15 );
+
+	div_cell cas_7_14 ( ~reg_6_7_curry ,  two_sc_divisor[14] ,  reg_6_7[13] ,  wire_7_14_8_15_remainter ,  wire_7_13_14_curry ,  wire_7_14_15_curry );
+	div_cell cas_7_13 ( ~reg_6_7_curry ,  two_sc_divisor[13] ,  reg_6_7[12] ,  wire_7_13_8_14_remainter ,  wire_7_12_13_curry ,  wire_7_13_14_curry );
+	div_cell cas_7_12 ( ~reg_6_7_curry ,  two_sc_divisor[12] ,  reg_6_7[11] ,  wire_7_12_8_13_remainter ,  wire_7_11_12_curry ,  wire_7_12_13_curry );
+	div_cell cas_7_11 ( ~reg_6_7_curry ,  two_sc_divisor[11] ,  reg_6_7[10] ,  wire_7_11_8_12_remainter ,  wire_7_10_11_curry ,  wire_7_11_12_curry );
+	div_cell cas_7_10 ( ~reg_6_7_curry ,  two_sc_divisor[10] ,  reg_6_7[9] ,  wire_7_10_8_11_remainter ,  wire_7_09_10_curry ,  wire_7_10_11_curry );
+	div_cell cas_7_9 ( ~reg_6_7_curry ,  two_sc_divisor[9] ,  reg_6_7[8] ,  wire_7_9_8_10_remainter ,  wire_7_08_09_curry ,  wire_7_09_10_curry );
+	div_cell cas_7_8 ( ~reg_6_7_curry ,  two_sc_divisor[8] ,  reg_6_7[7] ,  wire_7_8_8_9_remainter ,  wire_7_07_08_curry ,  wire_7_08_09_curry );
+	div_cell cas_7_7 ( ~reg_6_7_curry ,  two_sc_divisor[7] ,  reg_6_7[6] ,  wire_7_7_8_8_remainter ,  wire_7_06_07_curry ,  wire_7_07_08_curry );
+	div_cell cas_7_6 ( ~reg_6_7_curry ,  two_sc_divisor[6] ,  reg_6_7[5] ,  wire_7_6_8_7_remainter ,  wire_7_05_06_curry ,  wire_7_06_07_curry );
+	div_cell cas_7_5 ( ~reg_6_7_curry ,  two_sc_divisor[5] ,  reg_6_7[4] ,  wire_7_5_8_6_remainter ,  wire_7_04_05_curry ,  wire_7_05_06_curry );
+	div_cell cas_7_4 ( ~reg_6_7_curry ,  two_sc_divisor[4] ,  reg_6_7[3] ,  wire_7_4_8_5_remainter ,  wire_7_03_04_curry ,  wire_7_04_05_curry );
+	div_cell cas_7_3 ( ~reg_6_7_curry ,  two_sc_divisor[3] ,  reg_6_7[2] ,  wire_7_3_8_4_remainter ,  wire_7_02_03_curry ,  wire_7_03_04_curry );
+	div_cell cas_7_2 ( ~reg_6_7_curry ,  two_sc_divisor[2] ,  reg_6_7[1] ,  wire_7_2_8_3_remainter ,  wire_7_01_02_curry ,  wire_7_02_03_curry );
+	div_cell cas_7_1 ( ~reg_6_7_curry ,  two_sc_divisor[1] ,  reg_6_7[0] ,  wire_7_1_8_2_remainter ,  wire_7_00_01_curry ,  wire_7_01_02_curry );
 	
-	div_cell cas_7_0 ( ~wire_out_quotient[10] ,  two_sc_divisor[0] ,  two_sc_dividend[9] ,  wire_7_0_8_1_remainter ,  ~wire_out_quotient[10] ,  wire_7_00_01_curry );
+	div_cell cas_7_0 ( ~reg_6_7_curry ,  two_sc_divisor[0] ,  two_sc_dividend[9] ,  wire_7_0_8_1_remainter ,  ~reg_6_7_curry ,  wire_7_00_01_curry );
 
 	//9th row
 	div_cell cas_8_15 ( ~wire_out_quotient[9] ,  two_sc_divisor[15] ,  wire_7_14_8_15_remainter ,   wire_out_quotient[8] ,  wire_8_14_15_curry ,  hang_8_wire_15 );
@@ -375,25 +497,51 @@ module interconect_cells(
 	
 	div_cell cas_8_0 ( ~wire_out_quotient[9] ,  two_sc_divisor[0] ,  two_sc_dividend[8] ,  wire_8_0_9_1_remainter ,  ~wire_out_quotient[9] ,  wire_8_00_01_curry );
 
-	//10th row
-	div_cell cas_9_15 ( ~wire_out_quotient[8] ,  two_sc_divisor[15] ,  wire_8_14_9_15_remainter ,   wire_out_quotient[7] ,  wire_9_14_15_curry ,  hang_9_wire_15 );
+	//Pipeline register from 9th row to 10th row 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			reg_8_9 <= 'b0; 
+			reg_8_9_curry <= 'b0;
+		end else begin
+			reg_8_9[14] <= wire_8_14_9_15_remainter;
+			reg_8_9[13] <= wire_8_13_9_14_remainter; 
+			reg_8_9[12] <= wire_8_12_9_13_remainter;
+			reg_8_9[11] <= wire_8_11_9_12_remainter;
+			reg_8_9[10] <= wire_8_10_9_11_remainter;
+			reg_8_9[9] <= wire_8_9_9_10_remainter;
+			reg_8_9[8] <= wire_8_8_9_9_remainter;
+			reg_8_9[7] <= wire_8_7_9_8_remainter;
+			reg_8_9[6] <= wire_8_6_9_7_remainter;
+			reg_8_9[5] <= wire_8_5_9_6_remainter;
+			reg_8_9[4] <= wire_8_4_9_5_remainter;
+			reg_8_9[3] <= wire_8_3_9_4_remainter;
+			reg_8_9[2] <= wire_8_2_9_3_remainter;
+			reg_8_9[1] <= wire_8_1_9_2_remainter;
+			reg_8_9[0] <= wire_8_0_9_1_remainter;
 
-	div_cell cas_9_14 ( ~wire_out_quotient[8] ,  two_sc_divisor[14] ,  wire_8_13_9_14_remainter ,  wire_9_14_10_15_remainter ,  wire_9_13_14_curry ,  wire_9_14_15_curry );
-	div_cell cas_9_13 ( ~wire_out_quotient[8] ,  two_sc_divisor[13] ,  wire_8_12_9_13_remainter ,  wire_9_13_10_14_remainter ,  wire_9_12_13_curry ,  wire_9_13_14_curry );
-	div_cell cas_9_12 ( ~wire_out_quotient[8] ,  two_sc_divisor[12] ,  wire_8_11_9_12_remainter ,  wire_9_12_10_13_remainter ,  wire_9_11_12_curry ,  wire_9_12_13_curry );
-	div_cell cas_9_11 ( ~wire_out_quotient[8] ,  two_sc_divisor[11] ,  wire_8_10_9_11_remainter ,  wire_9_11_10_12_remainter ,  wire_9_10_11_curry ,  wire_9_11_12_curry );
-	div_cell cas_9_10 ( ~wire_out_quotient[8] ,  two_sc_divisor[10] ,  wire_8_9_9_10_remainter ,  wire_9_10_10_11_remainter ,  wire_9_09_10_curry ,  wire_9_10_11_curry );
-	div_cell cas_9_9 ( ~wire_out_quotient[8] ,  two_sc_divisor[9] ,  wire_8_8_9_9_remainter ,  wire_9_9_10_10_remainter ,  wire_9_08_09_curry ,  wire_9_09_10_curry );
-	div_cell cas_9_8 ( ~wire_out_quotient[8] ,  two_sc_divisor[8] ,  wire_8_7_9_8_remainter ,  wire_9_8_10_9_remainter ,  wire_9_07_08_curry ,  wire_9_08_09_curry );
-	div_cell cas_9_7 ( ~wire_out_quotient[8] ,  two_sc_divisor[7] ,  wire_8_6_9_7_remainter ,  wire_9_7_10_8_remainter ,  wire_9_06_07_curry ,  wire_9_07_08_curry );
-	div_cell cas_9_6 ( ~wire_out_quotient[8] ,  two_sc_divisor[6] ,  wire_8_5_9_6_remainter ,  wire_9_6_10_7_remainter ,  wire_9_05_06_curry ,  wire_9_06_07_curry );
-	div_cell cas_9_5 ( ~wire_out_quotient[8] ,  two_sc_divisor[5] ,  wire_8_4_9_5_remainter ,  wire_9_5_10_6_remainter ,  wire_9_04_05_curry ,  wire_9_05_06_curry );
-	div_cell cas_9_4 ( ~wire_out_quotient[8] ,  two_sc_divisor[4] ,  wire_8_3_9_4_remainter ,  wire_9_4_10_5_remainter ,  wire_9_03_04_curry ,  wire_9_04_05_curry );
-	div_cell cas_9_3 ( ~wire_out_quotient[8] ,  two_sc_divisor[3] ,  wire_8_2_9_3_remainter ,  wire_9_3_10_4_remainter ,  wire_9_02_03_curry ,  wire_9_03_04_curry );
-	div_cell cas_9_2 ( ~wire_out_quotient[8] ,  two_sc_divisor[2] ,  wire_8_1_9_2_remainter ,  wire_9_2_10_3_remainter ,  wire_9_01_02_curry ,  wire_9_02_03_curry );
-	div_cell cas_9_1 ( ~wire_out_quotient[8] ,  two_sc_divisor[1] ,  wire_8_0_9_1_remainter ,  wire_9_1_10_2_remainter ,  wire_9_00_01_curry ,  wire_9_01_02_curry );
+			reg_8_9_curry <= wire_out_quotient[8];
+		end
+	end
+
+	//10th row
+	div_cell cas_9_15 ( ~reg_8_9_curry ,  two_sc_divisor[15] ,  reg_8_9[14] ,   wire_out_quotient[7] ,  wire_9_14_15_curry ,  hang_9_wire_15 );
+
+	div_cell cas_9_14 ( ~reg_8_9_curry ,  two_sc_divisor[14] ,  reg_8_9[13] ,  wire_9_14_10_15_remainter ,  wire_9_13_14_curry ,  wire_9_14_15_curry );
+	div_cell cas_9_13 ( ~reg_8_9_curry ,  two_sc_divisor[13] ,  reg_8_9[12] ,  wire_9_13_10_14_remainter ,  wire_9_12_13_curry ,  wire_9_13_14_curry );
+	div_cell cas_9_12 ( ~reg_8_9_curry ,  two_sc_divisor[12] ,  reg_8_9[11] ,  wire_9_12_10_13_remainter ,  wire_9_11_12_curry ,  wire_9_12_13_curry );
+	div_cell cas_9_11 ( ~reg_8_9_curry ,  two_sc_divisor[11] ,  reg_8_9[10] ,  wire_9_11_10_12_remainter ,  wire_9_10_11_curry ,  wire_9_11_12_curry );
+	div_cell cas_9_10 ( ~reg_8_9_curry ,  two_sc_divisor[10] ,  reg_8_9[9] ,  wire_9_10_10_11_remainter ,  wire_9_09_10_curry ,  wire_9_10_11_curry );
+	div_cell cas_9_9 ( ~reg_8_9_curry ,  two_sc_divisor[9] ,  reg_8_9[8] ,  wire_9_9_10_10_remainter ,  wire_9_08_09_curry ,  wire_9_09_10_curry );
+	div_cell cas_9_8 ( ~reg_8_9_curry ,  two_sc_divisor[8] ,  reg_8_9[7] ,  wire_9_8_10_9_remainter ,  wire_9_07_08_curry ,  wire_9_08_09_curry );
+	div_cell cas_9_7 ( ~reg_8_9_curry ,  two_sc_divisor[7] ,  reg_8_9[6] ,  wire_9_7_10_8_remainter ,  wire_9_06_07_curry ,  wire_9_07_08_curry );
+	div_cell cas_9_6 ( ~reg_8_9_curry ,  two_sc_divisor[6] ,  reg_8_9[5] ,  wire_9_6_10_7_remainter ,  wire_9_05_06_curry ,  wire_9_06_07_curry );
+	div_cell cas_9_5 ( ~reg_8_9_curry ,  two_sc_divisor[5] ,  reg_8_9[4] ,  wire_9_5_10_6_remainter ,  wire_9_04_05_curry ,  wire_9_05_06_curry );
+	div_cell cas_9_4 ( ~reg_8_9_curry ,  two_sc_divisor[4] ,  reg_8_9[3] ,  wire_9_4_10_5_remainter ,  wire_9_03_04_curry ,  wire_9_04_05_curry );
+	div_cell cas_9_3 ( ~reg_8_9_curry ,  two_sc_divisor[3] ,  reg_8_9[2] ,  wire_9_3_10_4_remainter ,  wire_9_02_03_curry ,  wire_9_03_04_curry );
+	div_cell cas_9_2 ( ~reg_8_9_curry ,  two_sc_divisor[2] ,  reg_8_9[1] ,  wire_9_2_10_3_remainter ,  wire_9_01_02_curry ,  wire_9_02_03_curry );
+	div_cell cas_9_1 ( ~reg_8_9_curry ,  two_sc_divisor[1] ,  reg_8_9[0] ,  wire_9_1_10_2_remainter ,  wire_9_00_01_curry ,  wire_9_01_02_curry );
 	
-	div_cell cas_9_0 ( ~wire_out_quotient[8] ,  two_sc_divisor[0] ,  two_sc_dividend[7] ,  wire_9_0_10_1_remainter ,  ~wire_out_quotient[8] ,  wire_9_00_01_curry );
+	div_cell cas_9_0 ( ~reg_8_9_curry ,  two_sc_divisor[0] ,  two_sc_dividend[7] ,  wire_9_0_10_1_remainter ,  ~reg_8_9_curry ,  wire_9_00_01_curry );
 
 	//11th row
 	div_cell cas_10_15 ( ~wire_out_quotient[7] ,  two_sc_divisor[15] ,  wire_9_14_10_15_remainter ,   wire_out_quotient[6] ,  wire_10_14_15_curry ,  hang_10_wire_15 );
@@ -415,25 +563,51 @@ module interconect_cells(
 	
 	div_cell cas_10_0 ( ~wire_out_quotient[7] ,  two_sc_divisor[0] ,  two_sc_dividend[6] ,  wire_10_0_11_1_remainter ,  ~wire_out_quotient[7] ,  wire_10_00_01_curry );
 
-	//12th row
-	div_cell cas_11_15 ( ~wire_out_quotient[6] ,  two_sc_divisor[15] ,  wire_10_14_11_15_remainter ,   wire_out_quotient[5] ,  wire_11_14_15_curry ,  hang_11_wire_15 );
+	//Pipeline register from 11th row to 12th row 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			reg_10_11 <= 'b0; 
+			reg_10_11_curry <= 'b0;
+		end else begin
+			reg_10_11[14] <= wire_10_14_11_15_remainter;
+			reg_10_11[13] <= wire_10_13_11_14_remainter; 
+			reg_10_11[12] <= wire_10_12_11_13_remainter;
+			reg_10_11[11] <= wire_10_11_11_12_remainter;
+			reg_10_11[10] <= wire_10_10_11_11_remainter;
+			reg_10_11[9] <= wire_10_9_11_10_remainter;
+			reg_10_11[8] <= wire_10_8_11_9_remainter;
+			reg_10_11[7] <= wire_10_7_11_8_remainter;
+			reg_10_11[6] <= wire_10_6_11_7_remainter;
+			reg_10_11[5] <= wire_10_5_11_6_remainter;
+			reg_10_11[4] <= wire_10_4_11_5_remainter;
+			reg_10_11[3] <= wire_10_3_11_4_remainter;
+			reg_10_11[2] <= wire_10_2_11_3_remainter;
+			reg_10_11[1] <= wire_10_1_11_2_remainter;
+			reg_10_11[0] <= wire_10_0_11_1_remainter;
 
-	div_cell cas_11_14 ( ~wire_out_quotient[6] ,  two_sc_divisor[14] ,  wire_10_13_11_14_remainter ,  wire_11_14_12_15_remainter ,  wire_11_13_14_curry ,  wire_11_14_15_curry );
-	div_cell cas_11_13 ( ~wire_out_quotient[6] ,  two_sc_divisor[13] ,  wire_10_12_11_13_remainter ,  wire_11_13_12_14_remainter ,  wire_11_12_13_curry ,  wire_11_13_14_curry );
-	div_cell cas_11_12 ( ~wire_out_quotient[6] ,  two_sc_divisor[12] ,  wire_10_11_11_12_remainter ,  wire_11_12_12_13_remainter ,  wire_11_11_12_curry ,  wire_11_12_13_curry );
-	div_cell cas_11_11 ( ~wire_out_quotient[6] ,  two_sc_divisor[11] ,  wire_10_10_11_11_remainter ,  wire_11_11_12_12_remainter ,  wire_11_10_11_curry ,  wire_11_11_12_curry );
-	div_cell cas_11_10 ( ~wire_out_quotient[6] ,  two_sc_divisor[10] ,  wire_10_9_11_10_remainter ,  wire_11_10_12_11_remainter ,  wire_11_09_10_curry ,  wire_11_10_11_curry );
-	div_cell cas_11_9 ( ~wire_out_quotient[6] ,  two_sc_divisor[9] ,  wire_10_8_11_9_remainter ,  wire_11_9_12_10_remainter ,  wire_11_08_09_curry ,  wire_11_09_10_curry );
-	div_cell cas_11_8 ( ~wire_out_quotient[6] ,  two_sc_divisor[8] ,  wire_10_7_11_8_remainter ,  wire_11_8_12_9_remainter ,  wire_11_07_08_curry ,  wire_11_08_09_curry );
-	div_cell cas_11_7 ( ~wire_out_quotient[6] ,  two_sc_divisor[7] ,  wire_10_6_11_7_remainter ,  wire_11_7_12_8_remainter ,  wire_11_06_07_curry ,  wire_11_07_08_curry );
-	div_cell cas_11_6 ( ~wire_out_quotient[6] ,  two_sc_divisor[6] ,  wire_10_5_11_6_remainter ,  wire_11_6_12_7_remainter ,  wire_11_05_06_curry ,  wire_11_06_07_curry );
-	div_cell cas_11_5 ( ~wire_out_quotient[6] ,  two_sc_divisor[5] ,  wire_10_4_11_5_remainter ,  wire_11_5_12_6_remainter ,  wire_11_04_05_curry ,  wire_11_05_06_curry );
-	div_cell cas_11_4 ( ~wire_out_quotient[6] ,  two_sc_divisor[4] ,  wire_10_3_11_4_remainter ,  wire_11_4_12_5_remainter ,  wire_11_03_04_curry ,  wire_11_04_05_curry );
-	div_cell cas_11_3 ( ~wire_out_quotient[6] ,  two_sc_divisor[3] ,  wire_10_2_11_3_remainter ,  wire_11_3_12_4_remainter ,  wire_11_02_03_curry ,  wire_11_03_04_curry );
-	div_cell cas_11_2 ( ~wire_out_quotient[6] ,  two_sc_divisor[2] ,  wire_10_1_11_2_remainter ,  wire_11_2_12_3_remainter ,  wire_11_01_02_curry ,  wire_11_02_03_curry );
-	div_cell cas_11_1 ( ~wire_out_quotient[6] ,  two_sc_divisor[1] ,  wire_10_0_11_1_remainter ,  wire_11_1_12_2_remainter ,  wire_11_00_01_curry ,  wire_11_01_02_curry );
+			reg_10_11_curry <= wire_out_quotient[6];
+		end
+	end
+
+	//12th row
+	div_cell cas_11_15 ( ~reg_10_11_curry ,  two_sc_divisor[15] , reg_10_11[14] ,   wire_out_quotient[5] ,  wire_11_14_15_curry ,  hang_11_wire_15 );
+
+	div_cell cas_11_14 ( ~reg_10_11_curry ,  two_sc_divisor[14] ,  reg_10_11[13] ,  wire_11_14_12_15_remainter ,  wire_11_13_14_curry ,  wire_11_14_15_curry );
+	div_cell cas_11_13 ( ~reg_10_11_curry ,  two_sc_divisor[13] ,  reg_10_11[12] ,  wire_11_13_12_14_remainter ,  wire_11_12_13_curry ,  wire_11_13_14_curry );
+	div_cell cas_11_12 ( ~reg_10_11_curry ,  two_sc_divisor[12] ,  reg_10_11[11] ,  wire_11_12_12_13_remainter ,  wire_11_11_12_curry ,  wire_11_12_13_curry );
+	div_cell cas_11_11 ( ~reg_10_11_curry ,  two_sc_divisor[11] ,  reg_10_11[10] ,  wire_11_11_12_12_remainter ,  wire_11_10_11_curry ,  wire_11_11_12_curry );
+	div_cell cas_11_10 ( ~reg_10_11_curry ,  two_sc_divisor[10] ,  reg_10_11[9],  wire_11_10_12_11_remainter ,  wire_11_09_10_curry ,  wire_11_10_11_curry );
+	div_cell cas_11_9 ( ~reg_10_11_curry ,  two_sc_divisor[9] ,  reg_10_11[8] ,  wire_11_9_12_10_remainter ,  wire_11_08_09_curry ,  wire_11_09_10_curry );
+	div_cell cas_11_8 ( ~reg_10_11_curry ,  two_sc_divisor[8] ,  reg_10_11[7] ,  wire_11_8_12_9_remainter ,  wire_11_07_08_curry ,  wire_11_08_09_curry );
+	div_cell cas_11_7 ( ~reg_10_11_curry ,  two_sc_divisor[7] ,  reg_10_11[6] ,  wire_11_7_12_8_remainter ,  wire_11_06_07_curry ,  wire_11_07_08_curry );
+	div_cell cas_11_6 ( ~reg_10_11_curry ,  two_sc_divisor[6] ,  reg_10_11[5] ,  wire_11_6_12_7_remainter ,  wire_11_05_06_curry ,  wire_11_06_07_curry );
+	div_cell cas_11_5 ( ~reg_10_11_curry ,  two_sc_divisor[5] ,  reg_10_11[4] ,  wire_11_5_12_6_remainter ,  wire_11_04_05_curry ,  wire_11_05_06_curry );
+	div_cell cas_11_4 ( ~reg_10_11_curry ,  two_sc_divisor[4] ,  reg_10_11[3] ,  wire_11_4_12_5_remainter ,  wire_11_03_04_curry ,  wire_11_04_05_curry );
+	div_cell cas_11_3 ( ~reg_10_11_curry ,  two_sc_divisor[3] ,  reg_10_11[2] ,  wire_11_3_12_4_remainter ,  wire_11_02_03_curry ,  wire_11_03_04_curry );
+	div_cell cas_11_2 ( ~reg_10_11_curry ,  two_sc_divisor[2] ,  reg_10_11[1] ,  wire_11_2_12_3_remainter ,  wire_11_01_02_curry ,  wire_11_02_03_curry );
+	div_cell cas_11_1 ( ~reg_10_11_curry ,  two_sc_divisor[1] ,  reg_10_11[0] ,  wire_11_1_12_2_remainter ,  wire_11_00_01_curry ,  wire_11_01_02_curry );
 	
-	div_cell cas_11_0 ( ~wire_out_quotient[6] ,  two_sc_divisor[0] ,  two_sc_dividend[5] ,  wire_11_0_12_1_remainter ,  ~wire_out_quotient[6] ,  wire_11_00_01_curry );
+	div_cell cas_11_0 ( ~reg_10_11_curry ,  two_sc_divisor[0] ,  two_sc_dividend[5] ,  wire_11_0_12_1_remainter ,  ~reg_10_11_curry ,  wire_11_00_01_curry );
 
 	//13th row
 	div_cell cas_12_15 ( ~wire_out_quotient[5] ,  two_sc_divisor[15] ,  wire_11_14_12_15_remainter ,   wire_out_quotient[4] ,  wire_12_14_15_curry ,  hang_12_wire_15 );
@@ -454,25 +628,51 @@ module interconect_cells(
 	
 	div_cell cas_12_0 ( ~wire_out_quotient[5] ,  two_sc_divisor[0] ,  two_sc_dividend[4] ,  wire_12_0_13_1_remainter ,  ~wire_out_quotient[5] ,  wire_12_00_01_curry );
 
-	//14th row
-	div_cell cas_13_15 ( ~wire_out_quotient[4] ,  two_sc_divisor[15] ,  wire_12_14_13_15_remainter ,   wire_out_quotient[3] ,  wire_13_14_15_curry ,  hang_13_wire_15 );
+	//Pipeline register from 13th row to 14th row 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			reg_12_13 <= 'b0; 
+			reg_12_13_curry <= 'b0;
+		end else begin
+			reg_12_13[14] <= wire_12_14_13_15_remainter;
+			reg_12_13[13] <= wire_12_13_13_14_remainter; 
+			reg_12_13[12] <= wire_12_12_13_13_remainter;
+			reg_12_13[11] <= wire_12_11_13_12_remainter;
+			reg_12_13[10] <= wire_12_10_13_11_remainter;
+			reg_12_13[9] <= wire_12_9_13_10_remainter;
+			reg_12_13[8] <= wire_12_8_13_9_remainter;
+			reg_12_13[7] <= wire_12_7_13_8_remainter;
+			reg_12_13[6] <= wire_12_6_13_7_remainter;
+			reg_12_13[5] <= wire_12_5_13_6_remainter;
+			reg_12_13[4] <= wire_12_4_13_5_remainter;
+			reg_12_13[3] <= wire_12_3_13_4_remainter;
+			reg_12_13[2] <= wire_12_2_13_3_remainter;
+			reg_12_13[1] <= wire_12_1_13_2_remainter;
+			reg_12_13[0] <= wire_12_0_13_1_remainter;
 
-	div_cell cas_13_14 ( ~wire_out_quotient[4] ,  two_sc_divisor[14] ,  wire_12_13_13_14_remainter ,  wire_13_14_14_15_remainter ,  wire_13_13_14_curry ,  wire_13_14_15_curry );
-	div_cell cas_13_13 ( ~wire_out_quotient[4] ,  two_sc_divisor[13] ,  wire_12_12_13_13_remainter ,  wire_13_13_14_14_remainter ,  wire_13_12_13_curry ,  wire_13_13_14_curry );
-	div_cell cas_13_12 ( ~wire_out_quotient[4] ,  two_sc_divisor[12] ,  wire_12_11_13_12_remainter ,  wire_13_12_14_13_remainter ,  wire_13_11_12_curry ,  wire_13_12_13_curry );
-	div_cell cas_13_11 ( ~wire_out_quotient[4] ,  two_sc_divisor[11] ,  wire_12_10_13_11_remainter ,  wire_13_11_14_12_remainter ,  wire_13_10_11_curry ,  wire_13_11_12_curry );
-	div_cell cas_13_10 ( ~wire_out_quotient[4] ,  two_sc_divisor[10] ,  wire_12_9_13_10_remainter ,  wire_13_10_14_11_remainter ,  wire_13_09_10_curry ,  wire_13_10_11_curry );
-	div_cell cas_13_9 ( ~wire_out_quotient[4] ,  two_sc_divisor[9] ,  wire_12_8_13_9_remainter ,  wire_13_9_14_10_remainter ,  wire_13_08_09_curry ,  wire_13_09_10_curry );
-	div_cell cas_13_8 ( ~wire_out_quotient[4] ,  two_sc_divisor[8] ,  wire_12_7_13_8_remainter ,  wire_13_8_14_9_remainter ,  wire_13_07_08_curry ,  wire_13_08_09_curry );
-	div_cell cas_13_7 ( ~wire_out_quotient[4] ,  two_sc_divisor[7] ,  wire_12_6_13_7_remainter ,  wire_13_7_14_8_remainter ,  wire_13_06_07_curry ,  wire_13_07_08_curry );
-	div_cell cas_13_6 ( ~wire_out_quotient[4] ,  two_sc_divisor[6] ,  wire_12_5_13_6_remainter ,  wire_13_6_14_7_remainter ,  wire_13_05_06_curry ,  wire_13_06_07_curry );
-	div_cell cas_13_5 ( ~wire_out_quotient[4] ,  two_sc_divisor[5] ,  wire_12_4_13_5_remainter ,  wire_13_5_14_6_remainter ,  wire_13_04_05_curry ,  wire_13_05_06_curry );
-	div_cell cas_13_4 ( ~wire_out_quotient[4] ,  two_sc_divisor[4] ,  wire_12_3_13_4_remainter ,  wire_13_4_14_5_remainter ,  wire_13_03_04_curry ,  wire_13_04_05_curry );
-	div_cell cas_13_3 ( ~wire_out_quotient[4] ,  two_sc_divisor[3] ,  wire_12_2_13_3_remainter ,  wire_13_3_14_4_remainter ,  wire_13_02_03_curry ,  wire_13_03_04_curry );
-	div_cell cas_13_2 ( ~wire_out_quotient[4] ,  two_sc_divisor[2] ,  wire_12_1_13_2_remainter ,  wire_13_2_14_3_remainter ,  wire_13_01_02_curry ,  wire_13_02_03_curry );
-	div_cell cas_13_1 ( ~wire_out_quotient[4] ,  two_sc_divisor[1] ,  wire_12_0_13_1_remainter ,  wire_13_1_14_2_remainter ,  wire_13_00_01_curry ,  wire_13_01_02_curry );
+			reg_12_13_curry <= wire_out_quotient[4];
+		end
+	end
+
+	//14th row
+	div_cell cas_13_15 ( ~reg_12_13_curry ,  two_sc_divisor[15] , reg_12_13[14] ,   wire_out_quotient[3] ,  wire_13_14_15_curry ,  hang_13_wire_15 );
+
+	div_cell cas_13_14 ( ~reg_12_13_curry ,  two_sc_divisor[14] ,reg_12_13[13] ,  wire_13_14_14_15_remainter ,  wire_13_13_14_curry ,  wire_13_14_15_curry );
+	div_cell cas_13_13 ( ~reg_12_13_curry ,  two_sc_divisor[13] ,reg_12_13[12] ,  wire_13_13_14_14_remainter ,  wire_13_12_13_curry ,  wire_13_13_14_curry );
+	div_cell cas_13_12 ( ~reg_12_13_curry ,  two_sc_divisor[12] ,reg_12_13[11] ,  wire_13_12_14_13_remainter ,  wire_13_11_12_curry ,  wire_13_12_13_curry );
+	div_cell cas_13_11 ( ~reg_12_13_curry ,  two_sc_divisor[11] ,reg_12_13[10] ,  wire_13_11_14_12_remainter ,  wire_13_10_11_curry ,  wire_13_11_12_curry );
+	div_cell cas_13_10 ( ~reg_12_13_curry ,  two_sc_divisor[10] ,reg_12_13[9],  wire_13_10_14_11_remainter ,  wire_13_09_10_curry ,  wire_13_10_11_curry );
+	div_cell cas_13_9 ( ~reg_12_13_curry ,  two_sc_divisor[9] , reg_12_13[8] ,  wire_13_9_14_10_remainter ,  wire_13_08_09_curry ,  wire_13_09_10_curry );
+	div_cell cas_13_8 ( ~reg_12_13_curry ,  two_sc_divisor[8] , reg_12_13[7] ,  wire_13_8_14_9_remainter ,  wire_13_07_08_curry ,  wire_13_08_09_curry );
+	div_cell cas_13_7 ( ~reg_12_13_curry ,  two_sc_divisor[7] , reg_12_13[6] ,  wire_13_7_14_8_remainter ,  wire_13_06_07_curry ,  wire_13_07_08_curry );
+	div_cell cas_13_6 ( ~reg_12_13_curry ,  two_sc_divisor[6] , reg_12_13[5] ,  wire_13_6_14_7_remainter ,  wire_13_05_06_curry ,  wire_13_06_07_curry );
+	div_cell cas_13_5 ( ~reg_12_13_curry ,  two_sc_divisor[5] , reg_12_13[4] ,  wire_13_5_14_6_remainter ,  wire_13_04_05_curry ,  wire_13_05_06_curry );
+	div_cell cas_13_4 ( ~reg_12_13_curry ,  two_sc_divisor[4] , reg_12_13[3] ,  wire_13_4_14_5_remainter ,  wire_13_03_04_curry ,  wire_13_04_05_curry );
+	div_cell cas_13_3 ( ~reg_12_13_curry ,  two_sc_divisor[3] , reg_12_13[2] ,  wire_13_3_14_4_remainter ,  wire_13_02_03_curry ,  wire_13_03_04_curry );
+	div_cell cas_13_2 ( ~reg_12_13_curry ,  two_sc_divisor[2] , reg_12_13[1] ,  wire_13_2_14_3_remainter ,  wire_13_01_02_curry ,  wire_13_02_03_curry );
+	div_cell cas_13_1 ( ~reg_12_13_curry ,  two_sc_divisor[1] , reg_12_13[0] ,  wire_13_1_14_2_remainter ,  wire_13_00_01_curry ,  wire_13_01_02_curry );
 	
-	div_cell cas_13_0 ( ~wire_out_quotient[4] ,  two_sc_divisor[0] ,  two_sc_dividend[3] ,  wire_13_0_14_1_remainter ,  ~wire_out_quotient[4] ,  wire_13_00_01_curry );
+	div_cell cas_13_0 ( ~reg_12_13_curry ,  two_sc_divisor[0] ,  two_sc_dividend[3] ,  wire_13_0_14_1_remainter ,  ~reg_12_13_curry ,  wire_13_00_01_curry );
 
 	//15th row
 	div_cell cas_14_15 ( ~wire_out_quotient[3] ,  two_sc_divisor[15] ,  wire_13_14_14_15_remainter ,   wire_out_quotient[2] ,  wire_14_14_15_curry ,  hang_14_wire_15 );
@@ -494,25 +694,51 @@ module interconect_cells(
 	
 	div_cell cas_14_0 ( ~wire_out_quotient[3] ,  two_sc_divisor[0] ,  two_sc_dividend[2] ,  wire_14_0_15_1_remainter ,  ~wire_out_quotient[3] ,  wire_14_00_01_curry );
 
-	//16th row
-	div_cell cas_15_15 ( ~wire_out_quotient[2] ,  two_sc_divisor[15] ,  wire_14_14_15_15_remainter ,   wire_out_quotient[1] ,  wire_15_14_15_curry ,  hang_15_wire_15 );
+	//Pipeline register from 15th row to 16th row 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			reg_14_15 <= 'b0; 
+			reg_14_15_curry <= 'b0;
+		end else begin
+			reg_14_15[14] <= wire_14_14_15_15_remainter;
+			reg_14_15[13] <= wire_14_13_15_14_remainter; 
+			reg_14_15[12] <= wire_14_12_15_13_remainter;
+			reg_14_15[11] <= wire_14_11_15_12_remainter;
+			reg_14_15[10] <= wire_14_10_15_11_remainter;
+			reg_14_15[9] <= wire_14_9_15_10_remainter;
+			reg_14_15[8] <= wire_14_8_15_9_remainter;
+			reg_14_15[7] <= wire_14_7_15_8_remainter;
+			reg_14_15[6] <= wire_14_6_15_7_remainter;
+			reg_14_15[5] <= wire_14_5_15_6_remainter;
+			reg_14_15[4] <= wire_14_4_15_5_remainter;
+			reg_14_15[3] <= wire_14_3_15_4_remainter;
+			reg_14_15[2] <= wire_14_2_15_3_remainter;
+			reg_14_15[1] <= wire_14_1_15_2_remainter;
+			reg_14_15[0] <= wire_14_0_15_1_remainter;
 
-	div_cell cas_15_14 ( ~wire_out_quotient[2] ,  two_sc_divisor[14] ,  wire_14_13_15_14_remainter ,  wire_15_14_16_15_remainter ,  wire_15_13_14_curry ,  wire_15_14_15_curry );
-	div_cell cas_15_13 ( ~wire_out_quotient[2] ,  two_sc_divisor[13] ,  wire_14_12_15_13_remainter ,  wire_15_13_16_14_remainter ,  wire_15_12_13_curry ,  wire_15_13_14_curry );
-	div_cell cas_15_12 ( ~wire_out_quotient[2] ,  two_sc_divisor[12] ,  wire_14_11_15_12_remainter ,  wire_15_12_16_13_remainter ,  wire_15_11_12_curry ,  wire_15_12_13_curry );
-	div_cell cas_15_11 ( ~wire_out_quotient[2] ,  two_sc_divisor[11] ,  wire_14_10_15_11_remainter ,  wire_15_11_16_12_remainter ,  wire_15_10_11_curry ,  wire_15_11_12_curry );
-	div_cell cas_15_10 ( ~wire_out_quotient[2] ,  two_sc_divisor[10] ,  wire_14_9_15_10_remainter ,  wire_15_10_16_11_remainter ,  wire_15_09_10_curry ,  wire_15_10_11_curry );
-	div_cell cas_15_9 ( ~wire_out_quotient[2] ,  two_sc_divisor[9] ,  wire_14_8_15_9_remainter ,  wire_15_9_16_10_remainter ,  wire_15_08_09_curry ,  wire_15_09_10_curry );
-	div_cell cas_15_8 ( ~wire_out_quotient[2] ,  two_sc_divisor[8] ,  wire_14_7_15_8_remainter ,  wire_15_8_16_9_remainter ,  wire_15_07_08_curry ,  wire_15_08_09_curry );
-	div_cell cas_15_7 ( ~wire_out_quotient[2] ,  two_sc_divisor[7] ,  wire_14_6_15_7_remainter ,  wire_15_7_16_8_remainter ,  wire_15_06_07_curry ,  wire_15_07_08_curry );
-	div_cell cas_15_6 ( ~wire_out_quotient[2] ,  two_sc_divisor[6] ,  wire_14_5_15_6_remainter ,  wire_15_6_16_7_remainter ,  wire_15_05_06_curry ,  wire_15_06_07_curry );
-	div_cell cas_15_5 ( ~wire_out_quotient[2] ,  two_sc_divisor[5] ,  wire_14_4_15_5_remainter ,  wire_15_5_16_6_remainter ,  wire_15_04_05_curry ,  wire_15_05_06_curry );
-	div_cell cas_15_4 ( ~wire_out_quotient[2] ,  two_sc_divisor[4] ,  wire_14_3_15_4_remainter ,  wire_15_4_16_5_remainter ,  wire_15_03_04_curry ,  wire_15_04_05_curry );
-	div_cell cas_15_3 ( ~wire_out_quotient[2] ,  two_sc_divisor[3] ,  wire_14_2_15_3_remainter ,  wire_15_3_16_4_remainter ,  wire_15_02_03_curry ,  wire_15_03_04_curry );
-	div_cell cas_15_2 ( ~wire_out_quotient[2] ,  two_sc_divisor[2] ,  wire_14_1_15_2_remainter ,  wire_15_2_16_3_remainter ,  wire_15_01_02_curry ,  wire_15_02_03_curry );
-	div_cell cas_15_1 ( ~wire_out_quotient[2] ,  two_sc_divisor[1] ,  wire_14_0_15_1_remainter ,  wire_15_1_16_2_remainter ,  wire_15_00_01_curry ,  wire_15_01_02_curry );
+			reg_14_15_curry <= wire_out_quotient[2];
+		end
+	end
+
+	//16th row
+	div_cell cas_15_15 ( ~reg_14_15_curry ,  two_sc_divisor[15] ,  reg_14_15[14] ,   wire_out_quotient[1] ,  wire_15_14_15_curry ,  hang_15_wire_15 );
+
+	div_cell cas_15_14 ( ~reg_14_15_curry ,  two_sc_divisor[14] ,  reg_14_15[13] ,  wire_15_14_16_15_remainter ,  wire_15_13_14_curry ,  wire_15_14_15_curry );
+	div_cell cas_15_13 ( ~reg_14_15_curry ,  two_sc_divisor[13] ,  reg_14_15[12] ,  wire_15_13_16_14_remainter ,  wire_15_12_13_curry ,  wire_15_13_14_curry );
+	div_cell cas_15_12 ( ~reg_14_15_curry ,  two_sc_divisor[12] ,  reg_14_15[11] ,  wire_15_12_16_13_remainter ,  wire_15_11_12_curry ,  wire_15_12_13_curry );
+	div_cell cas_15_11 ( ~reg_14_15_curry ,  two_sc_divisor[11] ,  reg_14_15[10] ,  wire_15_11_16_12_remainter ,  wire_15_10_11_curry ,  wire_15_11_12_curry );
+	div_cell cas_15_10 ( ~reg_14_15_curry ,  two_sc_divisor[10] ,  reg_14_15[9],  wire_15_10_16_11_remainter ,  wire_15_09_10_curry ,  wire_15_10_11_curry );
+	div_cell cas_15_9 ( ~reg_14_15_curry ,  two_sc_divisor[9] ,  reg_14_15[8] ,  wire_15_9_16_10_remainter ,  wire_15_08_09_curry ,  wire_15_09_10_curry );
+	div_cell cas_15_8 ( ~reg_14_15_curry ,  two_sc_divisor[8] ,  reg_14_15[7] ,  wire_15_8_16_9_remainter ,  wire_15_07_08_curry ,  wire_15_08_09_curry );
+	div_cell cas_15_7 ( ~reg_14_15_curry ,  two_sc_divisor[7] ,  reg_14_15[6] ,  wire_15_7_16_8_remainter ,  wire_15_06_07_curry ,  wire_15_07_08_curry );
+	div_cell cas_15_6 ( ~reg_14_15_curry ,  two_sc_divisor[6] ,  reg_14_15[5] ,  wire_15_6_16_7_remainter ,  wire_15_05_06_curry ,  wire_15_06_07_curry );
+	div_cell cas_15_5 ( ~reg_14_15_curry ,  two_sc_divisor[5] ,  reg_14_15[4] ,  wire_15_5_16_6_remainter ,  wire_15_04_05_curry ,  wire_15_05_06_curry );
+	div_cell cas_15_4 ( ~reg_14_15_curry ,  two_sc_divisor[4] ,  reg_14_15[3] ,  wire_15_4_16_5_remainter ,  wire_15_03_04_curry ,  wire_15_04_05_curry );
+	div_cell cas_15_3 ( ~reg_14_15_curry ,  two_sc_divisor[3] ,  reg_14_15[2] ,  wire_15_3_16_4_remainter ,  wire_15_02_03_curry ,  wire_15_03_04_curry );
+	div_cell cas_15_2 ( ~reg_14_15_curry ,  two_sc_divisor[2] ,  reg_14_15[1] ,  wire_15_2_16_3_remainter ,  wire_15_01_02_curry ,  wire_15_02_03_curry );
+	div_cell cas_15_1 ( ~reg_14_15_curry ,  two_sc_divisor[1] ,  reg_14_15[0] ,  wire_15_1_16_2_remainter ,  wire_15_00_01_curry ,  wire_15_01_02_curry );
 	
-	div_cell cas_15_0 ( ~wire_out_quotient[2] ,  two_sc_divisor[0] ,  two_sc_dividend[1] ,  wire_15_0_16_1_remainter ,  ~wire_out_quotient[2] ,  wire_15_00_01_curry );
+	div_cell cas_15_0 ( ~reg_14_15_curry ,  two_sc_divisor[0] ,  two_sc_dividend[1] ,  wire_15_0_16_1_remainter ,  ~reg_14_15_curry ,  wire_15_00_01_curry );
 
 	//17th row
 	div_cell cas_16_15 ( ~wire_out_quotient[1] ,  two_sc_divisor[15] ,  wire_15_14_16_15_remainter ,   wire_out_quotient[0] ,  wire_16_14_15_curry ,  hang_16_wire_15 );
