@@ -3,23 +3,22 @@ module interconect_cells(
 	reset,
 	in_divisor,
 	in_dividend,
-	mode,
 	valid_input,
 	valid_output,
-	final_output
+	mod_res,
+	div_res
 );
 
 	input signed [31:0] in_dividend;
 	input signed [15:0] in_divisor;
 
 	input clk, reset;
-	input valid_input, mode;
+	input valid_input;
 
 	output reg valid_output;
-	output reg signed [16:0] final_output;
 
-	reg signed [16:0] div_res;
-	reg signed [15:0] mod_res;
+	output reg signed [16:0] div_res;
+	output reg signed [15:0] mod_res;
 
 	reg signed [31:0] dividend;
 	reg signed [15:0] divisor;
@@ -194,14 +193,11 @@ module interconect_cells(
 	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			valid_output <= 1'b0;
-			final_output <= 'b0;
 			cycle_count <= 'b0;
 		end else begin
 			cycle_count <= cycle_count + 1'b1;
-			if (cycle_count == 5) begin
+			if (cycle_count == 4) begin
 				valid_output <= 1'b1;
-				// Assign final output based on iput mode selection
-				final_output <= (mode) ? div_res : mod_res;
 				cycle_count <= 1'b0;
 			end else begin
 				valid_output <= 1'b0;

@@ -18,16 +18,22 @@ module Div_mod_top_level(
 	output valid_output;
 	output signed [16:0] final_output;
 
+	wire signed [16:0] div_res;
+	wire signed [15:0] mod_res;
+
+	// Assign final output based on iput mode selection
+	assign final_output = (valid_output) ? ((mode) ? div_res : mod_res) : 'b0;
+
 	interconect_cells connected_cells 
 	(
 		.clk(clk) ,
 		.reset(reset) ,
 		.in_divisor(divisor),
 		.in_dividend(dividend),
-		.mode(mode),
 		.valid_input(valid_input),
 		.valid_output(valid_output),
-		.final_output(final_output)
+		.mod_res(mod_res),
+		.div_res(div_res)
 	);
 
 
