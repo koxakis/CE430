@@ -30,11 +30,13 @@ initial begin
 	clk = 1;
 	mode = 1;
 	reset = 1;
+	valid_input = 1'b0;
 	#50;
 	reset = 0;
 
-	dividend = -32'd80;
-	divisor = 16'd3;
+	valid_input = 1'b1;
+	dividend = 32'd80;
+	divisor = -16'd3;
 end
 
 endmodule

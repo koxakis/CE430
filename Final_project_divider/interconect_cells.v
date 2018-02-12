@@ -1,25 +1,28 @@
 module interconect_cells(
 	clk,
 	reset,
-	divisor,
-	dividend,
+	in_divisor,
+	in_dividend,
 	mode,
 	valid_input,
 	valid_output,
 	final_output
 );
 
-	input signed [31:0] dividend;
-	input signed [15:0] divisor;
+	input signed [31:0] in_dividend;
+	input signed [15:0] in_divisor;
 
 	input clk, reset;
 	input valid_input, mode;
 
-	output valid_output;
-	output signed [16:0] final_output;
+	output reg valid_output;
+	output reg signed [16:0] final_output;
 
 	reg signed [16:0] div_res;
 	reg signed [15:0] mod_res;
+
+	reg signed [31:0] dividend;
+	reg signed [15:0] divisor;
 
 	reg signed [31:0] two_sc_dividend;
 	reg signed [15:0] two_sc_divisor;
@@ -28,6 +31,25 @@ module interconect_cells(
 	wire [14:0] wire_out_remainder;
 
 	wire one=1'b1;
+
+	reg [2:0] cycle_count;
+
+	//Registeed input set in order to make negative slack apperar 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			dividend <= 'b0;
+			divisor <= 'b0;
+		end else begin
+			if (!valid_input) begin
+				dividend <= 'b0;
+				divisor <= 'b0;
+			end else begin	
+				dividend <= in_dividend;
+				divisor <= in_divisor;
+			end
+		end	
+
+	end
 
 	always @(*) begin
 		if (reset) begin
@@ -110,22 +132,17 @@ module interconect_cells(
 			mod_res[0] = wire_out_remainder[0];	
 			//If the remainder is negative add the two_sc_divisor as per non-restoring algorithm
 			
-			if ( (dividend[31]) &&  (!divisor[15]) ) begin
+			if ( (dividend[31] == 1) &&  (divisor[15] == 0) ) begin
 				mod_res = ~mod_res;
 				mod_res = mod_res + 1'b1;
 				mod_res = mod_res + divisor;
 			end 
-			//if ( (!dividend[31]) &&  (divisor[15]) ) begin
-			//	mod_res = ~mod_res;
-			//	mod_res = mod_res + 1'b1;
-			//	mod_res = mod_res + divisor;
-			//end 
 
-			if ( (wire_out_quotient[0]) && (!dividend[31]) && (!divisor[15])) begin
+			if ( (wire_out_quotient[0] == 1) && (dividend[31] == 0) && (divisor[15] == 0)) begin
 				mod_res = mod_res + divisor;
 			end
 
-			if ( (divisor[15]) && (dividend[31]) ) begin
+			if ( (divisor[15] == 1) && (dividend[31] ==1 ) ) begin
 				mod_res = ~mod_res;
 				mod_res = mod_res + 1'b1;
 				mod_res = mod_res + divisor;
@@ -155,7 +172,26 @@ module interconect_cells(
 		end
 	end
 
-	assign final_output = (mode) ? div_res : mod_res;
+	//Registered output set 
+	always @(posedge clk or posedge reset) begin
+		if (reset) begin
+			valid_output <= 1'b0;
+			final_output <= 'b0;
+			cycle_count <= 'b0;
+		end else begin
+			cycle_count <= cycle_count + 1'b1;
+			if (cycle_count == 5) begin
+				valid_output <= 1'b1;
+				// Assign final output based on iput mode selection
+				final_output <= (mode) ? div_res : mod_res;
+				cycle_count <= 1'b0;
+			end else begin
+				valid_output <= 1'b0;
+			end
+		end
+	end
+
+	//assign final_output = (mode) ? div_res : mod_res;
 
 	//div_cell cas_X_Y (T_in,Divisor_in,Remainder_in/two_sc_dividend,Remainder_out,C_in,C_out);
 	//1st row

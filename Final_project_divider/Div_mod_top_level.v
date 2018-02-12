@@ -22,8 +22,8 @@ module Div_mod_top_level(
 	(
 		.clk(clk) ,
 		.reset(reset) ,
-		.divisor(divisor),
-		.dividend(dividend),
+		.in_divisor(divisor),
+		.in_dividend(dividend),
 		.mode(mode),
 		.valid_input(valid_input),
 		.valid_output(valid_output),
