@@ -109,14 +109,27 @@ module interconect_cells(
 			mod_res[1] = wire_out_remainder[1];
 			mod_res[0] = wire_out_remainder[0];	
 			//If the remainder is negative add the two_sc_divisor as per non-restoring algorithm
-			if (dividend[31] && divisor[15]) begin
+			
+			if ( (dividend[31]) &&  (!divisor[15]) ) begin
 				mod_res = ~mod_res;
 				mod_res = mod_res + 1'b1;
-			end	else begin
-				if (wire_out_quotient[0] == 1) begin
-					mod_res = mod_res + divisor;
-				end 
+				mod_res = mod_res + divisor;
+			end 
+			//if ( (!dividend[31]) &&  (divisor[15]) ) begin
+			//	mod_res = ~mod_res;
+			//	mod_res = mod_res + 1'b1;
+			//	mod_res = mod_res + divisor;
+			//end 
+
+			if ( (wire_out_quotient[0]) && (!dividend[31]) && (!divisor[15])) begin
+				mod_res = mod_res + divisor;
 			end
+
+			if ( (divisor[15]) && (dividend[31]) ) begin
+				mod_res = ~mod_res;
+				mod_res = mod_res + 1'b1;
+				mod_res = mod_res + divisor;
+			end 
 		end
 	end
 

@@ -34,8 +34,7 @@ initial begin
 	reset = 0;
 
 	dividend = -32'd80;
-
-	divisor = -16'd3;
+	divisor = 16'd3;
 end
 
 endmodule
