@@ -21,7 +21,7 @@ module MAC_mac_unit(
 	output signed [24:0] mac_output;
 	//25 output for too bing numbers 
 
-	reg signed [16:0] adder_out;
+	reg signed [24:0] adder_out;
 	wire signed [23:0] mul_out;
 	reg signed [24:0] intermidiate_res;
 

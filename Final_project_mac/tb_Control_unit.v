@@ -10,10 +10,12 @@ reg valid_input, last_input;
 
 wire valid_output;
 
-wire signed [16:0] final_output;
+wire signed [24:0] final_output;
+//wire signed [16:0] final_output;
 
 reg mode;
-reg signed [16:0] check_tri, check_sump, y_reg;
+reg signed [24:0] check_tri, check_sump;
+reg signed [15:0] y_reg;
 
 reg signed [7:0] num_a_test [6:0];
 reg signed [7:0] num_x_test [6:0];
