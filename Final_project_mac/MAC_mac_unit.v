@@ -18,14 +18,14 @@ module MAC_mac_unit(
 	//input mode;
 
 	//Due to carry-out and mull oporation the output is 17 bit 
-	output signed [16:0] mac_output;
+	output signed [24:0] mac_output;
+	//25 output for too bing numbers 
 
 	reg signed [16:0] adder_out;
-	wire signed [15:0] mul_out;
-	reg signed [16:0] intermidiate_res;
+	wire signed [23:0] mul_out;
+	reg signed [24:0] intermidiate_res;
 
-	//output Select for output mux mode modes 1 for tri 0 for sump
-	//assign mac_output = (mode) ? intermidiate_res : intermidiate_res ;
+	//Assign mac_output as the value of the register 
 	assign mac_output = intermidiate_res;
 
 	//Do the mul with out delay 

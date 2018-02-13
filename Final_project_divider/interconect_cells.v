@@ -6,7 +6,7 @@ module interconect_cells(
 	valid_input,
 	valid_output,
 	mod_res,
-	div_res
+	div_res_tmp
 );
 
 	input signed [31:0] in_dividend;
@@ -17,8 +17,9 @@ module interconect_cells(
 
 	output reg valid_output;
 
-	output reg signed [16:0] div_res;
+	reg signed [16:0] div_res;
 	output reg signed [15:0] mod_res;
+	output reg signed [16:0] div_res_tmp;
 
 	reg signed [31:0] dividend;
 	reg signed [15:0] divisor;
@@ -50,6 +51,7 @@ module interconect_cells(
 	reg reg_4_5_curry;
 	reg reg_2_3_curry;
 	reg reg_0_1_curry;
+
 
 	//Registeed input set in order to make negative slack apperar 
 	always @(posedge clk or posedge reset) begin
@@ -105,9 +107,16 @@ module interconect_cells(
 			div_res[2] = ~wire_out_quotient[2];
 			div_res[1] = ~wire_out_quotient[1];
 			div_res[0] = ~wire_out_quotient[0];
-			if ((dividend[31] && !divisor[15]) || (!dividend[31] && divisor[15])) begin
-				div_res = ~div_res;
-			end 
+
+			//div_res = div_res_tmp;
+		end
+	end
+	always @(*) begin
+		if ((dividend[31] && !divisor[15]) || (!dividend[31] && divisor[15])) begin
+			div_res_tmp = ~div_res;
+			//div_res_tmp = div_res_tmp + 1'b1;
+		end else begin
+			div_res_tmp = div_res;
 		end
 	end
 

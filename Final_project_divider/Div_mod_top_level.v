@@ -33,7 +33,7 @@ module Div_mod_top_level(
 		.valid_input(valid_input),
 		.valid_output(valid_output),
 		.mod_res(mod_res),
-		.div_res(div_res)
+		.div_res_tmp(div_res)
 	);
 
 

@@ -18,7 +18,7 @@ module MAC_top_level(
 	input mode;
 
 	output valid_output;
-	output signed [16:0] final_output;
+	output signed [24:0] final_output;
 
 	MAC_control_unit control_unit_trinomial_sump_0(
 		.clk(clk) ,

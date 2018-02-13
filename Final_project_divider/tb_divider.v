@@ -13,7 +13,7 @@ wire signed [16:0] final_output;
 
 reg signed [16:0] check_div;
 reg signed [15:0] check_mod;
-reg [2:0] test_cases;
+reg [3:0] test_cases;
 
 Div_mod_top_level divider_dut 
 (
@@ -45,6 +45,25 @@ always @(posedge clk or posedge reset) begin
 	end
 end
 
+reg signed [31:0] dividend_test [3:0] ;
+reg signed [15:0] divisor_test [3:0] ;
+
+always @(posedge clk or posedge reset) begin
+	if (reset) begin
+		dividend_test[0] <= 32'd80;
+		divisor_test[0] <=  16'd3;
+
+		dividend_test[1] <= -32'd80;
+		divisor_test[1] <= -16'd3;
+
+		dividend_test[2] <= -32'd80;
+		divisor_test[2] <= 16'd3;
+
+		dividend_test[3] <= 32'd80;
+		divisor_test[3] <= -16'd3;
+	end
+end
+
 localparam CLK_PERIOD = 10;
 always #(CLK_PERIOD/2) clk=~clk;
 
@@ -56,11 +75,11 @@ initial begin
 	#50;
 	reset = 0;
 
-	for (test_cases = 0; test_cases < 3; test_cases = test_cases + 1'b1) begin
+	for (test_cases = 0; test_cases < 4; test_cases = test_cases + 1'b1) begin
 		valid_input = 1'b1;
 		//dividend = $random;
-		dividend = 32'd50;
-		divisor = -16'd5;
+		dividend = dividend_test[test_cases];
+		divisor = divisor_test[test_cases];
 		//divisor = $random;
 		#50;
 	end

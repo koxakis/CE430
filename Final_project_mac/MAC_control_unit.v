@@ -18,14 +18,14 @@ module MAC_control_unit(
 	input mode;
 
 	output reg valid_output;
-	output [16:0] final_output;
+	output [24:0] final_output;
 
 	reg [1:0] tri_state;
 	reg [2:0] tri_state_counter;
 
 	reg sump_state;
 	reg sump_state_counter;
-	wire [16:0] mac_output;
+	wire [24:0] mac_output;
 
 	reg mul_input_mux, adder_input_mux;
 	reg [7:0] in_1, in_2, in_add;
