@@ -4,21 +4,21 @@ module tb_Control_unit;
 reg clk;
 reg reset;
 
-reg [7:0] num_a_in, num_b_in, num_c_in, num_x_in;
-reg [7:0] num_a, num_x, num_b, num_c;
+reg signed [7:0] num_a_in, num_b_in, num_c_in, num_x_in;
+reg signed [7:0] num_a, num_x, num_b, num_c;
 reg valid_input, last_input;
 
 wire valid_output;
 
-wire [16:0] final_output;
+wire signed [16:0] final_output;
 
 reg mode;
-reg [16:0] check_tri, check_sump, y_reg;
+reg signed [16:0] check_tri, check_sump, y_reg;
 
-reg [7:0] num_a_test [6:0];
-reg [7:0] num_x_test [6:0];
-reg [7:0] num_b_test [2:0];
-reg [7:0] num_c_test [2:0];
+reg signed [7:0] num_a_test [6:0];
+reg signed [7:0] num_x_test [6:0];
+reg signed [7:0] num_b_test [2:0];
+reg signed [7:0] num_c_test [2:0];
 
 reg [1:0] tri_test_inputs;
 
@@ -65,9 +65,10 @@ always @(posedge clk or posedge reset) begin
 		check_sump <= 'b0;
 		y_reg <= 'b0;
 	end else begin
-		#20;
+		#10;
 		check_sump <= (num_a*num_x) + y_reg;
 		y_reg <= check_sump;
+		#10;
 	end
 end
 
@@ -82,10 +83,10 @@ end
 
 always @(posedge clk or posedge reset) begin
 	if (reset) begin
-		num_a_test[0] <= 'd5;
-		num_x_test[0] <= 'd3;
-		num_b_test[0] <= 'd2;
-		num_c_test[0] <= 'd1;
+		num_a_test[0] <= -8'd5;
+		num_x_test[0] <= -8'd3;
+		num_b_test[0] <= -8'd2;
+		num_c_test[0] <= -8'd1;
 
 		num_a_test[1] <= 'd9;
 		num_x_test[1] <= 'd8;

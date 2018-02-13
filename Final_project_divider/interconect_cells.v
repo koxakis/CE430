@@ -105,10 +105,9 @@ module interconect_cells(
 			div_res[2] = ~wire_out_quotient[2];
 			div_res[1] = ~wire_out_quotient[1];
 			div_res[0] = ~wire_out_quotient[0];
-
 			if ((dividend[31] && !divisor[15]) || (!dividend[31] && divisor[15])) begin
 				div_res = ~div_res;
-			end
+			end 
 		end
 	end
 
@@ -148,11 +147,12 @@ module interconect_cells(
 			mod_res[1] = wire_out_remainder[1];
 			mod_res[0] = wire_out_remainder[0];	
 			//If the remainder is negative add the two_sc_divisor as per non-restoring algorithm
-			
 			if ( (dividend[31] == 1) &&  (divisor[15] == 0) ) begin
 				mod_res = ~mod_res;
 				mod_res = mod_res + 1'b1;
-				mod_res = mod_res + divisor;
+				if (wire_out_quotient[0] == 1) begin
+					mod_res = mod_res + divisor;
+				end
 			end 
 
 			if ( (wire_out_quotient[0] == 1) && (dividend[31] == 0) && (divisor[15] == 0)) begin
@@ -162,13 +162,15 @@ module interconect_cells(
 			if ( (divisor[15] == 1) && (dividend[31] ==1 ) ) begin
 				mod_res = ~mod_res;
 				mod_res = mod_res + 1'b1;
-				mod_res = mod_res + divisor;
+				if (wire_out_quotient[0] == 1) begin
+					mod_res = mod_res + divisor;
+				end
 			end 
 		end
 	end
 
 	//If inputs are negative transform to 2s compliment
-	always @(*) begin
+	always @(posedge clk or posedge reset) begin
 		if (reset) begin
 			two_sc_divisor = 'b0;
 			two_sc_dividend = 'b0;

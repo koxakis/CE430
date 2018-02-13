@@ -11,18 +11,18 @@ module MAC_mac_unit(
 );
 
 	input clk, reset;
-	input [7:0] in_1, in_2; 
+	input signed [7:0] in_1, in_2; 
 	input mul_input_mux, adder_input_mux;
 
-	input [7:0] in_add;
+	input signed [7:0] in_add;
 	//input mode;
 
 	//Due to carry-out and mull oporation the output is 17 bit 
-	output [16:0] mac_output;
+	output signed [16:0] mac_output;
 
-	reg [16:0] adder_out;
-	wire [15:0] mul_out;
-	reg [16:0] intermidiate_res;
+	reg signed [16:0] adder_out;
+	wire signed [15:0] mul_out;
+	reg signed [16:0] intermidiate_res;
 
 	//output Select for output mux mode modes 1 for tri 0 for sump
 	//assign mac_output = (mode) ? intermidiate_res : intermidiate_res ;

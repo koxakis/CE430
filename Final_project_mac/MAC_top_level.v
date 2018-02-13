@@ -14,11 +14,11 @@ module MAC_top_level(
 	input clk, reset;
 
 	input valid_input, last_input;
-	input [7:0] num_a, num_b, num_c, num_x;
+	input signed [7:0] num_a, num_b, num_c, num_x;
 	input mode;
 
 	output valid_output;
-	output [16:0] final_output;
+	output signed [16:0] final_output;
 
 	MAC_control_unit control_unit_trinomial_sump_0(
 		.clk(clk) ,
