@@ -1,3 +1,9 @@
+////////////////////////////////////////////////////
+//Module : Divider interconnection module
+//File : interconect_cells.v
+//Discreption : instancates and connects cas modules in order to form the division grid
+//					takes care of any I/O conversions that may occur
+////////////////////////////////////////////////////
 module interconect_cells(
 	clk,
 	reset,
@@ -34,6 +40,7 @@ module interconect_cells(
 
 	reg [2:0] cycle_count;
 
+	//Pipeline regs
 	reg [14:0] reg_14_15;
 	reg [14:0] reg_12_13;
 	reg [14:0] reg_10_11;

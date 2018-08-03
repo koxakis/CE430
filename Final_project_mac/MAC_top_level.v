@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////
+//Module : Trinomial Sum of Products solver top module 
+//File : MAC_top_level.v
+//Discreption : Top Trinomial Sum of Products solver  - top module for Trinomial Sum of Products solver 
+////////////////////////////////////////////////////
 module MAC_top_level(
 	clk,
 	reset,

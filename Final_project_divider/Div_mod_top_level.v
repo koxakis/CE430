@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////
+//Module : Divider top module
+//File : Div_mod_top_level.v
+//Discreption : Top level module for divider
+////////////////////////////////////////////////////
 module Div_mod_top_level(
 	clk,
 	reset,
@@ -21,7 +26,7 @@ module Div_mod_top_level(
 	wire signed [16:0] div_res;
 	wire signed [15:0] mod_res;
 
-	// Assign final output based on iput mode selection
+	// Assign final output based on iput mode selection and valid output control signal 
 	assign final_output = (valid_output) ? ((mode) ? div_res : mod_res) : 'b0;
 
 	interconect_cells connected_cells 

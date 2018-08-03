@@ -1,10 +1,14 @@
+////////////////////////////////////////////////////
+//Module : Multiplier / Accumulator
+//File : MAC_mac_unit.v
+//Discreption : Multiplies and accumulates three inputs 
+////////////////////////////////////////////////////
 module MAC_mac_unit(
 	clk,
 	reset,
 	in_1,
 	in_2,
 	in_add,
-	//mode,
 	mul_input_mux,
 	adder_input_mux,
 	mac_output
@@ -15,11 +19,9 @@ module MAC_mac_unit(
 	input mul_input_mux, adder_input_mux;
 
 	input signed [7:0] in_add;
-	//input mode;
 
-	//Due to carry-out and mull oporation the output is 17 bit 
+	//Due to carry-out and mull oporation the output is 25 bit 
 	output signed [24:0] mac_output;
-	//25 output for too bing numbers 
 
 	reg signed [24:0] adder_out;
 	wire signed [23:0] mul_out;

@@ -1,3 +1,9 @@
+////////////////////////////////////////////////////
+//Module : Trinomial Sum of Products solver control module 
+//File : MAC_control_unit.v
+//Discreption : Control unit for Trinomial Sum of Products solver - sends inputs and control signals as well as output 
+//					managment for the MAC unit 
+////////////////////////////////////////////////////
 module MAC_control_unit(
 	clk,
 	reset,
@@ -18,14 +24,14 @@ module MAC_control_unit(
 	input mode;
 
 	output reg valid_output;
-	output [24:0] final_output;
+	output signed [24:0] final_output;
 
 	reg [1:0] tri_state;
 	reg [2:0] tri_state_counter;
 
 	reg sump_state;
 	reg sump_state_counter;
-	wire [24:0] mac_output;
+	wire signed [24:0] mac_output;
 
 	reg mul_input_mux, adder_input_mux;
 	reg [7:0] in_1, in_2, in_add;
@@ -55,7 +61,6 @@ module MAC_control_unit(
 		.in_1(in_1) ,
 		.in_2(in_2) ,
 		.in_add(in_add) ,
-		//.mode(mode),
 		.mul_input_mux(mul_input_mux) ,
 		.adder_input_mux(adder_input_mux) ,
 		.mac_output(mac_output)
