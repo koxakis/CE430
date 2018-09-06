@@ -1,0 +1,10 @@
+
+NET "clk" LOC = V6;
+NET "reset" LOC = V10;
+
+NET "clk" TNM_NET = "clk";
+TIMESPEC TS_clk = PERIOD "clk" 5 ns HIGH 50 %;
+
+
+
+

@@ -1,0 +1,50 @@
+
+
+NET "clk" LOC = V10;
+#NET "reset" LOC = B8 ;
+NET "reset" LOC = B8;
+#PIN "reset" CLOCK_DEDICATED_ROUTE=TRUE;
+#NET "reset_2" LOC = A8;
+NET "Tx_WR" LOC = C4;
+NET "Tx_DATA[7]" LOC = T5;
+NET "Tx_DATA[6]" LOC = V8;
+NET "Tx_DATA[5]" LOC = U8;
+NET "Tx_DATA[4]" LOC = N8;
+NET "Tx_DATA[3]" LOC = M8;
+NET "Tx_DATA[2]" LOC = V9;
+NET "Tx_DATA[1]" LOC = T9;
+NET "Tx_DATA[0]" LOC = T10;
+
+#NET "Rx_DATA[7]" LOC = T11;
+#NET "Rx_DATA[6]" LOC = R11;
+#NET "Rx_DATA[5]" LOC = N11;
+#NET "Rx_DATA[4]" LOC = M11;
+#NET "Rx_DATA[3]" LOC = V15;
+#NET "Rx_DATA[2]" LOC = U15;
+#NET "Rx_DATA[1]" LOC = V16;
+#NET "Rx_DATA[0]" LOC = U16;
+
+NET "a" LOC = T17;
+NET "an0" LOC = N16;
+NET "an1" LOC = N15;
+NET "an2" LOC = P18;
+NET "an3" LOC = P17;
+NET "b" LOC = T18;
+NET "c" LOC = U17;
+NET "d" LOC = U18;
+NET "dp" LOC = M13;
+NET "e" LOC = M14;
+NET "f" LOC = N14;
+NET "g" LOC = L14;
+
+#NET CLOCK_DEDICATED_ROUTE = FALSE;
+
+NET "r_btn" LOC = D9;
+
+
+# PlanAhead Generated physical constraints 
+
+NET "Rx_FERROR" LOC = T11;
+NET "Rx_PERROR" LOC = R11;
+NET "Rx_VALID" LOC = N11;
+NET "Tx_BUSY" LOC = U16;

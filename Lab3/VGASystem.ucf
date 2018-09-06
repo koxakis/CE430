@@ -1,0 +1,22 @@
+
+# PlanAhead Generated physical constraints 
+
+NET "clk" LOC = V10;
+NET "reset" LOC = B8;
+NET "VGA_Blue1" LOC = R7;
+NET "VGA_Blue2" LOC = T7;
+
+NET "VGA_Green0" LOC = P8;
+NET "VGA_Green1" LOC = T6;
+NET "VGA_Green2" LOC = V6;
+
+NET "VGA_HSYNC" LOC = N6;
+
+NET "VGA_Red0" LOC = U7;
+NET "VGA_Red1" LOC = V7;
+NET "VGA_Red2" LOC = N7;
+
+NET "VGA_VSYNC" LOC = P7;
+
+NET "clk" TNM_NET = clk;
+TIMESPEC "TS_sys_clk_pin" = PERIOD "clk" 20 ns HIGH 50 %;
