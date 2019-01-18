@@ -39,8 +39,8 @@ initial begin
 	rst_n = 0;
 	#200;
 
-	//#1000000
-	//$finish;
+	#1000000;
+	$finish;
 end
 
 endmodule
